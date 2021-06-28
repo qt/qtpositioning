@@ -51,12 +51,7 @@
 //
 
 #include "qpositioningquickglobal.h"
-
-QT_BEGIN_NAMESPACE
-
-#define Q_POSITIONINGQUICK_PRIVATE_EXPORT Q_POSITIONINGQUICK_EXPORT
-
-QT_END_NAMESPACE
+#include <QtPositioningQuick/private/qtpositioningquickexports_p.h>
 
 void Q_POSITIONINGQUICK_PRIVATE_EXPORT qml_register_types_QtPositioning();
 

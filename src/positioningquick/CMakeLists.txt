@@ -34,6 +34,8 @@ qt_internal_add_qml_module(PositioningQuick
     PRIVATE_MODULE_INTERFACE
         Qt::PositioningPrivate
         Qt::QuickPrivate
+    GENERATE_CPP_EXPORTS
+    GENERATE_PRIVATE_CPP_EXPORTS
 )
 
 qt_internal_extend_target(positioningquickplugin

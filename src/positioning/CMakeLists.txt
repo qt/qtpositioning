@@ -42,6 +42,8 @@ qt_internal_add_module(Positioning
         Qt::Core
     PRIVATE_MODULE_INTERFACE
         Qt::CorePrivate
+    GENERATE_CPP_EXPORTS
+    GENERATE_PRIVATE_CPP_EXPORTS
 )
 
 if(ANDROID)

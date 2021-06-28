@@ -51,12 +51,7 @@
 //
 
 #include "qpositioningglobal.h"
-
-QT_BEGIN_NAMESPACE
-
-#define Q_POSITIONING_PRIVATE_EXPORT Q_POSITIONING_EXPORT
-
-QT_END_NAMESPACE
+#include <QtPositioning/private/qtpositioningexports_p.h>
 
 #endif // QPOSITIONINGGLOBAL_P_H
 
