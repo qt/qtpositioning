@@ -56,7 +56,7 @@
 #include <QtPositioning/private/qpositioningglobal_p.h>
 #include "qgeopositioninfosource.h"
 #include "qgeopositioninfosourcefactory.h"
-#include <QJsonObject>
+#include <QCborMap>
 #include <QString>
 #include <QMultiHash>
 #include <QList>
@@ -69,8 +69,8 @@ class QGeoPositionInfoSourcePrivate : public QObjectPrivate
 public:
     virtual ~QGeoPositionInfoSourcePrivate();
 
-    static QGeoPositionInfoSourceFactory *loadFactory(const QJsonObject &meta);
-    static QGeoPositionInfoSource *createSourceReal(const QJsonObject &meta,
+    static QGeoPositionInfoSourceFactory *loadFactory(const QCborMap &meta);
+    static QGeoPositionInfoSource *createSourceReal(const QCborMap &meta,
                                                     const QVariantMap &parameters,
                                                     QObject *parent);
 
@@ -86,9 +86,9 @@ public:
                                        QGeoPositionInfoSource::NoPositioningMethods)
     QString sourceName;
 
-    static QMultiHash<QString, QJsonObject> plugins(bool reload = false);
-    static void loadPluginMetadata(QMultiHash<QString, QJsonObject> &list);
-    static QList<QJsonObject> pluginsSorted();
+    static QMultiHash<QString, QCborMap> plugins(bool reload = false);
+    static void loadPluginMetadata(QMultiHash<QString, QCborMap> &list);
+    static QList<QCborMap> pluginsSorted();
 };
 
 QT_END_NAMESPACE

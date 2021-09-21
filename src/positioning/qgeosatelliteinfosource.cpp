@@ -197,7 +197,7 @@ QVariant QGeoSatelliteInfoSource::backendProperty(const QString &name) const
     return QVariant();
 }
 
-QGeoSatelliteInfoSource *QGeoSatelliteInfoSourcePrivate::createSourceReal(const QJsonObject &meta, const QVariantMap &parameters, QObject *parent)
+QGeoSatelliteInfoSource *QGeoSatelliteInfoSourcePrivate::createSourceReal(const QCborMap &meta, const QVariantMap &parameters, QObject *parent)
 {
     QGeoSatelliteInfoSource *s = nullptr;
     auto factory = QGeoPositionInfoSourcePrivate::loadFactory(meta);
@@ -249,8 +249,8 @@ QGeoSatelliteInfoSource *QGeoSatelliteInfoSource::createSource(const QString &so
 */
 QGeoSatelliteInfoSource *QGeoSatelliteInfoSource::createDefaultSource(const QVariantMap &parameters, QObject *parent)
 {
-    QList<QJsonObject> plugins = QGeoPositionInfoSourcePrivate::pluginsSorted();
-    foreach (const QJsonObject &obj, plugins) {
+    const QList<QCborMap> plugins = QGeoPositionInfoSourcePrivate::pluginsSorted();
+    foreach (const QCborMap &obj, plugins) {
         if (obj.value(QStringLiteral("Satellite")).isBool()
                 && obj.value(QStringLiteral("Satellite")).toBool())
         {

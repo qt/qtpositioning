@@ -61,7 +61,7 @@ class QGeoSatelliteInfoSourcePrivate : public QObjectPrivate
 {
 public:
     virtual ~QGeoSatelliteInfoSourcePrivate();
-    static QGeoSatelliteInfoSource *createSourceReal(const QJsonObject &meta,
+    static QGeoSatelliteInfoSource *createSourceReal(const QCborMap &meta,
                                                      const QVariantMap &parameters,
                                                      QObject *parent);
     Q_OBJECT_BINDABLE_PROPERTY_WITH_ARGS(QGeoSatelliteInfoSourcePrivate, int, interval, 0)
