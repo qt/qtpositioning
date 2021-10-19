@@ -48,13 +48,7 @@ qdoc_wrapper.sh
 qhelpgenerator_wrapper.sh
 target_wrapper.sh
 QtPositioning.version*
-QtLocation.version*
 src/positioning/doc/snippets/cpp/positioning_cppsnippet
-src/location/doc/snippets/cpp/cppsnippet
-src/location/doc/snippets/places/placescppsnippet
-examples/location/places_list/places_list
-examples/location/places_map/places_map
-examples/location/planespotter/planespotter
 examples/positioning/geoflickr/geoflickr
 examples/positioning/logfilepositionsource/logfilepositionsource
 examples/positioning/satelliteinfo/satelliteinfo
