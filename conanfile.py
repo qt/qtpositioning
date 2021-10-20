@@ -42,11 +42,11 @@ def _get_qt_minor_version() -> str:
     return ".".join(_parse_qt_version_by_key("QT_REPO_MODULE_VERSION").split(".")[:2])
 
 
-class QtLocation(ConanFile):
-    name = "qtlocation"
+class QtPositioning(ConanFile):
+    name = "qtpositioning"
     license = "LGPL-3.0, GPL-2.0+, Commercial Qt License Agreement"
     author = "The Qt Company <https://www.qt.io/contact-us>"
-    url = "https://code.qt.io/cgit/qt/qtlocation.git"
+    url = "https://code.qt.io/cgit/qt/qtpositioning.git"
     description = "Qt Positioning support."
     topics = "qt", "qt6", "positioning"
     settings = "os", "compiler", "arch", "build_type"
