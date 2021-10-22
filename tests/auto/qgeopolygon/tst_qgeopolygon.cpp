@@ -57,6 +57,8 @@ private slots:
     void contains_data();
     void contains();
 
+    void containsAfterCopy();
+
     void boundingGeoRectangle_data();
     void boundingGeoRectangle();
 
@@ -318,6 +320,31 @@ void tst_QGeoPolygon::contains()
 
     QGeoShape area = p;
     QCOMPARE(area.contains(probe), result);
+}
+
+void tst_QGeoPolygon::containsAfterCopy()
+{
+    // This test is to make sure that we copy the QClipperUtils in the
+    // QGeoPolygonPrivate correctly.
+    QList<QGeoCoordinate> coords;
+    coords.append(QGeoCoordinate(1, 1));
+    coords.append(QGeoCoordinate(2, 2));
+    coords.append(QGeoCoordinate(3, 0));
+
+    const QGeoCoordinate testPoint(2.0, 1.0);
+
+    QGeoPolygon p1(coords);
+    QVERIFY(p1.contains(testPoint));
+
+    QGeoPolygon p2 = p1;
+    QVERIFY(p2.contains(testPoint));
+
+    p2.translate(10, 10); // does not contain testPoint any more
+    QVERIFY(!p2.contains(testPoint));
+    QVERIFY(p1.contains(testPoint));
+    // This check is intentional! Needed to make sure that p1 does not modify
+    // the internals of p2 somehow.
+    QVERIFY(!p2.contains(testPoint));
 }
 
 void tst_QGeoPolygon::boundingGeoRectangle_data()

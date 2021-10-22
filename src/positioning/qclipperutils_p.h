@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2016 The Qt Company Ltd.
+** Copyright (C) 2021 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the QtPositioning module of the Qt Toolkit.
@@ -59,26 +59,61 @@
 #include <QtPositioning/private/qpositioningglobal_p.h>
 #include <QtCore/QtGlobal>
 #include <QtCore/QList>
-#include <cmath>
-/* clip2tri triangulator includes */
-#include <clip2tri.h>
 #include <QtPositioning/private/qdoublevector2d_p.h>
 
 QT_BEGIN_NAMESPACE
 
+/*
+ * This class provides a wrapper around the clip2tri library, so that
+ * we do not need to export any of the internal types. That is needed
+ * because after QtLocation and QtPositioning are moved to different
+ * repos, we need to use the features of the library in QtLocation without
+ * explicitly linking to it.
+*/
+
+class QClipperUtilsPrivate;
 class Q_POSITIONING_PRIVATE_EXPORT QClipperUtils
 {
 public:
+    QClipperUtils();
+    QClipperUtils(const QClipperUtils &other);
+    ~QClipperUtils();
+
+    // Must be in sync with c2t::clip2tri::Operation
+    enum Operation {
+        Union,
+        Intersection,
+        Difference,
+        Xor
+    };
+
+    // Must be in sync with QtClipperLib::PolyFillType
+    enum PolyFillType {
+        pftEvenOdd,
+        pftNonZero,
+        pftPositive,
+        pftNegative
+    };
+
     static double clipperScaleFactor();
 
-    static QDoubleVector2D  toVector2D(const IntPoint &p);
-    static IntPoint         toIntPoint(const QDoubleVector2D &p);
+    static int pointInPolygon(const QDoubleVector2D &point, const QList<QDoubleVector2D> &polygon);
 
-    static QList<QDoubleVector2D> pathToQList(const Path &path);
-    static QList<QList<QDoubleVector2D> > pathsToQList(const Paths &paths);
+    // wrap some useful non-static methods of c2t::clip2tri
+    void clearClipper();
+    void addSubjectPath(const QList<QDoubleVector2D> &path, bool closed);
+    void addClipPolygon(const QList<QDoubleVector2D> &path);
+    QList<QList<QDoubleVector2D>> execute(Operation op, PolyFillType subjFillType = pftNonZero,
+                                          PolyFillType clipFillType = pftNonZero);
 
-    static Path  qListToPath(const QList<QDoubleVector2D> &list);
-    static Paths qListToPaths(const QList<QList<QDoubleVector2D> > &lists);
+    // For optimization purposes. Set the polygon once and check for multiple
+    // points. Without the need to convert between Qt and clip2tri types
+    // every time
+    void setPolygon(const QList<QDoubleVector2D> &polygon);
+    int pointInPolygon(const QDoubleVector2D &point) const;
+
+private:
+    QClipperUtilsPrivate *d_ptr;
 };
 
 QT_END_NAMESPACE

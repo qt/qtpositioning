@@ -590,9 +590,7 @@ bool QGeoPolygonPrivate::polygonContains(const QGeoCoordinate &coordinate) const
     if (coord.x() < m_leftBoundWrapped)
         coord.setX(coord.x() + 1.0);
 
-
-    IntPoint intCoord = QClipperUtils::toIntPoint(coord);
-    if (!c2t::clip2tri::pointInPolygon(intCoord, m_clipperPath))
+    if (!m_clipperWrapper.pointInPolygon(coord))
         return false;
 
     // else iterates the holes List checking whether the point is contained inside the holes
@@ -624,7 +622,7 @@ void QGeoPolygonPrivate::updateClipperPath()
             crd.setX(crd.x() + 1.0);
         preservedPath << crd;
     }
-    m_clipperPath = QClipperUtils::qListToPath(preservedPath);
+    m_clipperWrapper.setPolygon(preservedPath);
 }
 
 QGeoPolygonPrivateEager::QGeoPolygonPrivateEager() : QGeoPolygonPrivate()

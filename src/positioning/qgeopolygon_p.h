@@ -87,7 +87,7 @@ public:
 // data members
     bool m_clipperDirty = true;
     QList<QList<QGeoCoordinate>> m_holesList;
-    QtClipperLib::Path m_clipperPath;
+    QClipperUtils m_clipperWrapper;
 };
 
 class Q_POSITIONING_PRIVATE_EXPORT QGeoPolygonPrivateEager : public QGeoPolygonPrivate
