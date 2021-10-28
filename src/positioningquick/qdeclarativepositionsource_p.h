@@ -192,6 +192,7 @@ private:
     QList<QDeclarativePluginParameter *> m_parameters;
     bool m_componentComplete = false;
     bool m_parametersInitialized = false;
+    bool m_startRequested = false;
 
     bool m_defaultSourceUsed = false;
     Q_OBJECT_COMPAT_PROPERTY(QDeclarativePositionSource, QString, m_sourceName,
