@@ -319,15 +319,15 @@ void QDeclarativePositionSource::tryAttach(const QString &newName, bool useFallb
     }
 
     if (m_active) { // implies m_positionSource
-        if (!sourceExisted) {
-            // delay ensures all properties have been set
-            QTimer::singleShot(0, this, [this]() { executeStart(); });
-        } else {
-            // New source is set. It should be inactive by default.
-            // But we do not want to break the binding.
-            m_active.setValueBypassingBindings(false);
-            m_active.notify();
-        }
+        // If m_active is true, then the previous position source existed!
+        Q_ASSERT(sourceExisted);
+        // New source is set. It should be inactive by default.
+        // But we do not want to break the binding.
+        m_active.setValueBypassingBindings(false);
+        m_active.notify();
+    } else if (m_startRequested) {
+        m_startRequested = false;
+        executeStart();
     }
 
     if (previousName != m_sourceName)
@@ -673,8 +673,12 @@ void QDeclarativePositionSource::setActive(bool active)
         return;
 
     if (active) {
-        // delay ensures all properties have been set
-        QTimer::singleShot(0, this, [this]() { executeStart(); });
+        // If the component is not completed yet, we need to defer the
+        // actual executeStart() call until everything is set up.
+        if (m_componentComplete && m_parametersInitialized)
+            executeStart();
+        else
+            m_startRequested = true;
     } else {
         stop();
     }
