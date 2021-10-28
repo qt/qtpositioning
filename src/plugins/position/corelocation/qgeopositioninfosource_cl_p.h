@@ -74,6 +74,7 @@ public:
 
     void locationDataAvailable(QGeoPositionInfo location);
     void setError(QGeoPositionInfoSource::Error positionError);
+    void changeAuthorizationStatus(CLAuthorizationStatus status);
 
 private:
     bool enableLocationManager();
@@ -91,7 +92,7 @@ protected:
 private:
     Q_DISABLE_COPY(QGeoPositionInfoSourceCL);
     CLLocationManager *m_locationManager;
-    bool m_started;
+    bool m_updatesWanted;
 
     QGeoPositionInfo m_lastUpdate;
 
