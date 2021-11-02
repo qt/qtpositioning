@@ -262,6 +262,12 @@ QVariant QGeoPositionInfoSource::backendProperty(const QString &name) const
     \note Subclass implementations must call the base implementation of
     \c {setUpdateInterval()} so that \c {updateInterval()} returns the correct
     value.
+
+    \note This property can't be used to tune update frequency on iOS and macOS,
+    because their APIs do not provide such possibility. On these systems this
+    parameter is only used to set \l UpdateTimeoutError and trigger an
+    \l errorOccurred signal if the update is not received within the desired
+    interval.
 */
 void QGeoPositionInfoSource::setUpdateInterval(int msec)
 {
