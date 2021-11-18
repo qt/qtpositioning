@@ -89,9 +89,9 @@ private:
 
 class QIOPipePrivate : public QIODevicePrivate
 {
+public:
     Q_DECLARE_PUBLIC(QIOPipe)
 
-public:
     explicit QIOPipePrivate(QIODevice *iodevice, bool proxying);
     ~QIOPipePrivate() override;
 
