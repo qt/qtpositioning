@@ -59,3 +59,13 @@
 \externalpage https://gypsy.freedesktop.org/wiki/
 \title Gypsy daemon
 */
+
+/*!
+\externalpage https://developer.android.com/reference/android/location/Location.html#getBearingAccuracyDegrees%28%29
+\title Android getBearingAccuracyDegrees
+*/
+
+/*!
+\externalpage https://developer.apple.com/documentation/corelocation/cllocation/3524338-courseaccuracy?language=objc
+\title iOS courseAccuracy
+*/

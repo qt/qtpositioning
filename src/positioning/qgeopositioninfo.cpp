@@ -73,6 +73,10 @@ QT_BEGIN_NAMESPACE
     \value MagneticVariation The angle between the horizontal component of the magnetic field and true north, in degrees. Also known as magnetic declination. A positive value indicates a clockwise direction from true north and a negative value indicates a counter-clockwise direction.
     \value HorizontalAccuracy The accuracy of the provided latitude-longitude value, in meters.
     \value VerticalAccuracy The accuracy of the provided altitude value, in meters.
+    \value DirectionAccuracy The accuracy of the provided bearing, in degrees.
+    This attribute is available only on Android (API level 26 or above) and
+    macOS/iOS. See corresponding \l {Android getBearingAccuracyDegrees}
+    {Android} and \l {iOS courseAccuracy}{Apple} documentation for more details.
 
     NMEA protocol also suggests another type of accuracy - PositionAccuracy,
     which is a 3D accuracy value. Qt does not provide a separate attribute for
@@ -322,6 +326,9 @@ QDebug QGeoPositionInfo::debugStreaming(QDebug dbg, const QGeoPositionInfo &info
                 break;
             case QGeoPositionInfo::VerticalAccuracy:
                 dbg << "VerticalAccuracy=";
+                break;
+            case QGeoPositionInfo::DirectionAccuracy:
+                dbg << "DirectionAccuracy=";
                 break;
         }
         dbg << info.d->doubleAttribs[attribs[i]];

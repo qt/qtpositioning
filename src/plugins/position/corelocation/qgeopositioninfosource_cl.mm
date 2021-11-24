@@ -86,8 +86,15 @@
     if (newLocation.verticalAccuracy >= 0)
         location.setAttribute(QGeoPositionInfo::VerticalAccuracy, newLocation.verticalAccuracy);
 #ifndef Q_OS_TVOS
-    if (newLocation.course >= 0)
+    if (newLocation.course >= 0) {
         location.setAttribute(QGeoPositionInfo::Direction, newLocation.course);
+        if (__builtin_available(iOS 13.4, watchOS 6.2, macOS 10.15.4, *)) {
+            if (newLocation.courseAccuracy >= 0) {
+                location.setAttribute(QGeoPositionInfo::DirectionAccuracy,
+                                      newLocation.courseAccuracy);
+            }
+        }
+    }
     if (newLocation.speed >= 0)
         location.setAttribute(QGeoPositionInfo::GroundSpeed, newLocation.speed);
 #endif

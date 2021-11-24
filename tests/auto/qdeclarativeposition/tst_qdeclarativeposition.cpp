@@ -57,6 +57,8 @@ private slots:
     void verticalSpeedBinding();
     void magneticVariationValidBinding();
     void magneticVariationBinding();
+    void directionAccuracyBinding();
+    void directionAccuracyValidBinding();
 
 private:
     QDeclarativePosition m_declarativePosition;
@@ -218,7 +220,24 @@ void tst_QDeclarativePosition::magneticVariationBinding()
     m_positionInfo.setAttribute(QGeoPositionInfo::MagneticVariation, 10.0);
     QTestPrivate::testReadOnlyPropertyBasics<QDeclarativePosition, double>(
             m_declarativePosition, qQNaN(), 10.0, "magneticVariation", m_mutatorFunc,
+                m_doubleComparator);
+}
+
+void tst_QDeclarativePosition::directionAccuracyBinding()
+{
+    QCOMPARE(m_declarativePosition.directionAccuracy(), qQNaN());
+    m_positionInfo.setAttribute(QGeoPositionInfo::DirectionAccuracy, 10.0);
+    QTestPrivate::testReadOnlyPropertyBasics<QDeclarativePosition, double>(
+            m_declarativePosition, qQNaN(), 10.0, "directionAccuracy", m_mutatorFunc,
             m_doubleComparator);
+}
+
+void tst_QDeclarativePosition::directionAccuracyValidBinding()
+{
+    QCOMPARE(m_declarativePosition.isDirectionAccuracyValid(), false);
+    m_positionInfo.setAttribute(QGeoPositionInfo::DirectionAccuracy, 10.0);
+    QTestPrivate::testReadOnlyPropertyBasics<QDeclarativePosition, bool>(
+            m_declarativePosition, false, true, "directionAccuracyValid", m_mutatorFunc);
 }
 
 QTEST_GUILESS_MAIN(tst_QDeclarativePosition)

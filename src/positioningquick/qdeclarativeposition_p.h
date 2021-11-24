@@ -95,6 +95,11 @@ class Q_POSITIONINGQUICK_PRIVATE_EXPORT QDeclarativePosition : public QObject
     Q_PROPERTY(bool magneticVariationValid READ isMagneticVariationValid BINDABLE
                        bindableMagneticVariationValid REVISION(5, 2))
 
+    Q_PROPERTY(double directionAccuracy READ directionAccuracy BINDABLE bindableDirectionAccuracy
+               REVISION(6, 3))
+    Q_PROPERTY(bool directionAccuracyValid READ isDirectionAccuracyValid BINDABLE
+               bindableDirectionAccuracyValid REVISION(6, 3))
+
 public:
     explicit QDeclarativePosition(QObject *parent = 0);
     ~QDeclarativePosition();
@@ -123,6 +128,9 @@ public:
     void setPosition(const QGeoPositionInfo &info);
     const QGeoPositionInfo &position() const;
 
+    bool isDirectionAccuracyValid() const;
+    double directionAccuracy() const;
+
     QBindable<bool> bindableLatitudeValid() const;
     QBindable<bool> bindableLongitudeValid() const;
     QBindable<bool> bindableAltitudeValid() const;
@@ -140,6 +148,8 @@ public:
     QBindable<double> bindableVerticalSpeed() const;
     QBindable<double> bindableMagneticVariation() const;
     QBindable<bool> bindableMagneticVariationValid() const;
+    QBindable<double> bindableDirectionAccuracy() const;
+    QBindable<bool> bindableDirectionAccuracyValid() const;
 
 private:
     bool isLatitudeValidActualCalculation() const;
@@ -159,6 +169,8 @@ private:
     double verticalSpeedActualCalculation() const;
     double magneticVariationActualCalculation() const;
     bool isMagneticVariationValidActualCalculation() const;
+    double directionAccuracyActualCalculation() const;
+    bool isDirectionAccuracyValidActualCalculation() const;
 
     QGeoPositionInfo m_info;
 
@@ -196,6 +208,10 @@ private:
                                &QDeclarativePosition::magneticVariationActualCalculation)
     Q_OBJECT_COMPUTED_PROPERTY(QDeclarativePosition, bool, m_computedMagneticVariationValid,
                                &QDeclarativePosition::isMagneticVariationValidActualCalculation)
+    Q_OBJECT_COMPUTED_PROPERTY(QDeclarativePosition, double, m_computedDirectionAccuracy,
+                               &QDeclarativePosition::directionAccuracyActualCalculation)
+    Q_OBJECT_COMPUTED_PROPERTY(QDeclarativePosition, bool, m_computedDirectionAccuracyValid,
+                               &QDeclarativePosition::isDirectionAccuracyValidActualCalculation)
 };
 
 QT_END_NAMESPACE

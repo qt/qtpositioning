@@ -70,7 +70,8 @@ public:
         VerticalSpeed,
         MagneticVariation,
         HorizontalAccuracy,
-        VerticalAccuracy
+        VerticalAccuracy,
+        DirectionAccuracy
     };
 
     QGeoPositionInfo();

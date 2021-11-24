@@ -159,6 +159,12 @@ void QDeclarativePosition::setPosition(const QGeoPositionInfo &info)
     const bool verticalAccuracyChanged = !equalOrNaN(pVerticalAccuracy, verticalAccuracy);
     const bool verticalAccuracyValidChanged = exclusiveNaN(pVerticalAccuracy, verticalAccuracy);
 
+    // direction accuracy
+    const qreal pDirectionAccuracy = m_info.attribute(QGeoPositionInfo::DirectionAccuracy);
+    const qreal directionAccuracy = info.attribute(QGeoPositionInfo::DirectionAccuracy);
+    const bool directionAccuracyChanged = !equalOrNaN(pDirectionAccuracy, directionAccuracy);
+    const bool directionAccuracyValidChanged = exclusiveNaN(pDirectionAccuracy, directionAccuracy);
+
     m_info = info;
 
     if (timestampChanged)
@@ -202,6 +208,11 @@ void QDeclarativePosition::setPosition(const QGeoPositionInfo &info)
         m_computedMagneticVariation.notify();
     if (magneticVariationValidChanged)
         m_computedMagneticVariationValid.notify();
+
+    if (directionAccuracyChanged)
+        m_computedDirectionAccuracy.notify();
+    if (directionAccuracyValidChanged)
+        m_computedDirectionAccuracyValid.notify();
 }
 
 const QGeoPositionInfo &QDeclarativePosition::position() const
@@ -292,6 +303,16 @@ QBindable<double> QDeclarativePosition::bindableMagneticVariation() const
 QBindable<bool> QDeclarativePosition::bindableMagneticVariationValid() const
 {
     return QBindable<bool>(&m_computedMagneticVariationValid);
+}
+
+QBindable<double> QDeclarativePosition::bindableDirectionAccuracy() const
+{
+    return QBindable<double>(&m_computedDirectionAccuracy);
+}
+
+QBindable<bool> QDeclarativePosition::bindableDirectionAccuracyValid() const
+{
+    return QBindable<bool>(&m_computedDirectionAccuracyValid);
 }
 
 /*!
@@ -616,6 +637,44 @@ double QDeclarativePosition::magneticVariation() const
 double QDeclarativePosition::magneticVariationActualCalculation() const
 {
     return m_info.attribute(QGeoPositionInfo::MagneticVariation);
+}
+
+/*!
+    \qmlproperty bool Position::directionAccuracyValid
+    \since Qt Positioning 6.3
+
+    This property is \c true if \l directionAccuracy has been set.
+
+    \sa directionAccuracy
+*/
+bool QDeclarativePosition::isDirectionAccuracyValid() const
+{
+    return m_computedDirectionAccuracyValid.value();
+}
+
+bool QDeclarativePosition::isDirectionAccuracyValidActualCalculation() const
+{
+    return !qIsNaN(m_info.attribute(QGeoPositionInfo::DirectionAccuracy));
+}
+
+/*!
+    \qmlproperty double Position::directionAccuracy
+    \since Qt Positioning 6.3
+
+    This property holds the accuracy of the provided \l direction in degrees.
+    This property is valid for Android and macOS/iOS only. See
+    \l {QGeoPositionInfo::Attribute} documentation for more details.
+
+    \sa direction, directionAccuracyValid
+*/
+double QDeclarativePosition::directionAccuracy() const
+{
+    return m_computedDirectionAccuracy.value();
+}
+
+double QDeclarativePosition::directionAccuracyActualCalculation() const
+{
+    return m_info.attribute(QGeoPositionInfo::DirectionAccuracy);
 }
 
 QT_END_NAMESPACE
