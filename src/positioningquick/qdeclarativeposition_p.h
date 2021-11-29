@@ -56,6 +56,7 @@
 #include <QtPositioningQuick/private/qpositioningquickglobal_p.h>
 #include <QtPositioning/QGeoPositionInfo>
 #include <QtCore/QObject>
+#include <QtCore/QProperty>
 #include <QtCore/QDateTime>
 #include <QtQml/qqml.h>
 
