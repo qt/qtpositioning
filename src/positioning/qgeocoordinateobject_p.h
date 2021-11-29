@@ -53,6 +53,7 @@
 
 #include <QtPositioning/private/qpositioningglobal_p.h>
 #include <QObject>
+#include <QProperty>
 #include <QGeoCoordinate>
 #include <QVariantMap>
 
