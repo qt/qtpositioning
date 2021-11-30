@@ -43,6 +43,7 @@
 #include <QGeoPositionInfo>
 #include <QJniEnvironment>
 #include <QJniObject>
+#include <QLoggingCategory>
 #include <QtCore/private/qandroidextras_p.h>
 #include <QCoreApplication>
 #include <android/log.h>
