@@ -274,15 +274,14 @@ namespace AndroidPositioning {
                 info.setAttribute(QGeoPositionInfo::HorizontalAccuracy, qreal(accuracy));
         }
 
-        // vertical accuracy
-        // The check for method existence happens inside QJniObject. If the
-        // method is not found, 0 (or 0.0, or false) is returned, so we do not
-        // need to handle it specially.
-        attributeExists = jniObject.callMethod<jboolean>("hasVerticalAccuracy");
-        if (attributeExists) {
-            const jfloat accuracy = jniObject.callMethod<jfloat>("getVerticalAccuracyMeters");
-            if (!qFuzzyIsNull(accuracy))
-                info.setAttribute(QGeoPositionInfo::VerticalAccuracy, qreal(accuracy));
+        // vertical accuracy (available in API Level 26+)
+        if (QNativeInterface::QAndroidApplication::sdkVersion() > 25) {
+            attributeExists = jniObject.callMethod<jboolean>("hasVerticalAccuracy");
+            if (attributeExists) {
+                const jfloat accuracy = jniObject.callMethod<jfloat>("getVerticalAccuracyMeters");
+                if (!qFuzzyIsNull(accuracy))
+                    info.setAttribute(QGeoPositionInfo::VerticalAccuracy, qreal(accuracy));
+            }
         }
 
         // ground speed
