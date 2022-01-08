@@ -864,104 +864,41 @@ QGeoRectangle &QGeoRectangle::operator|=(const QGeoRectangle &rectangle)
 
     Q_D(QGeoRectangle);
 
-    double left1 = d->topLeft.longitude();
-    double right1 = d->bottomRight.longitude();
-    double top1 = d->topLeft.latitude();
-    double bottom1 = d->bottomRight.latitude();
+    double top = qMax(d->topLeft.latitude(), rectangle.d_func()->topLeft.latitude());
+    double bottom = qMin(d->bottomRight.latitude(), rectangle.d_func()->bottomRight.latitude());
 
-    double left2 = rectangle.d_func()->topLeft.longitude();
-    double right2 = rectangle.d_func()->bottomRight.longitude();
-    double top2 = rectangle.d_func()->topLeft.latitude();
-    double bottom2 = rectangle.d_func()->bottomRight.latitude();
-
-    double top = qMax(top1, top2);
-    double bottom = qMin(bottom1, bottom2);
-
-    double left = 0.0;
-    double right = 0.0;
-
-    bool wrap1 = (left1 > right1);
-    bool wrap2 = (left2 > right2);
-
-    if ((wrap1 && wrap2) || (!wrap1 && !wrap2)) {
-
-        double w = qAbs((left1 + right1 - left2 - right2) / 2.0);
-
-        if (w < 180.0) {
-            left = qMin(left1, left2);
-            right = qMax(right1, right2);
-        } else if (w > 180.0) {
-            left = qMax(left1, left2);
-            right = qMin(right1, right2);
-        } else {
-            left = -180.0;
-            right = 180.0;
-        }
-
-    } else {
-        double wrapLeft = 0.0;
-        double wrapRight = 0.0;
-        double nonWrapLeft = 0.0;
-        double nonWrapRight = 0.0;
-
-        if (wrap1) {
-            wrapLeft = left1;
-            wrapRight = right1;
-            nonWrapLeft = left2;
-            nonWrapRight = right2;
-        } else {
-            wrapLeft = left2;
-            wrapRight = right2;
-            nonWrapLeft = left1;
-            nonWrapRight = right1;
-        }
-
-        bool joinWrapLeft = (nonWrapRight >= wrapLeft);
-        bool joinWrapRight = (nonWrapLeft <= wrapRight);
-
-        if (wrapLeft <= nonWrapLeft) { // The wrapping rectangle contains the non-wrapping one entirely
-            left = wrapLeft;
-            right = wrapRight;
-        } else {
-            if (joinWrapLeft) {
-                if (joinWrapRight) {
-                    left = -180.0;
-                    right = 180.0;
-                } else {
-                    left = nonWrapLeft;
-                    right = wrapRight;
-                }
-            } else {
-                if (joinWrapRight) {
-                    left = wrapLeft;
-                    right = nonWrapRight;
-                } else {
-                    double wrapRightDistance = nonWrapLeft - wrapRight;
-                    double wrapLeftDistance = wrapLeft - nonWrapRight;
-
-                    if (wrapLeftDistance == wrapRightDistance) {
-                        left = -180.0;
-                        right = 180.0;
-                    } else if (wrapLeftDistance < wrapRightDistance) {
-                        left = nonWrapLeft;
-                        right = wrapRight;
-                    } else {
-                        left = wrapLeft;
-                        right = nonWrapRight;
-                    }
-                }
-            }
-        }
+    QGeoRectangle candidate(
+        {top, d->topLeft.longitude()},
+        {bottom, rectangle.d_func()->bottomRight.longitude()}
+    );
+    QGeoRectangle otherCandidate(
+        {top, rectangle.d_func()->topLeft.longitude()},
+        {bottom, d->bottomRight.longitude()}
+    );
+    double unwrappedWidth = (candidate.width() < rectangle.width() ? 360 : 0) + candidate.width();
+    double otherUnwrappedWidth = (otherCandidate.width() < width() ? 360 : 0) + otherCandidate.width();
+    if (otherUnwrappedWidth < unwrappedWidth) {
+        candidate = otherCandidate;
+        unwrappedWidth = otherUnwrappedWidth;
+    }
+    if (360 <= unwrappedWidth) {
+        candidate.d_func()->topLeft.setLongitude(-180.0);
+        candidate.d_func()->bottomRight.setLongitude(180.0);
     }
 
-    if (((left1 == -180) && (right1 == 180.0))
-            || ((left2 == -180) && (right2 == 180.0))) {
-        left = -180;
-        right = 180;
+    candidate = (candidate.width() < width() ? *this : candidate);
+    candidate = (candidate.width() < rectangle.width() ? rectangle : candidate);
+
+    double middle1 = center().longitude();
+    double middle2 = rectangle.center().longitude();
+    if ((middle1 <= middle2 ? 0 : 360) + middle2 - middle1 == 180) {
+        candidate.d_func()->topLeft.setLongitude(-180.0);
+        candidate.d_func()->bottomRight.setLongitude(180.0);
     }
 
-    d->topLeft = QGeoCoordinate(top, left);
-    d->bottomRight = QGeoCoordinate(bottom, right);
+    *this = candidate;
+    this->d_func()->topLeft.setLatitude(top);
+    this->d_func()->bottomRight.setLatitude(bottom);
 
     return *this;
 }

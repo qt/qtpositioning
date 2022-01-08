@@ -2243,6 +2243,11 @@ void tst_QGeoRectangle::unite_data()
             << QGeoRectangle(QGeoCoordinate(30, 160), QGeoCoordinate(-30, 170))
             << QGeoRectangle(QGeoCoordinate(30, 160), QGeoCoordinate(-30, -170))
             << QGeoRectangle(QGeoCoordinate(30, 160), QGeoCoordinate(-30, -170));
+
+    QTest::newRow("wrappinng, one containing other, overlapping center")
+            << QGeoRectangle(QGeoCoordinate(30, 170), QGeoCoordinate(-30, -30))
+            << QGeoRectangle(QGeoCoordinate(30, -140), QGeoCoordinate(-30, -50))
+            << QGeoRectangle(QGeoCoordinate(30, 170), QGeoCoordinate(-30, -30));
 }
 
 
