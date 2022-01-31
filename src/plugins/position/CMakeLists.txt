@@ -1,7 +1,7 @@
 # Generated from position.pro.
 
 add_subdirectory(positionpoll)
-if(FREEBSD OR LINUX OR OPENBSD OR (NETBSD AND TARGET Qt::DBus))
+if(FREEBSD OR LINUX OR OPENBSD OR (NETBSD AND TARGET Qt::DBus) OR HURD)
     add_subdirectory(geoclue2)
 endif()
 if(QT_FEATURE_gypsy)
