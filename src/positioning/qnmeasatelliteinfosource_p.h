@@ -60,6 +60,7 @@
 #include <QMap>
 #include <QtCore/qiodevice.h>
 #include <QtCore/qtimer.h>
+#include <QtCore/private/qglobal_p.h>
 
 QT_BEGIN_NAMESPACE
 
