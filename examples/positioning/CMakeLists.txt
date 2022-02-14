@@ -1,5 +1,3 @@
-# Generated from positioning.pro.
-
 if(TARGET Qt::Widgets)
     qt_internal_add_example(logfilepositionsource)
 endif()
