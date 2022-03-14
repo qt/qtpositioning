@@ -45,7 +45,8 @@
 QT_BEGIN_NAMESPACE
 
 /*!
-    \qmlbasictype coordinate
+    \qmlvaluetype coordinate
+    \ingroup qmlvaluetypes
     \inqmlmodule QtPositioning
     \ingroup qml-QtPositioning5-basictypes
     \since 5.2
@@ -202,7 +203,8 @@ QT_BEGIN_NAMESPACE
 */
 
 /*!
-    \qmlbasictype geoshape
+    \qmlvaluetype geoshape
+    \ingroup qmlvaluetypes
     \inqmlmodule QtPositioning
     \ingroup qml-QtPositioning5-basictypes
     \since 5.2
@@ -304,7 +306,8 @@ QT_BEGIN_NAMESPACE
 */
 
 /*!
-    \qmlbasictype georectangle
+    \qmlvaluetype georectangle
+    \ingroup qmlvaluetypes
     \inqmlmodule QtPositioning
     \ingroup qml-QtPositioning5-basictypes
     \since 5.2
@@ -420,7 +423,8 @@ QT_BEGIN_NAMESPACE
 */
 
 /*!
-    \qmlbasictype geocircle
+    \qmlvaluetype geocircle
+    \ingroup qmlvaluetypes
     \inqmlmodule QtPositioning
     \ingroup qml-QtPositioning5-basictypes
     \since 5.2
@@ -473,7 +477,8 @@ QT_BEGIN_NAMESPACE
 */
 
 /*!
-    \qmlbasictype geopath
+    \qmlvaluetype geopath
+    \ingroup qmlvaluetypes
     \inqmlmodule QtPositioning
     \ingroup qml-QtPositioning5-basictypes
     \since 5.9
@@ -505,7 +510,8 @@ QT_BEGIN_NAMESPACE
 */
 
 /*!
-   \qmlbasictype geopolygon
+   \qmlvaluetype geopolygon
+   \ingroup qmlvaluetypes
    \inqmlmodule QtPositioning
    \ingroup qml-QtPositioning5-basictypes
    \since 5.10
