@@ -33,3 +33,12 @@ qt_add_qml_module(tst_declarative_positioning_core
         tst_positionsource.qml
     NO_RESOURCE_TARGET_PATH
 )
+
+add_dependencies(tst_declarative_positioning_core QGeoPositionInfoSourceFactoryTestPlugin
+    DummyPluginForTestsFactoryPlugin)
+if(ANDROID)
+    # We depend on 2 plugins, but they both will be installed in the same dir
+    set_target_properties(tst_declarative_positioning_core PROPERTIES
+        QT_ANDROID_EXTRA_PLUGINS "$<TARGET_FILE_DIR:QGeoPositionInfoSourceFactoryTestPlugin>"
+    )
+endif()

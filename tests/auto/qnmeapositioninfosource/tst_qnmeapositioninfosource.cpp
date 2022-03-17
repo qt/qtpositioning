@@ -114,18 +114,30 @@ void tst_QNmeaPositionInfoSource::setUpdateInterval_delayedUpdate()
     QNmeaPositionInfoSourceProxy *proxy = static_cast<QNmeaPositionInfoSourceProxy *>(
             factory.createPositionInfoSourceProxy(&source));
 
+    // Android emulator is slow, so increase the update interval and all
+    // timeouts for it.
+#ifndef Q_OS_ANDROID
+    constexpr int updateInterval = 500;
+    constexpr int waitInterval = 600;
+    constexpr int maxDelay = 400;
+#else
+    constexpr int updateInterval = 1000;
+    constexpr int waitInterval = 1100;
+    constexpr int maxDelay = 900;
+#endif
+
     QSignalSpy spyUpdate(proxy->source(), SIGNAL(positionUpdated(QGeoPositionInfo)));
-    proxy->source()->setUpdateInterval(500);
+    proxy->source()->setUpdateInterval(updateInterval);
     proxy->source()->startUpdates();
 
-    QTest::qWait(600);
+    QTest::qWait(waitInterval);
     QDateTime now = QDateTime::currentDateTime();
     proxy->feedUpdate(now);
     QTRY_COMPARE(spyUpdate.count(), 1);
 
     // should have gotten the update immediately, and not have needed to
     // wait until the next interval
-    QVERIFY(now.time().msecsTo(QDateTime::currentDateTime().time()) < 400);
+    QVERIFY(now.time().msecsTo(QDateTime::currentDateTime().time()) < maxDelay);
 }
 
 void tst_QNmeaPositionInfoSource::lastKnownPosition()
