@@ -27,6 +27,15 @@ qt_internal_add_test(tst_qnmeaposinfosource_sim_generic
         Qt::TestPrivate
 )
 
+# Default android position plugin is not loaded for unit-tests, so we have to
+# explicitly use a test position plugin.
+add_dependencies(tst_qnmeaposinfosource_sim_generic QGeoPositionInfoSourceFactoryTestPlugin)
+if(ANDROID)
+    set_target_properties(tst_qnmeaposinfosource_sim_generic PROPERTIES
+        QT_ANDROID_EXTRA_PLUGINS "$<TARGET_FILE_DIR:QGeoPositionInfoSourceFactoryTestPlugin>"
+    )
+endif()
+
 #### Keys ignored in scope 1:.:.:qnmeapositioninfosource_simulation_generic.pro:<TRUE>:
 # TEMPLATE = "app"
 # testcase.timeout = "400"
