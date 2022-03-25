@@ -72,46 +72,60 @@
 
 The Qt Positioning API provides positioning information via QML and C++ interfaces.
 
-Currently the API is supported on \l {Qt for Android}{Android},
+Currently, the API is supported on \l {Qt for Android}{Android},
 \l {Qt for iOS}{iOS}, \l {Qt for macOS}{\macos}, \l {Qt for Linux/X11}{Linux},
 and \l {Qt for Windows}{Windows} (with GPS receivers exposed as a serial port
 providing NMEA sentences or using \c {Windows.Devices.Geolocation}).
 
 \section1 Overview
 
-The Qt Positioning API gives developers the ability to determine a position by
-using a variety of possible sources, including satellite, or wifi, or text file,
-and so on. That information can then be used to for example determine a position
-on a map. In addition satellite information can be retrieved and area based monitoring
-can be performed.
+The Qt Positioning API lets you to determine a position by using a variety of
+possible sources, including satellite, wifi, or text files. That information can
+then be used to, for example, determine a position on a map. In addition, you
+can use to the API to retrieve satellite information and perform area based
+monitoring.
 
-\include module-use.qdocinc using qt module
+\section1 Using the Module
 
-\badcode
-find_package(Qt6 COMPONENTS Positioning REQUIRED)
-target_link_libraries(mytarget PRIVATE Qt6::Positioning)
-\endcode
+\section2 QML API
 
-See also the \l {Build with CMake} overview.
+\include {module-use.qdocinc} {using the qml api} {QtPositioning}
 
-\include module-use.qdocinc building with qmake
+\section2 C++ API
 
-\badcode
-QT += positioning
-\endcode
+\include {module-use.qdocinc} {using the c++ api}
 
-\section2 Getting Started
+\section3 Building with CMake
 
-To load the Qt Positioning module, add the following statement to your .qml files
+\include {module-use.qdocinc} {building with cmake} {Positioning}
 
-\snippet doc_src_qtpositioning.qml import
+\section3 Building with qmake
 
-For C++ projects include the header appropriate for the current use case,
-for example applications using routes may use
+\include {module-use.qdocinc} {building_with_qmake} {positioning}
 
-\code
-#include <QGeoCoordinate>
-\endcode
+\section1 Articles and Guides
+
+\list
+    \li \l {Positioning (C++)} {Positioning introduction for C++}
+    \li \l {Positioning (QML)} {Positioning introduction for QML}
+    \li \l {Qt Positioning Plugins}
+    \li \l {Interfaces between C++ and QML Code in Qt Positioning}
+    \li \l {Qt Positioning on Android}
+    \li \l {Qt Positioning on iOS}
+\endlist
+
+\section1 Examples
+
+\list
+    \li \l {Qt Positioning Examples}
+\endlist
+
+\section1 Reference
+
+\list
+    \li \l {Qt Positioning C++ Classes}
+    \li \l {Qt Positioning QML Types}
+\endlist
 
 \section1 Module Evolution
 
@@ -126,29 +140,4 @@ these free software licenses are
 \l{GNU Lesser General Public License, version 3}, or
 the \l{GNU General Public License, version 2}.
 See \l{Qt Licensing} for further details.
-
-\section1 Articles and Guides
-
-\list
-    \li \l {Positioning (C++)} {Positioning introduction for C++}
-    \li \l {Positioning (QML)} {Positioning introduction for QML}
-    \li \l {Qt Positioning Plugins}
-    \li \l {Interfaces between C++ and QML Code in Qt Positioning}
-    \li \l {Qt Positioning on Android}
-    \li \l {Qt Positioning on iOS}
-\endlist
-
-\section1 Reference
-
-\list
-    \li \l {Qt Positioning C++ Classes}
-    \li \l {Qt Positioning QML Types}
-\endlist
-
-\section1 Examples
-
-\list
-    \li \l {Qt Positioning Examples}
-\endlist
-
 */
