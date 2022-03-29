@@ -66,16 +66,16 @@ static void qlocationutils_readGga(const char *data, int size, QGeoPositionInfo 
     QList<QByteArray> parts = sentence.split(',');
     QGeoCoordinate coord;
 
-    if (hasFix && parts.count() > 6 && parts[6].count() > 0)
+    if (hasFix && parts.size() > 6 && parts[6].size() > 0)
         *hasFix = parts[6].toInt() > 0;
 
-    if (parts.count() > 1 && parts[1].count() > 0) {
+    if (parts.size() > 1 && parts[1].size() > 0) {
         QTime time;
         if (QLocationUtils::getNmeaTime(parts[1], &time))
             info->setTimestamp(QDateTime(QDate(), time, Qt::UTC));
     }
 
-    if (parts.count() > 5 && parts[3].count() == 1 && parts[5].count() == 1) {
+    if (parts.size() > 5 && parts[3].size() == 1 && parts[5].size() == 1) {
         double lat;
         double lng;
         if (QLocationUtils::getNmeaLatLong(parts[2], parts[3][0], parts[4], parts[5][0], &lat, &lng)) {
@@ -84,14 +84,14 @@ static void qlocationutils_readGga(const char *data, int size, QGeoPositionInfo 
         }
     }
 
-    if (parts.count() > 8 && !parts[8].isEmpty()) {
+    if (parts.size() > 8 && !parts[8].isEmpty()) {
         bool hasHdop = false;
         double hdop = parts[8].toDouble(&hasHdop);
         if (hasHdop)
             info->setAttribute(QGeoPositionInfo::HorizontalAccuracy, 2 * hdop * uere);
     }
 
-    if (parts.count() > 9 && parts[9].count() > 0) {
+    if (parts.size() > 9 && parts[9].size() > 0) {
         bool hasAlt = false;
         double alt = parts[9].toDouble(&hasAlt);
         if (hasAlt)
@@ -107,17 +107,17 @@ static void qlocationutils_readGsa(const char *data, int size, QGeoPositionInfo 
 {
     QList<QByteArray> parts = QByteArray::fromRawData(data, size).split(',');
 
-    if (hasFix && parts.count() > 2 && !parts[2].isEmpty())
+    if (hasFix && parts.size() > 2 && !parts[2].isEmpty())
         *hasFix = parts[2].toInt() > 0;
 
-    if (parts.count() > 16 && !parts[16].isEmpty()) {
+    if (parts.size() > 16 && !parts[16].isEmpty()) {
         bool hasHdop = false;
         double hdop = parts[16].toDouble(&hasHdop);
         if (hasHdop)
             info->setAttribute(QGeoPositionInfo::HorizontalAccuracy, 2 * hdop * uere);
     }
 
-    if (parts.count() > 17 && !parts[17].isEmpty()) {
+    if (parts.size() > 17 && !parts[17].isEmpty()) {
         bool hasVdop = false;
         double vdop = parts[17].toDouble(&hasVdop);
         if (hasVdop)
@@ -131,7 +131,7 @@ static void qlocationutils_readGsa(const char *data,
 {
     QList<QByteArray> parts = QByteArray::fromRawData(data, size).split(',');
     pnrsInUse.clear();
-    if (parts.count() <= 2)
+    if (parts.size() <= 2)
         return;
     bool ok;
     for (int i = 3; i <= qMin(14, parts.size()); ++i) {
@@ -150,16 +150,16 @@ static void qlocationutils_readGll(const char *data, int size, QGeoPositionInfo 
     QList<QByteArray> parts = sentence.split(',');
     QGeoCoordinate coord;
 
-    if (hasFix && parts.count() > 6 && parts[6].count() > 0)
+    if (hasFix && parts.size() > 6 && parts[6].size() > 0)
         *hasFix = (parts[6][0] == 'A');
 
-    if (parts.count() > 5 && parts[5].count() > 0) {
+    if (parts.size() > 5 && parts[5].size() > 0) {
         QTime time;
         if (QLocationUtils::getNmeaTime(parts[5], &time))
             info->setTimestamp(QDateTime(QDate(), time, Qt::UTC));
     }
 
-    if (parts.count() > 4 && parts[2].count() == 1 && parts[4].count() == 1) {
+    if (parts.size() > 4 && parts[2].size() == 1 && parts[4].size() == 1) {
         double lat;
         double lng;
         if (QLocationUtils::getNmeaLatLong(parts[1], parts[2][0], parts[3], parts[4][0], &lat, &lng)) {
@@ -180,10 +180,10 @@ static void qlocationutils_readRmc(const char *data, int size, QGeoPositionInfo 
     QDate date;
     QTime time;
 
-    if (hasFix && parts.count() > 2 && parts[2].count() > 0)
+    if (hasFix && parts.size() > 2 && parts[2].size() > 0)
         *hasFix = (parts[2][0] == 'A');
 
-    if (parts.count() > 9 && parts[9].count() == 6) {
+    if (parts.size() > 9 && parts[9].size() == 6) {
         date = QDate::fromString(QString::fromLatin1(parts[9]), QStringLiteral("ddMMyy"));
         if (date.isValid())
             date = date.addYears(100);     // otherwise starts from 1900
@@ -191,10 +191,10 @@ static void qlocationutils_readRmc(const char *data, int size, QGeoPositionInfo 
             date = QDate();
     }
 
-    if (parts.count() > 1 && parts[1].count() > 0)
+    if (parts.size() > 1 && parts[1].size() > 0)
         QLocationUtils::getNmeaTime(parts[1], &time);
 
-    if (parts.count() > 6 && parts[4].count() == 1 && parts[6].count() == 1) {
+    if (parts.size() > 6 && parts[4].size() == 1 && parts[6].size() == 1) {
         double lat;
         double lng;
         if (QLocationUtils::getNmeaLatLong(parts[3], parts[4][0], parts[5], parts[6][0], &lat, &lng)) {
@@ -205,17 +205,17 @@ static void qlocationutils_readRmc(const char *data, int size, QGeoPositionInfo 
 
     bool parsed = false;
     double value = 0.0;
-    if (parts.count() > 7 && parts[7].count() > 0) {
+    if (parts.size() > 7 && parts[7].size() > 0) {
         value = parts[7].toDouble(&parsed);
         if (parsed)
             info->setAttribute(QGeoPositionInfo::GroundSpeed, qreal(value * 1.852 / 3.6));    // knots -> m/s
     }
-    if (parts.count() > 8 && parts[8].count() > 0) {
+    if (parts.size() > 8 && parts[8].size() > 0) {
         value = parts[8].toDouble(&parsed);
         if (parsed)
             info->setAttribute(QGeoPositionInfo::Direction, qreal(value));
     }
-    if (parts.count() > 11 && parts[11].count() == 1
+    if (parts.size() > 11 && parts[11].size() == 1
             && (parts[11][0] == 'E' || parts[11][0] == 'W')) {
         value = parts[10].toDouble(&parsed);
         if (parsed) {
@@ -241,12 +241,12 @@ static void qlocationutils_readVtg(const char *data, int size, QGeoPositionInfo 
 
     bool parsed = false;
     double value = 0.0;
-    if (parts.count() > 1 && parts[1].count() > 0) {
+    if (parts.size() > 1 && parts[1].size() > 0) {
         value = parts[1].toDouble(&parsed);
         if (parsed)
             info->setAttribute(QGeoPositionInfo::Direction, qreal(value));
     }
-    if (parts.count() > 7 && parts[7].count() > 0) {
+    if (parts.size() > 7 && parts[7].size() > 0) {
         value = parts[7].toDouble(&parsed);
         if (parsed)
             info->setAttribute(QGeoPositionInfo::GroundSpeed, qreal(value / 3.6));    // km/h -> m/s
@@ -263,11 +263,11 @@ static void qlocationutils_readZda(const char *data, int size, QGeoPositionInfo 
     QDate date;
     QTime time;
 
-    if (parts.count() > 1 && parts[1].count() > 0)
+    if (parts.size() > 1 && parts[1].size() > 0)
         QLocationUtils::getNmeaTime(parts[1], &time);
 
-    if (parts.count() > 4 && parts[2].count() > 0 && parts[3].count() > 0
-            && parts[4].count() == 4) {     // must be full 4-digit year
+    if (parts.size() > 4 && parts[2].size() > 0 && parts[3].size() > 0
+            && parts[4].size() == 4) {     // must be full 4-digit year
         int day = parts[2].toUInt();
         int month = parts[3].toUInt();
         int year = parts[4].toUInt();
@@ -431,7 +431,7 @@ QLocationUtils::getSatInfoFromNmea(const char *data, int size, QList<QGeoSatelli
 
     QList<QByteArray> parts = QByteArray::fromRawData(data, size).split(',');
 
-    if (parts.count() <= 3) {
+    if (parts.size() <= 3) {
         infos.clear();
         return QNmeaSatelliteInfoSource::FullyParsed; // Malformed sentence.
     }
