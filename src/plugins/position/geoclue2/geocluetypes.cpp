@@ -41,6 +41,8 @@
 
 QT_BEGIN_NAMESPACE
 
+QT_IMPL_METATYPE_EXTERN(Timestamp)
+
 QDBusArgument &operator<<(QDBusArgument &arg, const Timestamp &ts)
 {
     arg.beginStructure();

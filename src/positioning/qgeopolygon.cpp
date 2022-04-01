@@ -53,6 +53,8 @@
 
 QT_BEGIN_NAMESPACE
 
+QT_IMPL_METATYPE_EXTERN(QGeoPolygon)
+
 constexpr int kMaxInt = std::numeric_limits<int>::max();
 constexpr auto kTooManyHoles = u"The polygon has more holes than fit into an int. "
                                 "This can cause errors while querying holes from QML";

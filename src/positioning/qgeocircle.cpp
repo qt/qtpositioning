@@ -49,6 +49,8 @@
 #include <cmath>
 QT_BEGIN_NAMESPACE
 
+QT_IMPL_METATYPE_EXTERN(QGeoCircle)
+
 /*!
     \class QGeoCircle
     \inmodule QtPositioning

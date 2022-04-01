@@ -50,6 +50,7 @@
 
 QT_BEGIN_NAMESPACE
 
+QT_IMPL_METATYPE_EXTERN(QGeoCoordinate)
 
 static const double qgeocoordinate_EARTH_MEAN_RADIUS = 6371.0072;
 

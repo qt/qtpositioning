@@ -156,6 +156,6 @@ Q_POSITIONING_EXPORT size_t qHash(const QGeoCoordinate &coordinate, size_t seed 
 
 QT_END_NAMESPACE
 
-Q_DECLARE_METATYPE(QGeoCoordinate)
+QT_DECL_METATYPE_EXTERN(QGeoCoordinate, Q_POSITIONING_EXPORT)
 
 #endif

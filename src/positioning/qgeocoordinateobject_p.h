@@ -93,6 +93,7 @@ protected:
 
 QT_END_NAMESPACE
 
-Q_DECLARE_METATYPE(QGeoCoordinateObject*)
+QT_DECL_METATYPE_EXTERN_TAGGED(QGeoCoordinateObject*, QGeoCoordinateObject_ptr,
+                               Q_POSITIONING_PRIVATE_EXPORT)
 
 #endif // QGEOCOORDINATEOBJECT_P_H

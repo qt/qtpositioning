@@ -50,6 +50,8 @@
 #include "qdoublevector3d_p.h"
 QT_BEGIN_NAMESPACE
 
+QT_IMPL_METATYPE_EXTERN(QGeoPath)
+
 constexpr int kMaxInt = std::numeric_limits<int>::max();
 constexpr auto kWarningString = u"The path has more elements than fit into an int. "
                                  "This can cause errors while querying elements from QML";

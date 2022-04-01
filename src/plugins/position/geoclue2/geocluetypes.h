@@ -58,6 +58,6 @@ const QDBusArgument &operator>>(const QDBusArgument &arg, Timestamp &ts);
 
 QT_END_NAMESPACE
 
-Q_DECLARE_METATYPE(Timestamp)
+QT_DECL_METATYPE_EXTERN(Timestamp, /* not exported */)
 
 #endif // GEOCLUETYPES_H

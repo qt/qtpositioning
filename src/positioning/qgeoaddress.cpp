@@ -48,6 +48,8 @@
 
 QT_BEGIN_NAMESPACE
 
+QT_IMPL_METATYPE_EXTERN(QGeoAddress)
+
 /*
     Combines a  list of address parts into  a single line.
 

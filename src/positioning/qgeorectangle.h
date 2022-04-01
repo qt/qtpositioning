@@ -118,6 +118,6 @@ inline QGeoRectangle QGeoRectangle::operator|(const QGeoRectangle &rectangle) co
 
 QT_END_NAMESPACE
 
-Q_DECLARE_METATYPE(QGeoRectangle)
+QT_DECL_METATYPE_EXTERN(QGeoRectangle, Q_POSITIONING_EXPORT)
 
 #endif

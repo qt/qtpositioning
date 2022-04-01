@@ -48,6 +48,8 @@
 #include <QList>
 QT_BEGIN_NAMESPACE
 
+QT_IMPL_METATYPE_EXTERN(QGeoRectangle)
+
 /*!
     \class QGeoRectangle
     \inmodule QtPositioning
