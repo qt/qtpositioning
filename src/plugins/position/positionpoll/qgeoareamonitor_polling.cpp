@@ -42,10 +42,12 @@
 #include <QtPositioning/qgeorectangle.h>
 #include <QtPositioning/qgeocircle.h>
 
+#include <QtCore/qhash.h>
 #include <QtCore/qmetaobject.h>
 #include <QtCore/qtimer.h>
 #include <QtCore/qdebug.h>
 #include <QtCore/qmutex.h>
+#include <QtCore/qset.h>
 
 #include <mutex>
 
