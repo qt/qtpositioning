@@ -25,5 +25,5 @@ qt_internal_add_plugin(QGeoPositionInfoSourceFactoryWinRTPlugin
 
 qt_internal_extend_target(QGeoPositionInfoSourceFactoryWinRTPlugin CONDITION MSVC AND NOT WINRT
     LIBRARIES
-        runtimeobject.lib
+        runtimeobject
 )
