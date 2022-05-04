@@ -65,6 +65,8 @@
 #include <QQmlEngine>
 #include <QtPositioningQuick/private/qpositioningquickglobal_p.h>
 
+QT_BEGIN_NAMESPACE
+
 class Q_POSITIONINGQUICK_PRIVATE_EXPORT LocationSingleton : public QObject
 {
     Q_OBJECT
@@ -106,5 +108,7 @@ public:
     Q_REVISION(5, 12) Q_INVOKABLE QGeoCoordinate mercatorToCoord(const QPointF &mercator) const;
     Q_REVISION(5, 12) Q_INVOKABLE QPointF coordToMercator(const QGeoCoordinate &coord) const;
 };
+
+QT_END_NAMESPACE
 
 #endif // LOCATIONSINGLETON_H
