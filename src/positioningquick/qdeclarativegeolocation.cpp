@@ -244,3 +244,5 @@ QGeoShape QDeclarativeGeoLocation::boundingShape() const
 }
 
 QT_END_NAMESPACE
+
+#include "moc_qdeclarativegeolocation_p.cpp"

@@ -765,6 +765,8 @@ QGeoPathEager::~QGeoPathEager() {}
 
 QT_END_NAMESPACE
 
+#include "moc_qgeopath_p.cpp"
+#include "moc_qgeopath.cpp"
 
 
 

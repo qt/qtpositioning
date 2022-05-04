@@ -90,4 +90,5 @@ QBindable<QGeoCoordinate> QGeoCoordinateObject::bindableCoordinate()
 
 QT_END_NAMESPACE
 
+#include "moc_qgeocoordinateobject_p.cpp"
 

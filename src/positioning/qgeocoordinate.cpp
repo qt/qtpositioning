@@ -790,3 +790,5 @@ size_t qHash(const QGeoCoordinate &coordinate, size_t seed)
 }
 
 QT_END_NAMESPACE
+
+#include "moc_qgeocoordinate.cpp"

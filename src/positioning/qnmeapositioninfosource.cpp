@@ -960,3 +960,6 @@ void QNmeaPositionInfoSource::setError(QGeoPositionInfoSource::Error positionErr
 }
 
 QT_END_NAMESPACE
+
+#include "moc_qnmeapositioninfosource_p.cpp"
+#include "moc_qnmeapositioninfosource.cpp"
