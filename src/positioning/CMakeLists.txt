@@ -6,6 +6,8 @@
 
 qt_internal_add_module(Positioning
     PLUGIN_TYPES position
+    DEPENDENCIES
+        QtQuick/auto
     SOURCES
         qclipperutils.cpp qclipperutils_p.h
         qdoublematrix4x4.cpp qdoublematrix4x4_p.h
