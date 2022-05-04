@@ -22,7 +22,7 @@ qt_internal_add_qml_module(PositioningQuick
         qquickgeocoordinateanimation_p_p.h
         qpositioningquickglobal.h
         qpositioningquickglobal_p.h
-        qpositioningquickmodule_p.h
+        qpositioningquickmodule_p.h qpositioningquickmodule.cpp
     LIBRARIES
         Qt::PositioningPrivate
         Qt::QuickPrivate
