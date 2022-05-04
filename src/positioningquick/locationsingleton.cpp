@@ -389,3 +389,5 @@ QPointF LocationSingleton::coordToMercator(const QGeoCoordinate &coord) const
 }
 
 QT_END_NAMESPACE
+
+#include "moc_locationsingleton_p.cpp"

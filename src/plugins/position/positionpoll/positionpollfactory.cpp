@@ -67,3 +67,5 @@ QGeoAreaMonitorSource *QGeoPositionInfoSourceFactoryPoll::areaMonitor(QObject *p
 }
 
 QT_END_NAMESPACE
+
+#include "moc_positionpollfactory.cpp"

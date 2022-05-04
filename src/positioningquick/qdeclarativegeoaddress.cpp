@@ -378,3 +378,5 @@ bool QDeclarativeGeoAddress::isTextGenerated() const
 }
 
 QT_END_NAMESPACE
+
+#include "moc_qdeclarativegeoaddress_p.cpp"

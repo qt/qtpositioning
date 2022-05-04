@@ -146,3 +146,5 @@ bool QDeclarativePluginParameter::isInitialized() const
 }
 
 QT_END_NAMESPACE
+
+#include "moc_qdeclarativepluginparameter_p.cpp"

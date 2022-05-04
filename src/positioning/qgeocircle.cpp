@@ -477,3 +477,5 @@ size_t QGeoCirclePrivate::hash(size_t seed) const
 }
 
 QT_END_NAMESPACE
+
+#include "moc_qgeocircle.cpp"
