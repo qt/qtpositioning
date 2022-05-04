@@ -430,3 +430,5 @@ void QGeoAreaMonitorSource::setPositionInfoSource(QGeoPositionInfoSource *newSou
 */
 
 QT_END_NAMESPACE
+
+#include "moc_qgeoareamonitorsource.cpp"

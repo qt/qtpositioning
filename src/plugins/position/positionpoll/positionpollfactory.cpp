@@ -40,6 +40,8 @@
 #include "positionpollfactory.h"
 #include "qgeoareamonitor_polling.h"
 
+QT_BEGIN_NAMESPACE
+
 QGeoPositionInfoSource *QGeoPositionInfoSourceFactoryPoll::positionInfoSource(QObject *parent, const QVariantMap &parameters)
 {
     Q_UNUSED(parent)
@@ -63,3 +65,7 @@ QGeoAreaMonitorSource *QGeoPositionInfoSourceFactoryPoll::areaMonitor(QObject *p
     delete ret;
     return nullptr;
 }
+
+QT_END_NAMESPACE
+
+#include "moc_positionpollfactory.cpp"

@@ -295,3 +295,5 @@ QBindable<QQuickGeoCoordinateAnimation::Direction> QQuickGeoCoordinateAnimation:
 }
 
 QT_END_NAMESPACE
+
+#include "moc_qquickgeocoordinateanimation_p.cpp"

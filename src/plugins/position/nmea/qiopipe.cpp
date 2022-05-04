@@ -205,3 +205,5 @@ qint64 QIOPipe::writeData(const char * /*data*/, qint64 /*len*/)
 }
 
 QT_END_NAMESPACE
+
+#include "moc_qiopipe_p.cpp"

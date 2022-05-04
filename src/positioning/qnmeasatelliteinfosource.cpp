@@ -907,3 +907,6 @@ int QNmeaSatelliteSimulationReader::updateInterval() const
 }
 
 QT_END_NAMESPACE
+
+#include "moc_qnmeasatelliteinfosource_p.cpp"
+#include "moc_qnmeasatelliteinfosource.cpp"

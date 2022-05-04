@@ -462,3 +462,5 @@ void QGeoPositionInfoSourceGeoclue2::parseParameters(const QVariantMap &paramete
 }
 
 QT_END_NAMESPACE
+
+#include "moc_qgeopositioninfosource_geoclue2_p.cpp"

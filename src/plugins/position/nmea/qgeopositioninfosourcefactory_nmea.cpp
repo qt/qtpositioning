@@ -502,4 +502,5 @@ QGeoAreaMonitorSource *QGeoPositionInfoSourceFactoryNmea::areaMonitor(QObject *p
 
 QT_END_NAMESPACE
 
+#include "moc_qgeopositioninfosourcefactory_nmea.cpp"
 #include "qgeopositioninfosourcefactory_nmea.moc"

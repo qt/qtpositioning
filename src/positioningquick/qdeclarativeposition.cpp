@@ -619,3 +619,5 @@ double QDeclarativePosition::magneticVariationActualCalculation() const
 }
 
 QT_END_NAMESPACE
+
+#include "moc_qdeclarativeposition_p.cpp"

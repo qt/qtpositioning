@@ -42,6 +42,8 @@
 #include <QtPositioning/private/qdoublevector2d_p.h>
 #include <QDebug>
 
+QT_BEGIN_NAMESPACE
+
 static QGeoCoordinate parseCoordinate(const QJSValue &value, bool *ok)
 {
     QGeoCoordinate c;
@@ -385,3 +387,7 @@ QPointF LocationSingleton::coordToMercator(const QGeoCoordinate &coord) const
 {
     return QWebMercator::coordToMercator(coord).toPointF();
 }
+
+QT_END_NAMESPACE
+
+#include "moc_locationsingleton_p.cpp"

@@ -915,3 +915,5 @@ void QDeclarativePositionSource::sourceErrorReceived(const QGeoPositionInfoSourc
 }
 
 QT_END_NAMESPACE
+
+#include "moc_qdeclarativepositionsource_p.cpp"

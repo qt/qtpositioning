@@ -67,3 +67,5 @@ QGeoAreaMonitorSource *QGeoPositionInfoSourceFactoryGeoclue2::areaMonitor(QObjec
 }
 
 QT_END_NAMESPACE
+
+#include "moc_qgeopositioninfosourcefactory_geoclue2.cpp"
