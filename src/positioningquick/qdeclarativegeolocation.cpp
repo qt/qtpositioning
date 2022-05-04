@@ -39,7 +39,7 @@
 
 #include "qdeclarativegeolocation_p.h"
 
-QT_USE_NAMESPACE
+QT_BEGIN_NAMESPACE
 
 /*!
     \qmltype Location
@@ -242,3 +242,5 @@ QGeoShape QDeclarativeGeoLocation::boundingShape() const
 {
     return m_boundingShape;
 }
+
+QT_END_NAMESPACE
