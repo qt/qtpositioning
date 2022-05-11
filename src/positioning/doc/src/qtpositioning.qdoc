@@ -48,7 +48,7 @@
     \include module-use.qdocinc using qt module
 
     \badcode
-    find_package(Qt6 COMPONENTS Positioning REQUIRED)
+    find_package(Qt6 REQUIRED COMPONENTS Positioning)
     target_link_libraries(mytarget PRIVATE Qt6::Positioning)
     \endcode
 
