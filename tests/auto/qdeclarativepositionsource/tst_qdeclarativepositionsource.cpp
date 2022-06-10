@@ -139,9 +139,10 @@ void tst_DeclarativePositionSource::positionBinding()
     // adding 0.1 lat and 0.1 log at every step
     m_positionSource->setName("test.source");
     m_positionSource->setUpdateInterval(200);
-    const QGeoCoordinate c1(0, 0);
-    const QGeoCoordinate c2(0.1, 0.1, 0);
-    QCOMPARE(m_positionSource->position()->coordinate(), c1);
+    const QGeoCoordinate c1(0.1, 0.1, 0);
+    const QGeoCoordinate c2(0.2, 0.2, 0);
+    m_positionSource->update();
+    QTRY_COMPARE_WITH_TIMEOUT(m_positionSource->position()->coordinate(), c1, 5000);
 
     QGeoPositionInfo posInfo;
     posInfo.setCoordinate(c1);
