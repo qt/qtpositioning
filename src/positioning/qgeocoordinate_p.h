@@ -26,7 +26,10 @@ class QGeoCoordinatePrivate : public QSharedData
 public:
     QGeoCoordinatePrivate();
     QGeoCoordinatePrivate(const QGeoCoordinatePrivate &other);
-    ~QGeoCoordinatePrivate();
+    // The destructor needs to be virtual because we have a derived class
+    // QGeoMercatorCoordinatePrivate, which is used by
+    // QQuickGeoCoordinateAnimation to create QGeoCoordinate.
+    virtual ~QGeoCoordinatePrivate();
 
     double lat;
     double lng;
