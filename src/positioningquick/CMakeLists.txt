@@ -11,6 +11,8 @@ qt_internal_add_qml_module(PositioningQuick
     NO_GENERATE_PLUGIN_SOURCE
     NO_PLUGIN_OPTIONAL
     CLASS_NAME QtPositioningDeclarativeModule
+    DEPENDENCIES
+        QtQuick/auto
     SOURCES
         qdeclarativegeoaddress_p.h qdeclarativegeoaddress.cpp
         qdeclarativegeolocation_p.h qdeclarativegeolocation.cpp
