@@ -80,6 +80,7 @@ private:
     {
         return dataStreamIn(stream, shape);
     }
+protected:
     static QDataStream &dataStreamOut(QDataStream &stream, const QGeoShape &shape);
     static QDataStream &dataStreamIn(QDataStream &stream, QGeoShape &shape);
 #endif

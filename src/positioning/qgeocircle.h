@@ -42,6 +42,17 @@ public:
 private:
     inline QGeoCirclePrivate *d_func();
     inline const QGeoCirclePrivate *d_func() const;
+
+#ifndef QT_NO_DATASTREAM
+    friend QDataStream &operator<<(QDataStream &stream, const QGeoCircle &circle)
+    {
+        return dataStreamOut(stream, circle);
+    }
+    friend QDataStream &operator>>(QDataStream &stream, QGeoCircle &circle)
+    {
+        return dataStreamIn(stream, circle);
+    }
+#endif
 };
 
 Q_DECLARE_TYPEINFO(QGeoCircle, Q_RELOCATABLE_TYPE);

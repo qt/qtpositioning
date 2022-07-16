@@ -54,6 +54,17 @@ public:
 private:
     inline QGeoPathPrivate *d_func();
     inline const QGeoPathPrivate *d_func() const;
+
+#ifndef QT_NO_DATASTREAM
+    friend QDataStream &operator<<(QDataStream &stream, const QGeoPath &path)
+    {
+        return dataStreamOut(stream, path);
+    }
+    friend QDataStream &operator>>(QDataStream &stream, QGeoPath &path)
+    {
+        return dataStreamIn(stream, path);
+    }
+#endif
 };
 
 Q_DECLARE_TYPEINFO(QGeoPath, Q_RELOCATABLE_TYPE);

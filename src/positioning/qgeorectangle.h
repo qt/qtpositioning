@@ -71,6 +71,17 @@ public:
 private:
     inline QGeoRectanglePrivate *d_func();
     inline const QGeoRectanglePrivate *d_func() const;
+
+#ifndef QT_NO_DATASTREAM
+    friend QDataStream &operator<<(QDataStream &stream, const QGeoRectangle &rectangle)
+    {
+        return dataStreamOut(stream, rectangle);
+    }
+    friend QDataStream &operator>>(QDataStream &stream, QGeoRectangle &rectangle)
+    {
+        return dataStreamIn(stream, rectangle);
+    }
+#endif
 };
 
 Q_DECLARE_TYPEINFO(QGeoRectangle, Q_RELOCATABLE_TYPE);
