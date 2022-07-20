@@ -50,6 +50,7 @@
 #include <QDebug>
 #include <QtCore/QtNumeric>
 
+#include <algorithm>
 
 QT_BEGIN_NAMESPACE
 
@@ -164,19 +165,21 @@ QNmeaRealTimeReader::QNmeaRealTimeReader(QNmeaPositionInfoSourcePrivate *sourceP
     // The update will be pushed earlier than this if a newer update will be received.
     // The update will be withold longer than this amount of time if additional
     // valid data will keep arriving within this time frame.
-    QByteArray pushDelay = qgetenv("QT_NMEA_PUSH_DELAY");
-    if (!pushDelay.isEmpty())
-        m_pushDelay = qBound(-1, QString::fromLatin1(pushDelay).toInt(), 1000);
+    bool ok = false;
+    int pushDelay = qEnvironmentVariableIntValue("QT_NMEA_PUSH_DELAY", &ok);
+    if (ok)
+        pushDelay = std::clamp(pushDelay, -1, 1000);
     else
-        m_pushDelay = 20;
+        pushDelay = 20;
 
-    if (m_pushDelay >= 0) {
+    if (pushDelay >= 0) {
         m_timer.setSingleShot(true);
-        m_timer.setInterval(m_pushDelay);
+        m_timer.setInterval(pushDelay);
         m_timer.connect(&m_timer, &QTimer::timeout, [this]() {
            this->notifyNewUpdate();
         });
     }
+    m_pushDelay = pushDelay;
 }
 
 void QNmeaRealTimeReader::readAvailableData()
