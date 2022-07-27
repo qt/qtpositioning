@@ -70,25 +70,25 @@ QT_BEGIN_NAMESPACE
 static QString addressLine(const QStringList &parts)
 {
     QString line;
-    Q_ASSERT(parts.count() % 2 == 0);
+    Q_ASSERT(parts.size() % 2 == 0);
 
     //iterate until just before the last pair
     QString penultimateSeparator;
-    for (int i = 0; i < parts.count() - 2; i += 2) {
+    for (qsizetype i = 0; i < parts.size() - 2; i += 2) {
         if (!parts.at(i).isEmpty()) {
             line.append(parts.at(i) + parts.at(i + 1));
             penultimateSeparator = parts.at(i + 1);
         }
     }
 
-    if (parts.at(parts.count() - 2).isEmpty()) {
+    if (parts.at(parts.size() - 2).isEmpty()) {
         line.chop(penultimateSeparator.length());
 
         if (!line.isEmpty())
-            line.append(parts.at(parts.count() - 1));
+            line.append(parts.at(parts.size() - 1));
     } else {
-        line.append(parts.at(parts.count() - 2));
-        line.append(parts.at(parts.count() - 1));
+        line.append(parts.at(parts.size() - 2));
+        line.append(parts.at(parts.size() - 1));
     }
 
     return line;
