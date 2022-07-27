@@ -10,7 +10,7 @@ qt_internal_add_test(tst_nmeasatelliteinfosource
         QT_DISABLE_DEPRECATED_BEFORE=0
     INCLUDE_DIRECTORIES
         ..
-    PUBLIC_LIBRARIES
+    LIBRARIES
         Qt::Core
         Qt::Positioning
 )

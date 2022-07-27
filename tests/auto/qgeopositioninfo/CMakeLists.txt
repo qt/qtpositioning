@@ -10,7 +10,7 @@
 qt_internal_add_test(tst_qgeopositioninfo
     SOURCES
         tst_qgeopositioninfo.cpp
-    PUBLIC_LIBRARIES
+    LIBRARIES
         Qt::Core
         Qt::Positioning
 )

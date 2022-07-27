@@ -11,7 +11,7 @@ qt_internal_add_test(tst_dummynmeasatelliteinfosource
         QT_DISABLE_DEPRECATED_BEFORE=0
     INCLUDE_DIRECTORIES
         ..
-    PUBLIC_LIBRARIES
+    LIBRARIES
         Qt::Core
         Qt::Network
         Qt::Positioning

@@ -10,7 +10,7 @@
 qt_internal_add_test(tst_qgeocircle
     SOURCES
         tst_qgeocircle.cpp
-    PUBLIC_LIBRARIES
+    LIBRARIES
         Qt::Core
         Qt::Positioning
 )

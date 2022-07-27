@@ -10,7 +10,7 @@
 qt_internal_add_test(tst_qgeorectangle
     SOURCES
         tst_qgeorectangle.cpp
-    PUBLIC_LIBRARIES
+    LIBRARIES
         Qt::Core
         Qt::Positioning
 )

@@ -4,7 +4,7 @@
 qt_internal_add_test(tst_qquickgeocoordinateanimation
     SOURCES
         tst_qquickgeocoordinateanimation.cpp
-    PUBLIC_LIBRARIES
+    LIBRARIES
         Qt::Core
         Qt::Positioning
         Qt::PositioningQuickPrivate

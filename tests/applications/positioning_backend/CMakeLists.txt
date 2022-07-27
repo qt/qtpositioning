@@ -13,7 +13,7 @@ qt_internal_add_executable(posbackendtesting
         logwidget.cpp logwidget.h
         main.cpp
         widget.cpp widget.h widget.ui
-    PUBLIC_LIBRARIES
+    LIBRARIES
         Qt::Gui
         Qt::Positioning
         Qt::Widgets

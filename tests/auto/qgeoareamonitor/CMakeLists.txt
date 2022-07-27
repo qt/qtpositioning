@@ -14,7 +14,7 @@ qt_internal_add_test(tst_qgeoareamonitor
         logfilepositionsource.cpp logfilepositionsource.h
         positionconsumerthread.cpp positionconsumerthread.h
         tst_qgeoareamonitor.cpp
-    PUBLIC_LIBRARIES
+    LIBRARIES
         Qt::Core
         Qt::Positioning
     TESTDATA ${test_data}

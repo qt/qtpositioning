@@ -9,7 +9,7 @@ qt_internal_add_test(tst_declarative_geolocation
     QMLTEST
     SOURCES
         main.cpp
-    PUBLIC_LIBRARIES
+    LIBRARIES
         Qt::Positioning
         Qt::Quick
     TESTDATA

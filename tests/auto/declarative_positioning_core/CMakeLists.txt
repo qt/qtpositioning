@@ -19,7 +19,7 @@ qt_internal_add_test(tst_declarative_positioning_core
         main.cpp
         factory.cpp
         factory.h
-    PUBLIC_LIBRARIES
+    LIBRARIES
         Qt::Positioning
         Qt::Quick
     TESTDATA ${test_data}

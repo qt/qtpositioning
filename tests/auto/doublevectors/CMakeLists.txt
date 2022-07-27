@@ -10,7 +10,7 @@
 qt_internal_add_test(tst_doublevectors
     SOURCES
         tst_doublevectors.cpp
-    PUBLIC_LIBRARIES
+    LIBRARIES
         Qt::Core
         Qt::PositioningPrivate
 )

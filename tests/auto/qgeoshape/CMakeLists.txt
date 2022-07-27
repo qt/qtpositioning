@@ -10,7 +10,7 @@
 qt_internal_add_test(tst_qgeoshape
     SOURCES
         tst_qgeoshape.cpp
-    PUBLIC_LIBRARIES
+    LIBRARIES
         Qt::Core
         Qt::Positioning
         Qt::Test

@@ -10,7 +10,7 @@
 qt_internal_add_test(tst_positionplugin
     SOURCES
         tst_positionplugin.cpp
-    PUBLIC_LIBRARIES
+    LIBRARIES
         Qt::Core
         Qt::Positioning
 )
