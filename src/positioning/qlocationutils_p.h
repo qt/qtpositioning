@@ -239,13 +239,13 @@ public:
     /*
         returns the NMEA sentence type.
     */
-    static NmeaSentence getNmeaSentenceType(const char *data, int size);
+    static NmeaSentence getNmeaSentenceType(QByteArrayView bv);
 
     /*
         Returns the satellite system type based on the message type.
         See https://gpsd.gitlab.io/gpsd/NMEA.html#_talker_ids for reference
     */
-    static QGeoSatelliteInfo::SatelliteSystem getSatelliteSystem(const char *data, int size);
+    static QGeoSatelliteInfo::SatelliteSystem getSatelliteSystem(QByteArrayView bv);
 
     /*
         Returns the satellite system type based on the satellite id.
@@ -262,8 +262,7 @@ public:
         - RMC reports date with a two-digit year so in this case the year
           is assumed to be after the year 2000.
     */
-    static bool getPosInfoFromNmea(const char *data,
-                                   int size,
+    static bool getPosInfoFromNmea(QByteArrayView bv,
                                    QGeoPositionInfo *info, double uere,
                                    bool *hasFix = nullptr);
 
@@ -276,7 +275,7 @@ public:
         getting the full data requires parsing multiple sentences.
      */
     static QNmeaSatelliteInfoSource::SatelliteInfoParseStatus
-    getSatInfoFromNmea(const char *data, int size, QList<QGeoSatelliteInfo> &infos, QGeoSatelliteInfo::SatelliteSystem &system);
+    getSatInfoFromNmea(QByteArrayView bv, QList<QGeoSatelliteInfo> &infos, QGeoSatelliteInfo::SatelliteSystem &system);
 
     /*
         Parses GSA for satellites in use.
@@ -284,13 +283,13 @@ public:
         Returns satellite system type or QGeoSatelliteInfo::Undefined if parsing
         failed
      */
-    static QGeoSatelliteInfo::SatelliteSystem getSatInUseFromNmea(const char *data, int size,
+    static QGeoSatelliteInfo::SatelliteSystem getSatInUseFromNmea(QByteArrayView bv,
                                                                   QList<int> &pnrsInUse);
 
     /*
         Returns true if the given NMEA sentence has a valid checksum.
     */
-    static bool hasValidNmeaChecksum(const char *data, int size);
+    static bool hasValidNmeaChecksum(QByteArrayView bv);
 
     /*
         Returns time from a string in hhmmss or hhmmss.z+ format.

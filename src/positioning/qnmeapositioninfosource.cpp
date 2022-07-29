@@ -158,7 +158,8 @@ void QNmeaRealTimeReader::readAvailableData()
         qint64 size = m_proxy->m_device->readLine(buf, sizeof(buf));
         const bool oldFix = m_hasFix;
         bool hasFix;
-        const bool parsed = m_proxy->parsePosInfoFromNmeaData(buf, size, &pos, &hasFix);
+        const bool parsed = m_proxy->parsePosInfoFromNmeaData(
+            QByteArrayView{buf, static_cast<qsizetype>(size)}, &pos, &hasFix);
 
         if (!parsed) {
             // got garbage, don't stop the timer
@@ -335,7 +336,8 @@ static int processSentence(QGeoPositionInfo &info,
 
         QGeoPositionInfoPrivateNmea *pimpl = new QGeoPositionInfoPrivateNmea;
         QGeoPositionInfo pos(*pimpl);
-        if (m_proxy->parsePosInfoFromNmeaData(buf, size, &pos, &hasFix)) {
+        if (m_proxy->parsePosInfoFromNmeaData(
+                QByteArrayView{buf, static_cast<qsizetype>(size)}, &pos, &hasFix)) {
             // Date may or may not be valid, as some packets do not have date.
             // If date isn't valid, match is performed on time only.
             // Hence, make sure that packet blocks are generated with
@@ -522,10 +524,10 @@ void QNmeaPositionInfoSourcePrivate::prepareSourceDevice()
     }
 }
 
-bool QNmeaPositionInfoSourcePrivate::parsePosInfoFromNmeaData(const char *data, int size,
+bool QNmeaPositionInfoSourcePrivate::parsePosInfoFromNmeaData(QByteArrayView data,
         QGeoPositionInfo *posInfo, bool *hasFix)
 {
-    return m_source->parsePosInfoFromNmeaData(data, size, posInfo, hasFix);
+    return m_source->parsePosInfoFromNmeaData(data.data(), data.size(), posInfo, hasFix);
 }
 
 void QNmeaPositionInfoSourcePrivate::startUpdates()
@@ -804,8 +806,8 @@ double QNmeaPositionInfoSource::userEquivalentRangeError() const
 bool QNmeaPositionInfoSource::parsePosInfoFromNmeaData(const char *data, int size,
         QGeoPositionInfo *posInfo, bool *hasFix)
 {
-    return QLocationUtils::getPosInfoFromNmea(data, size, posInfo, d->m_userEquivalentRangeError,
-                                              hasFix);
+    return QLocationUtils::getPosInfoFromNmea(QByteArrayView{data, size}, posInfo,
+                                              d->m_userEquivalentRangeError, hasFix);
 }
 
 /*!

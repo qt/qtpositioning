@@ -564,7 +564,7 @@ QGeoSatelliteInfo::SatelliteSystem
 QNmeaSatelliteInfoSource::parseSatellitesInUseFromNmea(const char *data, int size,
                                                        QList<int> &pnrsInUse)
 {
-    return QLocationUtils::getSatInUseFromNmea(data, size, pnrsInUse);
+    return QLocationUtils::getSatInUseFromNmea(QByteArrayView{data,size}, pnrsInUse);
 }
 
 /*!
@@ -601,7 +601,7 @@ QNmeaSatelliteInfoSource::parseSatelliteInfoFromNmea(const char *data, int size,
                                                      QGeoSatelliteInfo::SatelliteSystem &system)
 {
     return static_cast<SatelliteInfoParseStatus>(
-            QLocationUtils::getSatInfoFromNmea(data, size, infos, system));
+            QLocationUtils::getSatInfoFromNmea(QByteArrayView{data, size}, infos, system));
 }
 
 void QNmeaSatelliteInfoSource::setError(QGeoSatelliteInfoSource::Error satelliteError)

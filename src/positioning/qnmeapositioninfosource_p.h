@@ -48,8 +48,7 @@ public:
     void stopUpdates();
     void requestUpdate(int msec);
 
-    bool parsePosInfoFromNmeaData(const char *data,
-                                  int size,
+    bool parsePosInfoFromNmeaData(QByteArrayView data,
                                   QGeoPositionInfo *posInfo,
                                   bool *hasFix);
 
