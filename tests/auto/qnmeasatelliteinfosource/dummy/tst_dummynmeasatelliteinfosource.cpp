@@ -14,11 +14,42 @@ public:
     DummyNmeaSatelliteInfoSource(QObject *parent = 0);
 
 protected:
+#if QT_VERSION < QT_VERSION_CHECK(7, 0, 0)
     QGeoSatelliteInfo::SatelliteSystem parseSatellitesInUseFromNmea(const char *data, int size,
-                                                                    QList<int> &pnrsInUse) override;
+                                                                    QList<int> &pnrsInUse)
+                                                                    QT6_ONLY(override)
+    {
+        return parseSatellitesInUseFromNmeaImpl(QByteArrayView{data, size}, pnrsInUse);
+    }
+
     SatelliteInfoParseStatus parseSatelliteInfoFromNmea(const char *data, int size,
                                                         QList<QGeoSatelliteInfo> &infos,
-                                                        QGeoSatelliteInfo::SatelliteSystem &system) override;
+                                                        QGeoSatelliteInfo::SatelliteSystem &system)
+                                                        QT6_ONLY(override)
+    {
+        return parseSatelliteInfoImpl(QByteArrayView{data, size}, infos, system);
+    }
+#else
+    QGeoSatelliteInfo::SatelliteSystem parseSatellitesInUseFromNmea(QByteArrayView data,
+                                                                    QList<int> &pnrsInUse)
+                                                                    QT7_ONLY(override)
+    {
+        return parseSatellitesInUseFromNmeaImpl(data, pnrsInUse);
+    }
+    SatelliteInfoParseStatus parseSatelliteInfoFromNmea(QByteArrayView data,
+                                                        QList<QGeoSatelliteInfo> &infos,
+                                                        QGeoSatelliteInfo::SatelliteSystem &system)
+                                                        QT7_ONLY(override)
+    {
+        return parseSatelliteInfoImpl(data, infos, system);
+    }
+#endif
+private:
+    QGeoSatelliteInfo::SatelliteSystem parseSatellitesInUseFromNmeaImpl(QByteArrayView data,
+                                                                        QList<int> &pnrsInUse);
+    SatelliteInfoParseStatus parseSatelliteInfoImpl(QByteArrayView data,
+                                                    QList<QGeoSatelliteInfo> &infos,
+                                                    QGeoSatelliteInfo::SatelliteSystem &system);
 };
 
 DummyNmeaSatelliteInfoSource::DummyNmeaSatelliteInfoSource(QObject *parent)
@@ -27,15 +58,15 @@ DummyNmeaSatelliteInfoSource::DummyNmeaSatelliteInfoSource(QObject *parent)
 }
 
 QGeoSatelliteInfo::SatelliteSystem
-DummyNmeaSatelliteInfoSource::parseSatellitesInUseFromNmea(const char *data, int size,
-                                                           QList<int> &pnrsInUse)
+DummyNmeaSatelliteInfoSource::parseSatellitesInUseFromNmeaImpl(QByteArrayView data,
+                                                               QList<int> &pnrsInUse)
 {
     // expected format: "USE:num1;num2;num3\n"
     // example: "USE:1;3;4;7\n"
-    if (!data || !size)
+    if (data.isEmpty())
         return QGeoSatelliteInfo::Undefined;
 
-    QString str = QLatin1String(data, size).toString();
+    QString str = QLatin1String(data).toString();
     if (!str.startsWith("USE:"))
         return QGeoSatelliteInfo::Undefined;
 
@@ -55,16 +86,16 @@ DummyNmeaSatelliteInfoSource::parseSatellitesInUseFromNmea(const char *data, int
 }
 
 QNmeaSatelliteInfoSource::SatelliteInfoParseStatus
-DummyNmeaSatelliteInfoSource::parseSatelliteInfoFromNmea(const char *data, int size,
-                                                         QList<QGeoSatelliteInfo> &infos,
-                                                         QGeoSatelliteInfo::SatelliteSystem &system)
+DummyNmeaSatelliteInfoSource::parseSatelliteInfoImpl(QByteArrayView data,
+                                                     QList<QGeoSatelliteInfo> &infos,
+                                                     QGeoSatelliteInfo::SatelliteSystem &system)
 {
     // expected format: "INFO:system,identifier;system,identifier;system,identifier\n"
     // example: "INFO:1,5;1,7;1,15\n"
-    if (!data || !size)
+    if (data.isEmpty())
         return NotParsed;
 
-    QString str = QLatin1String(data, size).toString();
+    QString str = QLatin1String(data).toString();
     if (!str.startsWith("INFO:"))
         return NotParsed;
 

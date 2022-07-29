@@ -20,13 +20,31 @@ public:
     DummyNmeaPositionInfoSource(QNmeaPositionInfoSource::UpdateMode mode, QObject *parent = 0);
 
 protected:
+#if QT_VERSION < QT_VERSION_CHECK(7, 0, 0)
     bool parsePosInfoFromNmeaData(const char *data,
                                   int size,
                                   QGeoPositionInfo *posInfo,
-                                  bool *hasFix) override;
+                                  bool *hasFix)
+                                  QT6_ONLY(override)
+    {
+        return parsePosInfoFromNmeaDataImpl(QByteArrayView{data, size}, posInfo, hasFix);
+    }
+#else
+    bool parsePosInfoFromNmeaData(QByteArrayView data,
+                                  QGeoPositionInfo *posInfo,
+                                  bool *hasFix)
+                                  QT7_ONLY(override)
+    {
+        return parsePosInfoFromNmeaDataImpl(data, posInfo, hasFix);
+    }
+#endif
 
 private:
     int callCount;
+
+    bool parsePosInfoFromNmeaDataImpl(QByteArrayView data,
+                                      QGeoPositionInfo *posInfo,
+                                      bool *hasFix);
 };
 
 DummyNmeaPositionInfoSource::DummyNmeaPositionInfoSource(QNmeaPositionInfoSource::UpdateMode mode, QObject *parent) :
@@ -35,14 +53,11 @@ DummyNmeaPositionInfoSource::DummyNmeaPositionInfoSource(QNmeaPositionInfoSource
 {
 }
 
-bool DummyNmeaPositionInfoSource::parsePosInfoFromNmeaData(const char* data,
-                                                           int size,
-                                                           QGeoPositionInfo *posInfo,
-                                                           bool *hasFix)
+bool DummyNmeaPositionInfoSource::parsePosInfoFromNmeaDataImpl(QByteArrayView data,
+                                                               QGeoPositionInfo *posInfo,
+                                                               bool *hasFix)
 {
     Q_UNUSED(data);
-    Q_UNUSED(size);
-
     posInfo->setCoordinate(QGeoCoordinate(callCount * 1.0, callCount * 1.0, callCount * 1.0));
     posInfo->setTimestamp(QDateTime::currentDateTimeUtc());
     *hasFix = true;

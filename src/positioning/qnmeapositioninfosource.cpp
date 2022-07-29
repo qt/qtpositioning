@@ -533,7 +533,7 @@ void QNmeaPositionInfoSourcePrivate::prepareSourceDevice()
 bool QNmeaPositionInfoSourcePrivate::parsePosInfoFromNmeaData(QByteArrayView data,
         QGeoPositionInfo *posInfo, bool *hasFix)
 {
-    return m_source->parsePosInfoFromNmeaData(data.data(), data.size(), posInfo, hasFix);
+    return m_source->parsePosInfoFromNmeaData(data, posInfo, hasFix);
 }
 
 void QNmeaPositionInfoSourcePrivate::startUpdates()
@@ -809,12 +809,32 @@ double QNmeaPositionInfoSource::userEquivalentRangeError() const
     Returns true if the sentence was successfully parsed, otherwise returns false and should not
     modifiy \a posInfo or \a hasFix.
 */
+
+#if QT_DEPRECATED_SINCE(7, 0)
 bool QNmeaPositionInfoSource::parsePosInfoFromNmeaData(const char *data, int size,
-        QGeoPositionInfo *posInfo, bool *hasFix)
+                                                       QGeoPositionInfo *posInfo, bool *hasFix)
 {
+#if QT_VERSION < QT_VERSION_CHECK(7, 0, 0)
     return QLocationUtils::getPosInfoFromNmea(QByteArrayView{data, size}, posInfo,
                                               d->m_userEquivalentRangeError, hasFix);
+#else
+    return parsePosInfoFromNmeaData(QByteArrayView{data, size}, posInfo, hasFix);
+#endif
 }
+#endif // QT_DEPRECATED_SINCE(7, 0)
+
+bool QNmeaPositionInfoSource::parsePosInfoFromNmeaData(QByteArrayView data,
+                                                       QGeoPositionInfo *posInfo, bool *hasFix)
+{
+#if QT_VERSION < QT_VERSION_CHECK(7, 0, 0)
+    return parsePosInfoFromNmeaData(data.data(), static_cast<int>(data.size()),
+                                                             posInfo, hasFix);
+#else
+    return QLocationUtils::getPosInfoFromNmea(data, posInfo,
+                                              d->m_userEquivalentRangeError, hasFix);
+#endif
+}
+
 
 /*!
     Returns the update mode.

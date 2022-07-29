@@ -44,10 +44,19 @@ public Q_SLOTS:
     void requestUpdate(int timeout = 0) override;
 
 protected:
-    virtual bool parsePosInfoFromNmeaData(const char *data,
-                                          int size,
-                                          QGeoPositionInfo *posInfo,
-                                          bool *hasFix);
+#if QT_DEPRECATED_SINCE(7, 0)
+    QT6_ONLY(virtual)
+    bool parsePosInfoFromNmeaData(const char *data,
+                                  int size,
+                                  QGeoPositionInfo *posInfo,
+                                  bool *hasFix);
+#endif
+    // ### Qt 7: design a return type that gets rid of out-parameters
+    QT7_ONLY(virtual)
+    bool parsePosInfoFromNmeaData(QByteArrayView data,
+                                  QGeoPositionInfo *posInfo,
+                                  bool *hasFix);
+
     void setError(QGeoPositionInfoSource::Error positionError);
 
 private:

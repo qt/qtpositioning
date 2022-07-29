@@ -42,16 +42,29 @@ public Q_SLOTS:
     void requestUpdate(int timeout = 0) override;
 
 protected:
-    virtual QGeoSatelliteInfo::SatelliteSystem
+#if QT_DEPRECATED_SINCE(7, 0)
+    QT6_ONLY(virtual)
+    QGeoSatelliteInfo::SatelliteSystem
     parseSatellitesInUseFromNmea(const char *data, int size, QList<int> &pnrsInUse);
+#endif
+    QT7_ONLY(virtual)
+    QGeoSatelliteInfo::SatelliteSystem
+    parseSatellitesInUseFromNmea(QByteArrayView data, QList<int> &pnrsInUse);
     enum SatelliteInfoParseStatus {
         NotParsed = 0,
         PartiallyParsed,
         FullyParsed
     };
-    virtual SatelliteInfoParseStatus parseSatelliteInfoFromNmea(const char *data, int size,
-                                                                QList<QGeoSatelliteInfo> &infos,
-                                                                QGeoSatelliteInfo::SatelliteSystem &system);
+#if QT_DEPRECATED_SINCE(7, 0)
+    QT6_ONLY(virtual)
+    SatelliteInfoParseStatus parseSatelliteInfoFromNmea(const char *data, int size,
+                                                        QList<QGeoSatelliteInfo> &infos,
+                                                        QGeoSatelliteInfo::SatelliteSystem &system);
+#endif
+    QT7_ONLY(virtual)
+    SatelliteInfoParseStatus parseSatelliteInfoFromNmea(QByteArrayView data,
+                                                        QList<QGeoSatelliteInfo> &infos,
+                                                        QGeoSatelliteInfo::SatelliteSystem &system);
 
     QNmeaSatelliteInfoSourcePrivate *d;
     void setError(QGeoSatelliteInfoSource::Error satelliteError);

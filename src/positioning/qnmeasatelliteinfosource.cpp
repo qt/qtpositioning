@@ -76,7 +76,8 @@ void QNmeaSatelliteInfoSourcePrivate::processNmeaData(QNmeaSatelliteInfoUpdate &
     char buf[1024];
     qint64 size = m_device->readLine(buf, sizeof(buf));
     QList<int> satInUse;
-    const auto satSystemType = m_source->parseSatellitesInUseFromNmea(buf, size, satInUse);
+    const auto satSystemType = m_source->parseSatellitesInUseFromNmea(QByteArrayView{buf,static_cast<qsizetype>(size)},
+                                                                      satInUse);
     if (satSystemType != QGeoSatelliteInfo::Undefined) {
         const bool res = updateInfo.setSatellitesInUse(satSystemType, satInUse);
 #if USE_NMEA_PIMPL
@@ -102,7 +103,7 @@ void QNmeaSatelliteInfoSourcePrivate::processNmeaData(QNmeaSatelliteInfoUpdate &
         // come one after another. At least this is how it should be.
         auto systemType = QGeoSatelliteInfo::Undefined;
         const auto parserStatus = m_source->parseSatelliteInfoFromNmea(
-                buf, size, updateInfo.m_satellitesInViewParsed, systemType);
+                QByteArrayView{buf,static_cast<qsizetype>(size)}, updateInfo.m_satellitesInViewParsed, systemType);
         if (parserStatus == QNmeaSatelliteInfoSource::PartiallyParsed) {
             updateInfo.m_satellites[systemType].updatingGSV = true;
 #if USE_NMEA_PIMPL
@@ -560,11 +561,29 @@ void QNmeaSatelliteInfoSource::requestUpdate(int msec)
     Returns system type if the sentence was successfully parsed, otherwise
     returns \l QGeoSatelliteInfo::Undefined and should not modifiy \a pnrsInUse.
 */
+
+#if QT_DEPRECATED_SINCE(7, 0)
 QGeoSatelliteInfo::SatelliteSystem
 QNmeaSatelliteInfoSource::parseSatellitesInUseFromNmea(const char *data, int size,
                                                        QList<int> &pnrsInUse)
 {
-    return QLocationUtils::getSatInUseFromNmea(QByteArrayView{data,size}, pnrsInUse);
+#if QT_VERSION < QT_VERSION_CHECK(7, 0, 0)
+    return QLocationUtils::getSatInUseFromNmea(QByteArrayView{data, size}, pnrsInUse);
+#else
+    return parseSatellitesInUseFromNmea(QByteArrayView{data, size}, pnrsInUse);
+#endif
+}
+#endif // QT_DEPRECATED_SINCE(7, 0)
+
+QGeoSatelliteInfo::SatelliteSystem
+QNmeaSatelliteInfoSource::parseSatellitesInUseFromNmea(QByteArrayView data,
+                                                       QList<int> &pnrsInUse)
+{
+#if QT_VERSION < QT_VERSION_CHECK(7, 0, 0)
+    return parseSatellitesInUseFromNmea(data.data(), static_cast<int>(data.size()), pnrsInUse);
+#else
+    return QLocationUtils::getSatInUseFromNmea(data, pnrsInUse);
+#endif
 }
 
 /*!
@@ -595,13 +614,33 @@ QNmeaSatelliteInfoSource::parseSatellitesInUseFromNmea(const char *data, int siz
     Also sets the \a system to correct satellite system type. This is required
     to determine the system type in case there are no satellites in view.
 */
+
+#if QT_DEPRECATED_SINCE(7, 0)
 QNmeaSatelliteInfoSource::SatelliteInfoParseStatus
 QNmeaSatelliteInfoSource::parseSatelliteInfoFromNmea(const char *data, int size,
                                                      QList<QGeoSatelliteInfo> &infos,
                                                      QGeoSatelliteInfo::SatelliteSystem &system)
 {
+#if QT_VERSION < QT_VERSION_CHECK(7, 0, 0)
     return static_cast<SatelliteInfoParseStatus>(
             QLocationUtils::getSatInfoFromNmea(QByteArrayView{data, size}, infos, system));
+#else
+    return parseSatelliteInfoFromNmea(QByteArrayView{data, size}, infos, system);
+#endif
+}
+#endif // QT_DEPRECATED_SINCE(7, 0)
+
+QNmeaSatelliteInfoSource::SatelliteInfoParseStatus
+QNmeaSatelliteInfoSource::parseSatelliteInfoFromNmea(QByteArrayView data,
+                                                     QList<QGeoSatelliteInfo> &infos,
+                                                     QGeoSatelliteInfo::SatelliteSystem &system)
+{
+#if QT_VERSION < QT_VERSION_CHECK(7, 0, 0)
+    return parseSatelliteInfoFromNmea(data.data(), static_cast<int>(data.size()), infos, system);
+#else
+    return static_cast<SatelliteInfoParseStatus>(
+            QLocationUtils::getSatInfoFromNmea(data, infos, system));
+#endif
 }
 
 void QNmeaSatelliteInfoSource::setError(QGeoSatelliteInfoSource::Error satelliteError)
