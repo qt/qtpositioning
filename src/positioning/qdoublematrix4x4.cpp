@@ -9,8 +9,6 @@
 
 QT_BEGIN_NAMESPACE
 
-static const double inv_dist_to_plane = 1.0 / 1024.0;
-
 QDoubleMatrix4x4::QDoubleMatrix4x4(const double *values)
 {
     for (int row = 0; row < 4; ++row)
@@ -562,10 +560,13 @@ void QDoubleMatrix4x4::rotate(double angle, double x, double y, double z)
     *this *= rot;
 }
 
-void QDoubleMatrix4x4::projectedRotate(double angle, double x, double y, double z)
+void QDoubleMatrix4x4::projectedRotate(double angle, double x, double y, double z,
+                                       double distanceToPlane)
 {
     // Used by QGraphicsRotation::applyTo() to perform a rotation
     // and projection back to 2D in a single step.
+    if (qIsNull(distanceToPlane))
+        return rotate(angle, x, y, z);
     if (angle == 0.0)
         return;
     double c, s;
@@ -583,6 +584,8 @@ void QDoubleMatrix4x4::projectedRotate(double angle, double x, double y, double 
         c = std::cos(a);
         s = std::sin(a);
     }
+
+    const double d = 1.0 / distanceToPlane;
     if (x == 0.0) {
         if (y == 0.0) {
             if (z != 0.0) {
@@ -606,10 +609,11 @@ void QDoubleMatrix4x4::projectedRotate(double angle, double x, double y, double 
             // Rotate around the Y axis.
             if (y < 0)
                 s = -s;
-            m[0][0] = m[0][0] * c + m[3][0] * s * inv_dist_to_plane;
-            m[0][1] = m[0][1] * c + m[3][1] * s * inv_dist_to_plane;
-            m[0][2] = m[0][2] * c + m[3][2] * s * inv_dist_to_plane;
-            m[0][3] = m[0][3] * c + m[3][3] * s * inv_dist_to_plane;
+            s *= d;
+            m[0][0] = m[0][0] * c + m[3][0] * s;
+            m[0][1] = m[0][1] * c + m[3][1] * s;
+            m[0][2] = m[0][2] * c + m[3][2] * s;
+            m[0][3] = m[0][3] * c + m[3][3] * s;
             flagBits = General;
             return;
         }
@@ -617,10 +621,11 @@ void QDoubleMatrix4x4::projectedRotate(double angle, double x, double y, double 
         // Rotate around the X axis.
         if (x < 0)
             s = -s;
-        m[1][0] = m[1][0] * c - m[3][0] * s * inv_dist_to_plane;
-        m[1][1] = m[1][1] * c - m[3][1] * s * inv_dist_to_plane;
-        m[1][2] = m[1][2] * c - m[3][2] * s * inv_dist_to_plane;
-        m[1][3] = m[1][3] * c - m[3][3] * s * inv_dist_to_plane;
+        s *= d;
+        m[1][0] = m[1][0] * c - m[3][0] * s;
+        m[1][1] = m[1][1] * c - m[3][1] * s;
+        m[1][2] = m[1][2] * c - m[3][2] * s;
+        m[1][3] = m[1][3] * c - m[3][3] * s;
         flagBits = General;
         return;
     }
@@ -647,8 +652,8 @@ void QDoubleMatrix4x4::projectedRotate(double angle, double x, double y, double 
     rot.m[1][2] = 0.0;
     rot.m[2][2] = 1.0;
     rot.m[3][2] = 0.0;
-    rot.m[0][3] = (x * z * ic - y * s) * -inv_dist_to_plane;
-    rot.m[1][3] = (y * z * ic + x * s) * -inv_dist_to_plane;
+    rot.m[0][3] = (x * z * ic - y * s) * -d;
+    rot.m[1][3] = (y * z * ic + x * s) * -d;
     rot.m[2][3] = 0.0;
     rot.m[3][3] = 1.0;
     rot.flagBits = General;

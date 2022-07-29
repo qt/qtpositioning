@@ -147,7 +147,8 @@ private:
 
     QDoubleMatrix4x4 orthonormalInverse() const;
 
-    void projectedRotate(double angle, double x, double y, double z);
+    void projectedRotate(double angle, double x, double y, double z,
+                         double distanceToPlane = 1024.0);
 };
 
 Q_DECLARE_TYPEINFO(QDoubleMatrix4x4, Q_RELOCATABLE_TYPE);
