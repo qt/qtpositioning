@@ -82,19 +82,10 @@ bool QIOPipePrivate::readAvailableData() {
 void QIOPipePrivate::pumpData(const QByteArray &ba)
 {
     if (m_proxying) {
-        QList<int> toRemove;
-        for (int i = 0; i < childPipes.size(); ++i) {
-            const QPointer<QIOPipe> &cp = childPipes.at(i);
-            if (!cp) {
-                toRemove.append(i);
-                continue;
-            }
-            QIOPipePrivate *cpp = cp->d_func();
-            cpp->pushData(ba);
-        }
-        for (int i = toRemove.size() - 1; i >= 0; --i) {
-            childPipes.remove(i);
-        }
+        auto isNull = [](const auto &cp) { return cp == nullptr; };
+        childPipes.removeIf(isNull);
+        for (const auto &cp : std::as_const(childPipes))
+            cp->d_func()->pushData(ba);
     } else {
         for (auto &buffer : readBuffers)
             buffer.append(ba);
