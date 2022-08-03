@@ -29,10 +29,10 @@ static void qlocationutils_readGga(const char *data, int size, QGeoPositionInfo 
     QList<QByteArray> parts = sentence.split(',');
     QGeoCoordinate coord;
 
-    if (hasFix && parts.size() > 6 && parts[6].size() > 0)
+    if (hasFix && parts.size() > 6 && !parts[6].isEmpty())
         *hasFix = parts[6].toInt() > 0;
 
-    if (parts.size() > 1 && parts[1].size() > 0) {
+    if (parts.size() > 1 && !parts[1].isEmpty()) {
         QTime time;
         if (QLocationUtils::getNmeaTime(parts[1], &time))
             info->setTimestamp(QDateTime(QDate(), time, Qt::UTC));
@@ -54,7 +54,7 @@ static void qlocationutils_readGga(const char *data, int size, QGeoPositionInfo 
             info->setAttribute(QGeoPositionInfo::HorizontalAccuracy, 2 * hdop * uere);
     }
 
-    if (parts.size() > 9 && parts[9].size() > 0) {
+    if (parts.size() > 9 && !parts[9].isEmpty()) {
         bool hasAlt = false;
         double alt = parts[9].toDouble(&hasAlt);
         if (hasAlt)
@@ -113,10 +113,10 @@ static void qlocationutils_readGll(const char *data, int size, QGeoPositionInfo 
     QList<QByteArray> parts = sentence.split(',');
     QGeoCoordinate coord;
 
-    if (hasFix && parts.size() > 6 && parts[6].size() > 0)
+    if (hasFix && parts.size() > 6 && !parts[6].isEmpty())
         *hasFix = (parts[6][0] == 'A');
 
-    if (parts.size() > 5 && parts[5].size() > 0) {
+    if (parts.size() > 5 && !parts[5].isEmpty()) {
         QTime time;
         if (QLocationUtils::getNmeaTime(parts[5], &time))
             info->setTimestamp(QDateTime(QDate(), time, Qt::UTC));
@@ -143,7 +143,7 @@ static void qlocationutils_readRmc(const char *data, int size, QGeoPositionInfo 
     QDate date;
     QTime time;
 
-    if (hasFix && parts.size() > 2 && parts[2].size() > 0)
+    if (hasFix && parts.size() > 2 && !parts[2].isEmpty())
         *hasFix = (parts[2][0] == 'A');
 
     if (parts.size() > 9 && parts[9].size() == 6) {
@@ -154,7 +154,7 @@ static void qlocationutils_readRmc(const char *data, int size, QGeoPositionInfo 
             date = QDate();
     }
 
-    if (parts.size() > 1 && parts[1].size() > 0)
+    if (parts.size() > 1 && !parts[1].isEmpty())
         QLocationUtils::getNmeaTime(parts[1], &time);
 
     if (parts.size() > 6 && parts[4].size() == 1 && parts[6].size() == 1) {
@@ -168,12 +168,12 @@ static void qlocationutils_readRmc(const char *data, int size, QGeoPositionInfo 
 
     bool parsed = false;
     double value = 0.0;
-    if (parts.size() > 7 && parts[7].size() > 0) {
+    if (parts.size() > 7 && !parts[7].isEmpty()) {
         value = parts[7].toDouble(&parsed);
         if (parsed)
             info->setAttribute(QGeoPositionInfo::GroundSpeed, qreal(value * 1.852 / 3.6));    // knots -> m/s
     }
-    if (parts.size() > 8 && parts[8].size() > 0) {
+    if (parts.size() > 8 && !parts[8].isEmpty()) {
         value = parts[8].toDouble(&parsed);
         if (parsed)
             info->setAttribute(QGeoPositionInfo::Direction, qreal(value));
@@ -204,12 +204,12 @@ static void qlocationutils_readVtg(const char *data, int size, QGeoPositionInfo 
 
     bool parsed = false;
     double value = 0.0;
-    if (parts.size() > 1 && parts[1].size() > 0) {
+    if (parts.size() > 1 && !parts[1].isEmpty()) {
         value = parts[1].toDouble(&parsed);
         if (parsed)
             info->setAttribute(QGeoPositionInfo::Direction, qreal(value));
     }
-    if (parts.size() > 7 && parts[7].size() > 0) {
+    if (parts.size() > 7 && !parts[7].isEmpty()) {
         value = parts[7].toDouble(&parsed);
         if (parsed)
             info->setAttribute(QGeoPositionInfo::GroundSpeed, qreal(value / 3.6));    // km/h -> m/s
@@ -226,10 +226,10 @@ static void qlocationutils_readZda(const char *data, int size, QGeoPositionInfo 
     QDate date;
     QTime time;
 
-    if (parts.size() > 1 && parts[1].size() > 0)
+    if (parts.size() > 1 && !parts[1].isEmpty())
         QLocationUtils::getNmeaTime(parts[1], &time);
 
-    if (parts.size() > 4 && parts[2].size() > 0 && parts[3].size() > 0
+    if (parts.size() > 4 && !parts[2].isEmpty() && !parts[3].isEmpty()
             && parts[4].size() == 4) {     // must be full 4-digit year
         int day = parts[2].toUInt();
         int month = parts[3].toUInt();
