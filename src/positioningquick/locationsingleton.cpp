@@ -139,10 +139,11 @@ QGeoRectangle LocationSingleton::rectangle(const QGeoCoordinate &topLeft,
 QGeoRectangle LocationSingleton::rectangle(const QVariantList &coordinates) const
 {
     QList<QGeoCoordinate> internalCoordinates;
-    for (int i = 0; i < coordinates.size(); i++) {
-        if (coordinates.at(i).canConvert<QGeoCoordinate>())
-            internalCoordinates << coordinates.at(i).value<QGeoCoordinate>();
+    for (const auto &coordinate : coordinates) {
+        if (coordinate.canConvert<QGeoCoordinate>())
+            internalCoordinates << coordinate.value<QGeoCoordinate>();
     }
+
     return QGeoRectangle(internalCoordinates);
 }
 
@@ -235,10 +236,11 @@ QGeoPolygon LocationSingleton::polygon() const
 QGeoPolygon LocationSingleton::polygon(const QVariantList &coordinates) const
 {
     QList<QGeoCoordinate> internalCoordinates;
-    for (int i = 0; i < coordinates.size(); i++) {
-        if (coordinates.at(i).canConvert<QGeoCoordinate>())
-            internalCoordinates << coordinates.at(i).value<QGeoCoordinate>();
+    for (const auto &coordinate : coordinates) {
+        if (coordinate.canConvert<QGeoCoordinate>())
+            internalCoordinates << coordinate.value<QGeoCoordinate>();
     }
+
     return QGeoPolygon(internalCoordinates);
 }
 
@@ -253,21 +255,21 @@ QGeoPolygon LocationSingleton::polygon(const QVariantList &coordinates) const
 QGeoPolygon LocationSingleton::polygon(const QVariantList &perimeter, const QVariantList &holes) const
 {
     QList<QGeoCoordinate> internalCoordinates;
-    for (int i = 0; i < perimeter.size(); i++) {
-        if (perimeter.at(i).canConvert<QGeoCoordinate>())
-            internalCoordinates << perimeter.at(i).value<QGeoCoordinate>();
+    for (const auto &coordinate : perimeter) {
+        if (coordinate.canConvert<QGeoCoordinate>())
+            internalCoordinates << coordinate.value<QGeoCoordinate>();
     }
     QGeoPolygon poly(internalCoordinates);
 
-    for (qsizetype i = 0; i < holes.size(); ++i) {
-        if (holes.at(i).metaType().id() == QMetaType::QVariantList) {
+    for (const auto &h : holes) {
+        if (h.metaType().id() == QMetaType::QVariantList) {
             QList<QGeoCoordinate> hole;
-            const QVariantList &holeData = holes.at(i).toList();
-            for (qsizetype j = 0; j < holeData.size(); ++j) {
-                if (holeData.at(j).canConvert<QGeoCoordinate>())
-                    hole << holeData.at(j).value<QGeoCoordinate>();
+            const QVariantList &holeData = h.toList();
+            for (const auto &coord : holeData) {
+                if (coord.canConvert<QGeoCoordinate>())
+                    hole << coord.value<QGeoCoordinate>();
             }
-            if (hole.size())
+            if (!hole.isEmpty())
                 poly.addHole(hole);
         }
     }
