@@ -72,7 +72,7 @@ bool QIOPipePrivate::readAvailableData() {
     if (!source)
         return false;
     QByteArray ba = source->readAll();
-    if (!ba.size())
+    if (ba.isEmpty())
         return false;
 
     pumpData(ba);
@@ -95,7 +95,7 @@ void QIOPipePrivate::pumpData(const QByteArray &ba)
 void QIOPipePrivate::pushData(const QByteArray &ba)
 {
     Q_Q(QIOPipe);
-    if (!ba.size())
+    if (ba.isEmpty())
         return;
 
     pumpData(ba);

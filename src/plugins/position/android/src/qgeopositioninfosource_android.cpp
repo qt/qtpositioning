@@ -233,16 +233,15 @@ void QGeoPositionInfoSourceAndroid::requestTimeout()
 {
     AndroidPositioning::stopUpdates(androidClassKeyForSingleRequest);
     //no queued update to process -> timeout
-    const int count = queuedSingleUpdates.count();
 
-    if (!count) {
+    if (queuedSingleUpdates.isEmpty()) {
         setError(QGeoPositionInfoSource::UpdateTimeoutError);
         return;
     }
 
     //pick best
     QGeoPositionInfo best = queuedSingleUpdates[0];
-    for (int i = 1; i < count; i++) {
+    for (qsizetype i = 1; i < queuedSingleUpdates.size(); ++i) {
         const QGeoPositionInfo info = queuedSingleUpdates[i];
 
         //anything newer by 20s is always better

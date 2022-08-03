@@ -1067,7 +1067,7 @@ QDebug operator<<(QDebug dbg, const QDoubleMatrix4x4 &m)
             bits += "Rotation,";
         if ((m.flagBits & QDoubleMatrix4x4::Perspective) != 0)
             bits += "Perspective,";
-        if (bits.size() > 0)
+        if (!bits.isEmpty())
             bits = bits.left(bits.size() - 1);
     }
 
