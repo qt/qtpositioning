@@ -407,10 +407,8 @@ QVariantMap QDeclarativePositionSource::parameterMap() const
 {
     QVariantMap map;
 
-    for (int i = 0; i < m_parameters.size(); ++i) {
-        QDeclarativePluginParameter *parameter = m_parameters.at(i);
+    for (const auto *parameter : m_parameters)
         map.insert(parameter->name(), parameter->value());
-    }
 
     return map;
 }

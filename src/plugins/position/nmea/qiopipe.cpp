@@ -60,8 +60,8 @@ void QIOPipePrivate::pumpData(const QByteArray &ba)
             childPipes.remove(i);
         }
     } else {
-        for (int i = 0; i < readBuffers.size(); i++)
-            readBuffers[i].append(ba);
+        for (auto &buffer : readBuffers)
+            buffer.append(ba);
     }
 }
 
