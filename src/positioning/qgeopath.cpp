@@ -464,7 +464,7 @@ bool QGeoPathPrivate::lineContains(const QGeoCoordinate &coordinate) const
 
     double lineRadius = qMax(width() * 0.5, 0.2); // minimum radius: 20cm
 
-    if (!m_path.size())
+    if (m_path.isEmpty())
         return false;
     else if (m_path.size() == 1)
         return (m_path[0].distanceTo(coordinate) <= lineRadius);
@@ -475,7 +475,7 @@ bool QGeoPathPrivate::lineContains(const QGeoCoordinate &coordinate) const
 
     QDoubleVector2D a;
     QDoubleVector2D b;
-    if (m_path.size()) {
+    if (!m_path.isEmpty()) {
         a = QWebMercator::coordToMercator(m_path[0]);
         if (a.x() < m_leftBoundWrapped)
             a.setX(a.x() + m_leftBoundWrapped);  // unwrap X
