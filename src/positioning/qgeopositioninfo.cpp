@@ -315,7 +315,7 @@ QDebug QGeoPositionInfo::debugStreaming(QDebug dbg, const QGeoPositionInfo &info
 */
 QDataStream &QGeoPositionInfo::dataStreamOut(QDataStream &stream, QGeoPositionInfo::Attribute attr)
 {
-    return stream << int(attr);
+    return stream << qint32(attr);
 }
 
 /*!
@@ -327,7 +327,7 @@ QDataStream &QGeoPositionInfo::dataStreamOut(QDataStream &stream, QGeoPositionIn
 */
 QDataStream &QGeoPositionInfo::dataStreamIn(QDataStream &stream, QGeoPositionInfo::Attribute &attr)
 {
-    int a;
+    qint32 a;
     stream >> a;
     attr = static_cast<QGeoPositionInfo::Attribute>(a);
     return stream;
