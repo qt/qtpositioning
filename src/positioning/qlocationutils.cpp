@@ -145,8 +145,6 @@ static void qlocationutils_readRmc(QByteArrayView bv, QGeoPositionInfo *info, bo
         date = QDate::fromString(QString::fromLatin1(parts[9]), QStringLiteral("ddMMyy"));
         if (date.isValid())
             date = date.addYears(100);     // otherwise starts from 1900
-        else
-            date = QDate();
     }
 
     if (parts.size() > 1 && !parts[1].isEmpty())
@@ -525,21 +523,10 @@ bool QLocationUtils::hasValidNmeaChecksum(QByteArrayView bv)
 
 bool QLocationUtils::getNmeaTime(const QByteArray &bytes, QTime *time)
 {
-    int dotIndex = bytes.indexOf('.');
-    QTime tempTime;
-
-    if (dotIndex < 0) {
-        tempTime = QTime::fromString(QString::fromLatin1(bytes.constData()),
-                                     QStringLiteral("hhmmss"));
-    } else {
-        tempTime = QTime::fromString(QString::fromLatin1(bytes.mid(0, dotIndex)),
-                                     QStringLiteral("hhmmss"));
-        bool hasMsecs = false;
-        int midLen = qMin(3, bytes.size() - dotIndex - 1);
-        int msecs = bytes.mid(dotIndex + 1, midLen).toUInt(&hasMsecs);
-        if (hasMsecs)
-            tempTime = tempTime.addMSecs(msecs*(midLen == 3 ? 1 : midLen == 2 ? 10 : 100));
-    }
+    QTime tempTime = QTime::fromString(QString::fromLatin1(bytes),
+                        QStringView(bytes.size() > 6 && bytes[6] == '.'
+                                                       ? u"hhmmss.z"
+                                                       : u"hhmmss"));
 
     if (tempTime.isValid()) {
         *time = tempTime;
