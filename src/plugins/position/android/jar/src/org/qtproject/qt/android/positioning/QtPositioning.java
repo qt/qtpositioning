@@ -551,7 +551,7 @@ public class QtPositioning implements LocationListener
     public static native void positionUpdated(Location update, int androidClassKey, boolean isSingleUpdate);
     public static native void locationProvidersDisabled(int androidClassKey);
     public static native void locationProvidersChanged(int androidClassKey);
-    public static native void satelliteGpsUpdated(GpsSatellite[] update, int androidClassKey, boolean isSingleUpdate);
+    public static native void satelliteGpsUpdated(Object[] update, int androidClassKey, boolean isSingleUpdate);
     public static native void satelliteGnssUpdated(GnssStatus update, int androidClassKey, boolean isSingleUpdate);
 
     @Override

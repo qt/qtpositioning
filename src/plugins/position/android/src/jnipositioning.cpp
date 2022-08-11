@@ -15,6 +15,11 @@
 #include "qgeosatelliteinfosource_android_p.h"
 #include "jnipositioning.h"
 
+Q_DECLARE_JNI_CLASS(QtPositioning, "org/qtproject/qt/android/positioning/QtPositioning")
+Q_DECLARE_JNI_CLASS(GnssStatus, "android/location/GnssStatus")
+Q_DECLARE_JNI_CLASS(Location, "android/location/Location")
+
+template<typename T>
 class GlobalClassRefWrapper
 {
 public:
@@ -28,7 +33,7 @@ public:
         }
     }
 
-    bool init(const char *className)
+    bool init()
     {
         QJniEnvironment env;
         if (env.jniEnv()) {
@@ -37,7 +42,7 @@ public:
                 m_classRef = nullptr;
             }
 
-            m_classRef = env.findClass(className); // it returns global ref!
+            m_classRef = env.findClass<T>(); // it returns global ref!
         }
         return m_classRef != nullptr;
     }
@@ -48,7 +53,7 @@ private:
     jclass m_classRef = nullptr;
 };
 
-static GlobalClassRefWrapper positioningClass;
+static GlobalClassRefWrapper<QtJniTypes::QtPositioning> positioningClass;
 
 static jmethodID providerListMethodId;
 static jmethodID lastKnownPositionMethodId;
@@ -77,7 +82,7 @@ public:
     {
         m_gnssStatusObject = nullptr;
         if (QNativeInterface::QAndroidApplication::sdkVersion() > 23) {
-            m_gnssStatusObject = QJniEnvironment().findClass("android/location/GnssStatus");
+            m_gnssStatusObject = QJniEnvironment().findClass<QtJniTypes::GnssStatus>();
             if (!m_gnssStatusObject)
                 return false;
         }
@@ -181,7 +186,7 @@ namespace AndroidPositioning {
         if (!env.jniEnv())
             return ret;
         QJniObject jniProvidersObj =
-                QJniObject::callStaticObjectMethod(positioningClass(), providerListMethodId);
+                QJniObject::callStaticMethod<jobject>(positioningClass(), providerListMethodId);
         jintArray jProviders = jniProvidersObj.object<jintArray>();
         jint *providers = env->GetIntArrayElements(jProviders, nullptr);
         const int size = env->GetArrayLength(jProviders);
@@ -354,29 +359,29 @@ namespace AndroidPositioning {
             // signal strength - this is actually a carrier-to-noise density,
             // but the values are very close to what was previously returned by
             // getSnr() method of the GpsSatellite API.
-            const jfloat cn0 = jniStatus.callMethod<jfloat>("getCn0DbHz", "(I)F", i);
+            const jfloat cn0 = jniStatus.callMethod<jfloat>("getCn0DbHz", i);
             info.setSignalStrength(static_cast<int>(cn0));
 
             // satellite system
             const jint constellationType =
-                    jniStatus.callMethod<jint>("getConstellationType", "(I)I", i);
+                    jniStatus.callMethod<jint>("getConstellationType", i);
             info.setSatelliteSystem(ConstellationMapper::toSatelliteSystem(constellationType));
 
             // satellite identifier
-            const jint svId = jniStatus.callMethod<jint>("getSvid", "(I)I", i);
+            const jint svId = jniStatus.callMethod<jint>("getSvid", i);
             info.setSatelliteIdentifier(svId);
 
             // azimuth
-            const jfloat azimuth = jniStatus.callMethod<jfloat>("getAzimuthDegrees", "(I)F", i);
+            const jfloat azimuth = jniStatus.callMethod<jfloat>("getAzimuthDegrees", i);
             info.setAttribute(QGeoSatelliteInfo::Azimuth, static_cast<qreal>(azimuth));
 
             // elevation
-            const jfloat elevation = jniStatus.callMethod<jfloat>("getElevationDegrees", "(I)F", i);
+            const jfloat elevation = jniStatus.callMethod<jfloat>("getElevationDegrees", i);
             info.setAttribute(QGeoSatelliteInfo::Elevation, static_cast<qreal>(elevation));
 
             // Used in fix - true if this satellite is actually used in
             // determining the position.
-            const jboolean inFix = jniStatus.callMethod<jboolean>("usedInFix", "(I)Z", i);
+            const jboolean inFix = jniStatus.callMethod<jboolean>("usedInFix", i);
 
             sats.append(info);
 
@@ -396,7 +401,7 @@ namespace AndroidPositioning {
         if (!requestionPositioningPermissions())
             return {};
 
-        QJniObject locationObj = QJniObject::callStaticObjectMethod(
+        QJniObject locationObj = QJniObject::callStaticMethod<jobject>(
                 positioningClass(), lastKnownPositionMethodId, fromSatellitePositioningMethodsOnly);
         jobject location = locationObj.object();
         if (location == nullptr)
@@ -552,7 +557,7 @@ namespace AndroidPositioning {
     }
 }
 
-static void positionUpdated(JNIEnv *env, jobject thiz, jobject location,
+static void positionUpdated(JNIEnv *env, jobject thiz, QtJniTypes::Location location,
                             jint androidClassKey, jboolean isSingleUpdate)
 {
     Q_UNUSED(env);
@@ -573,6 +578,7 @@ static void positionUpdated(JNIEnv *env, jobject thiz, jobject location,
         QMetaObject::invokeMethod(source, "processSinglePositionUpdate", Qt::AutoConnection,
                               Q_ARG(QGeoPositionInfo, info));
 }
+Q_DECLARE_JNI_NATIVE_METHOD(positionUpdated)
 
 static void locationProvidersDisabled(JNIEnv *env, jobject thiz, jint androidClassKey)
 {
@@ -588,6 +594,7 @@ static void locationProvidersDisabled(JNIEnv *env, jobject thiz, jint androidCla
 
     QMetaObject::invokeMethod(source, "locationProviderDisabled", Qt::AutoConnection);
 }
+Q_DECLARE_JNI_NATIVE_METHOD(locationProvidersDisabled)
 
 static void locationProvidersChanged(JNIEnv *env, jobject thiz, jint androidClassKey)
 {
@@ -601,6 +608,7 @@ static void locationProvidersChanged(JNIEnv *env, jobject thiz, jint androidClas
 
     QMetaObject::invokeMethod(source, "locationProvidersChanged", Qt::AutoConnection);
 }
+Q_DECLARE_JNI_NATIVE_METHOD(locationProvidersChanged)
 
 static void notifySatelliteInfoUpdated(const QList<QGeoSatelliteInfo> &inView,
                                        const QList<QGeoSatelliteInfo> &inUse,
@@ -619,7 +627,8 @@ static void notifySatelliteInfoUpdated(const QList<QGeoSatelliteInfo> &inView,
                               Q_ARG(QList<QGeoSatelliteInfo>, inUse), Q_ARG(bool, isSingleUpdate));
 }
 
-static void satelliteGpsUpdated(JNIEnv *env, jobject thiz, jobjectArray satellites,
+static void satelliteGpsUpdated(JNIEnv *env, jobject thiz,
+                                jobjectArray satellites,
                                 jint androidClassKey, jboolean isSingleUpdate)
 {
     Q_UNUSED(thiz);
@@ -629,8 +638,9 @@ static void satelliteGpsUpdated(JNIEnv *env, jobject thiz, jobjectArray satellit
 
     notifySatelliteInfoUpdated(sats, inUse, androidClassKey, isSingleUpdate);
 }
+Q_DECLARE_JNI_NATIVE_METHOD(satelliteGpsUpdated)
 
-static void satelliteGnssUpdated(JNIEnv *env, jobject thiz, jobject gnssStatus,
+static void satelliteGnssUpdated(JNIEnv *env, jobject thiz, QtJniTypes::GnssStatus gnssStatus,
                                  jint androidClassKey, jboolean isSingleUpdate)
 {
     Q_UNUSED(env);
@@ -642,51 +652,48 @@ static void satelliteGnssUpdated(JNIEnv *env, jobject thiz, jobject gnssStatus,
 
     notifySatelliteInfoUpdated(sats, inUse, androidClassKey, isSingleUpdate);
 }
+Q_DECLARE_JNI_NATIVE_METHOD(satelliteGnssUpdated)
 
-#define GET_AND_CHECK_STATIC_METHOD(VAR, CLASS, METHOD_NAME, METHOD_SIGNATURE)                     \
-    VAR = env.findStaticMethod(CLASS, METHOD_NAME, METHOD_SIGNATURE);                              \
-    if (!VAR) {                                                                                    \
-        __android_log_print(ANDROID_LOG_FATAL, logTag, methodErrorMsg, METHOD_NAME,                \
-                            METHOD_SIGNATURE);                                                     \
-        return false;                                                                              \
+#define GET_AND_CHECK_STATIC_METHOD(VAR, METHOD_NAME, ...)                                  \
+    VAR = env.findStaticMethod<__VA_ARGS__>(positioningClass(),  METHOD_NAME);              \
+    if (!VAR) {                                                                             \
+        __android_log_print(ANDROID_LOG_FATAL, logTag, methodErrorMsg, METHOD_NAME,         \
+                            QtJniTypes::methodSignature<__VA_ARGS__>().data());             \
+        return false;                                                                       \
     }
 
 static bool registerNatives()
 {
-     const JNINativeMethod methods[] = {
-        {"positionUpdated", "(Landroid/location/Location;IZ)V", (void *)positionUpdated},
-        {"locationProvidersDisabled", "(I)V", (void *) locationProvidersDisabled},
-        {"satelliteGpsUpdated", "([Landroid/location/GpsSatellite;IZ)V", (void *)satelliteGpsUpdated},
-        {"locationProvidersChanged", "(I)V", (void *) locationProvidersChanged},
-        {"satelliteGnssUpdated", "(Landroid/location/GnssStatus;IZ)V", (void *)satelliteGnssUpdated}
-    };
-
     QJniEnvironment env;
     if (!env.jniEnv()) {
         __android_log_print(ANDROID_LOG_FATAL, logTag, "Failed to create environment");
         return false;
     }
 
-    if (!positioningClass.init("org/qtproject/qt/android/positioning/QtPositioning")) {
+    if (!positioningClass.init()) {
         __android_log_print(ANDROID_LOG_FATAL, logTag, "Failed to create global class ref");
         return false;
     }
 
-    if (!env.registerNativeMethods(positioningClass(), methods,
-                                   sizeof(methods) / sizeof(methods[0]))) {
+    if (!env.registerNativeMethods(positioningClass(), {
+                                      Q_JNI_NATIVE_METHOD(positionUpdated),
+                                      Q_JNI_NATIVE_METHOD(locationProvidersDisabled),
+                                      Q_JNI_NATIVE_METHOD(satelliteGpsUpdated),
+                                      Q_JNI_NATIVE_METHOD(locationProvidersChanged),
+                                      Q_JNI_NATIVE_METHOD(satelliteGnssUpdated)
+                                  })) {
         __android_log_print(ANDROID_LOG_FATAL, logTag, "Failed to register native methods");
         return false;
     }
 
-    GET_AND_CHECK_STATIC_METHOD(providerListMethodId, positioningClass(), "providerList", "()[I");
-    GET_AND_CHECK_STATIC_METHOD(lastKnownPositionMethodId, positioningClass(), "lastKnownPosition",
-                                "(Z)Landroid/location/Location;");
-    GET_AND_CHECK_STATIC_METHOD(startUpdatesMethodId, positioningClass(), "startUpdates", "(III)I");
-    GET_AND_CHECK_STATIC_METHOD(stopUpdatesMethodId, positioningClass(), "stopUpdates", "(I)V");
-    GET_AND_CHECK_STATIC_METHOD(requestUpdateMethodId, positioningClass(), "requestUpdate",
-                                "(II)I");
-    GET_AND_CHECK_STATIC_METHOD(startSatelliteUpdatesMethodId, positioningClass(),
-                                "startSatelliteUpdates", "(IIZ)I");
+    GET_AND_CHECK_STATIC_METHOD(providerListMethodId, "providerList", jintArray);
+    GET_AND_CHECK_STATIC_METHOD(lastKnownPositionMethodId, "lastKnownPosition",
+                                QtJniTypes::Location, bool);
+    GET_AND_CHECK_STATIC_METHOD(startUpdatesMethodId, "startUpdates", jint, jint, jint, jint);
+    GET_AND_CHECK_STATIC_METHOD(stopUpdatesMethodId, "stopUpdates", void, jint);
+    GET_AND_CHECK_STATIC_METHOD(requestUpdateMethodId, "requestUpdate", jint, jint, jint);
+    GET_AND_CHECK_STATIC_METHOD(startSatelliteUpdatesMethodId, "startSatelliteUpdates",
+                                jint, jint, jint, bool);
 
     return true;
 }
