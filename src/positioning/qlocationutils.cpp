@@ -231,9 +231,9 @@ static void qlocationutils_readZda(const char *data, int size, QGeoPositionInfo 
 
     if (parts.size() > 4 && !parts[2].isEmpty() && !parts[3].isEmpty()
             && parts[4].size() == 4) {     // must be full 4-digit year
-        int day = parts[2].toUInt();
-        int month = parts[3].toUInt();
-        int year = parts[4].toUInt();
+        int day = parts[2].toInt();
+        int month = parts[3].toInt();
+        int year = parts[4].toInt();
         if (day > 0 && month > 0 && year > 0)
             date.setDate(year, month, day);
     }
