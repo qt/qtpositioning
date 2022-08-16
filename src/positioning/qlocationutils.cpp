@@ -525,8 +525,8 @@ bool QLocationUtils::hasValidNmeaChecksum(const char *data, int size)
         }
     }
 
-    const int CSUM_LEN = 2;
-    if (asteriskIndex < 0 || asteriskIndex + CSUM_LEN >= size)
+    constexpr qsizetype CSUM_LEN = 2;
+    if (asteriskIndex < 0 || asteriskIndex >= size - CSUM_LEN)
         return false;
 
     // XOR byte value of all characters between '$' and '*'
