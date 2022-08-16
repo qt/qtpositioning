@@ -501,8 +501,8 @@ bool QLocationUtils::hasValidNmeaChecksum(QByteArrayView bv)
 {
     qsizetype asteriskIndex = bv.indexOf('*');
 
-    const qsizetype CSUM_LEN = 2;
-    if (asteriskIndex < 0 || asteriskIndex + CSUM_LEN >= bv.size())
+    constexpr qsizetype CSUM_LEN = 2;
+    if (asteriskIndex < 0 || asteriskIndex >= bv.size() - CSUM_LEN)
         return false;
 
     // XOR byte value of all characters between '$' and '*'
