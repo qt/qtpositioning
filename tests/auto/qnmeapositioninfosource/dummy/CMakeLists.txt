@@ -12,8 +12,6 @@ qt_internal_add_test(tst_dummynmeapositioninfosource
         ../../utils/qlocationtestutils.cpp ../../utils/qlocationtestutils_p.h
         ../../utils/qnmeaproxyfactory.cpp ../../utils/qnmeaproxyfactory.h
         tst_dummynmeapositioninfosource.cpp
-    DEFINES
-        QT_DISABLE_DEPRECATED_BEFORE=0
     INCLUDE_DIRECTORIES
         ..
     LIBRARIES

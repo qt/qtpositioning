@@ -14,8 +14,6 @@ qt_internal_add_test(tst_qnmeapositioninfosource_simulation
         ../../utils/qnmeaproxyfactory.cpp ../../utils/qnmeaproxyfactory.h
         ../tst_qnmeapositioninfosource.cpp ../tst_qnmeapositioninfosource.h
         tst_qnmeapositioninfosource_simulation.cpp
-    DEFINES
-        QT_DISABLE_DEPRECATED_BEFORE=0
     INCLUDE_DIRECTORIES
         ..
     LIBRARIES
