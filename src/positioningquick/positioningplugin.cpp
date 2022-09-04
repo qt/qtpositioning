@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only
 
 #include <private/qpositioningquickglobal_p.h>
+#include <QGeoCoordinate>
 #include <QtPositioningQuick/private/qquickgeocoordinateanimation_p.h>
 #include <QtCore/QVariantAnimation>
 #include <QtQml/QQmlEngineExtensionPlugin>
@@ -513,8 +514,39 @@ public:
     }
 };
 
+namespace {
+
+bool parseCoordinate(const QVariantMap &map, QGeoCoordinate &c)
+{
+    if (const auto it = map.find(QStringLiteral("latitude")); it != map.end())
+        c.setLatitude(it.value().toDouble());
+    else
+        c.setLatitude(qQNaN());
+    if (const auto it = map.find(QStringLiteral("longitude")); it != map.end())
+        c.setLongitude(it.value().toDouble());
+    else
+        c.setLongitude(qQNaN());
+    if (const auto it = map.find(QStringLiteral("altitude")); it != map.end())
+        c.setAltitude(it.value().toDouble());
+    else
+        c.setAltitude(qQNaN());
+
+    // Not considering the case where the map is valid but containing NaNs.
+    return c.isValid();
+}
+
+}
+
 void QtPositioningDeclarative_initializeModule()
 {
+    if (!QMetaType::registerConverterFunction([](const void *src, void *target) -> bool {
+        const QVariantMap &map = *static_cast<const QVariantMap *>(src);
+        QGeoCoordinate &coord = *static_cast<QGeoCoordinate *>(target);
+        return parseCoordinate(map, coord);
+    }, QMetaType::fromType<QVariantMap>(), QMetaType::fromType<QGeoCoordinate>())) {
+        qWarning("Failed to register conversion function from QVariantMap to QGeoCoordinate");
+    }
+
     qRegisterAnimationInterpolator<QGeoCoordinate>(q_coordinateInterpolator);
 }
 

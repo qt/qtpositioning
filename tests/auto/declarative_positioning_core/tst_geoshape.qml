@@ -215,6 +215,25 @@ Item {
     }
 
     TestCase {
+        name: "Properties"
+        Properties {
+            id: properties
+            coordinate: QtPositioning.coordinate(12.5, 23.6)
+            coordinates: [
+                { latitude: 1.1, longitude: 2.2 },
+                { latitude: 3.3, longitude: 4.4, altitude: 5.5 }
+            ]
+        }
+
+        function test_initialization() {
+            compare(properties.coordinate, QtPositioning.coordinate(12.5, 23.6))
+            compare(properties.coordinates.length, 2)
+            compare(properties.coordinates[0], QtPositioning.coordinate(1.1, 2.2))
+            compare(properties.coordinates[1], QtPositioning.coordinate(3.3, 4.4, 5.5))
+        }
+    }
+
+    TestCase {
         name: "GeoPath path"
         function test_qgeopath_path_operations() {
             var geopath = QtPositioning.path()

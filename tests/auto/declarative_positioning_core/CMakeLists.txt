@@ -19,6 +19,8 @@ qt_internal_add_test(tst_declarative_positioning_core
         main.cpp
         factory.cpp
         factory.h
+        properties.cpp
+        properties.h
     LIBRARIES
         Qt::Positioning
         Qt::Quick
