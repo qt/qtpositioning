@@ -12,6 +12,8 @@
 #include <array>
 #include <QDebug>
 #include <QtCore/QtNumeric>
+#include <QtCore/QDateTime>
+#include <QtCore/QTimeZone>
 
 #include <algorithm>
 
@@ -634,7 +636,7 @@ void QNmeaPositionInfoSourcePrivate::notifyNewUpdate(QGeoPositionInfo *update, b
         // some sentence have time but no date
         QTime time = update->timestamp().time();
         if (time.isValid() && m_currentDate.isValid())
-            update->setTimestamp(QDateTime(m_currentDate, time, Qt::UTC));
+            update->setTimestamp(QDateTime(m_currentDate, time, QTimeZone::UTC));
     }
 
     // Some attributes are sent in separate NMEA sentences. Save and restore the accuracy

@@ -4,9 +4,11 @@
 #include "qgeopositioninfosource_winrt_p.h"
 
 #include <QtCore/qcoreapplication.h>
+#include <QtCore/qdatetime.h>
 #include <QtCore/private/qfunctions_winrt_p.h>
 #include <QtCore/qloggingcategory.h>
 #include <QtCore/qmutex.h>
+#include <QtCore/qtimezone.h>
 #ifdef Q_OS_WINRT
 #include <QtCore/private/qeventdispatcher_winrt_p.h>
 #endif
@@ -559,7 +561,7 @@ HRESULT QGeoPositionInfoSourceWinRT::onPositionChanged(IGeolocator *locator, IPo
                                                      systemTime.wDay),
                                                QTime(systemTime.wHour, systemTime.wMinute,
                                                      systemTime.wSecond, systemTime.wMilliseconds),
-                                               Qt::UTC));
+                                               QTimeZone::UTC));
         }
     }
 

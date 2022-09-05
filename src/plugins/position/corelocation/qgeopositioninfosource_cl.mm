@@ -3,8 +3,10 @@
 
 #include <QTimerEvent>
 #include <QDebug>
+#include <QtCore/qdatetime.h>
 #include <QtCore/qglobal.h>
 #include <QtCore/private/qglobal_p.h>
+#include <QtCore/qtimezone.h>
 
 #include "qgeopositioninfosource_cl_p.h"
 
@@ -38,7 +40,8 @@
 
     // Convert location timestamp to QDateTime
     NSTimeInterval locationTimeStamp = [newLocation.timestamp timeIntervalSince1970];
-    const QDateTime timeStamp = QDateTime::fromMSecsSinceEpoch(qRound64(locationTimeStamp * 1000), Qt::UTC);
+    const QDateTime timeStamp = QDateTime::fromMSecsSinceEpoch(qRound64(locationTimeStamp * 1000),
+                                                               QTimeZone::UTC);
 
     // Construct position info from location data
     QGeoPositionInfo location(QGeoCoordinate(newLocation.coordinate.latitude,

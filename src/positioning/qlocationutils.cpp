@@ -8,7 +8,9 @@
 #include <QTime>
 #include <QList>
 #include <QByteArray>
+#include <QDateTime>
 #include <QDebug>
+#include <QTimeZone>
 
 #include <math.h>
 
@@ -34,7 +36,7 @@ static void qlocationutils_readGga(QByteArrayView bv, QGeoPositionInfo *info, do
     if (parts.size() > 1 && !parts[1].isEmpty()) {
         QTime time;
         if (QLocationUtils::getNmeaTime(parts[1], &time))
-            info->setTimestamp(QDateTime(QDate(), time, Qt::UTC));
+            info->setTimestamp(QDateTime(QDate(), time, QTimeZone::UTC));
     }
 
     if (parts.size() > 5 && parts[3].size() == 1 && parts[5].size() == 1) {
@@ -115,7 +117,7 @@ static void qlocationutils_readGll(QByteArrayView bv, QGeoPositionInfo *info, bo
     if (parts.size() > 5 && !parts[5].isEmpty()) {
         QTime time;
         if (QLocationUtils::getNmeaTime(parts[5], &time))
-            info->setTimestamp(QDateTime(QDate(), time, Qt::UTC));
+            info->setTimestamp(QDateTime(QDate(), time, QTimeZone::UTC));
     }
 
     if (parts.size() > 4 && parts[2].size() == 1 && parts[4].size() == 1) {
@@ -184,7 +186,7 @@ static void qlocationutils_readRmc(QByteArrayView bv, QGeoPositionInfo *info, bo
     if (coord.type() != QGeoCoordinate::InvalidCoordinate)
         info->setCoordinate(coord);
 
-    info->setTimestamp(QDateTime(date, time, Qt::UTC));
+    info->setTimestamp(QDateTime(date, time, QTimeZone::UTC));
 }
 
 static void qlocationutils_readVtg(QByteArrayView bv, QGeoPositionInfo *info, bool *hasFix)
@@ -229,7 +231,7 @@ static void qlocationutils_readZda(QByteArrayView bv, QGeoPositionInfo *info, bo
             date.setDate(year, month, day);
     }
 
-    info->setTimestamp(QDateTime(date, time, Qt::UTC));
+    info->setTimestamp(QDateTime(date, time, QTimeZone::UTC));
 }
 
 QLocationUtils::NmeaSentence QLocationUtils::getNmeaSentenceType(QByteArrayView bv)

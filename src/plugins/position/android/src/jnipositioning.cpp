@@ -10,6 +10,7 @@
 #include <QLoggingCategory>
 #include <QtCore/private/qandroidextras_p.h>
 #include <QCoreApplication>
+#include <QTimeZone>
 #include <android/log.h>
 #include "qgeopositioninfosource_android_p.h"
 #include "qgeosatelliteinfosource_android_p.h"
@@ -238,7 +239,7 @@ namespace AndroidPositioning {
 
         // time stamp
         const jlong timestamp = jniObject.callMethod<jlong>("getTime");
-        info.setTimestamp(QDateTime::fromMSecsSinceEpoch(timestamp, Qt::UTC));
+        info.setTimestamp(QDateTime::fromMSecsSinceEpoch(timestamp, QTimeZone::UTC));
 
         // horizontal accuracy
         attributeExists = jniObject.callMethod<jboolean>("hasAccuracy");
