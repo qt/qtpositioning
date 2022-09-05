@@ -69,24 +69,12 @@ inline const QGeoPathPrivate *QGeoPath::d_func() const
     return static_cast<const QGeoPathPrivate *>(d_ptr.constData());
 }
 
-struct PathVariantConversions
-{
-    PathVariantConversions()
-    {
-        QMetaType::registerConverter<QGeoShape, QGeoPath>();
-        QMetaType::registerConverter<QGeoPath, QGeoShape>();
-    }
-};
-
-Q_GLOBAL_STATIC(PathVariantConversions, initPathConversions)
-
 /*!
     Constructs a new, empty geo path.
 */
 QGeoPath::QGeoPath()
 :   QGeoShape(new QGeoPathPrivate())
 {
-    initPathConversions();
 }
 
 /*!
@@ -96,7 +84,6 @@ QGeoPath::QGeoPath()
 QGeoPath::QGeoPath(const QList<QGeoCoordinate> &path, const qreal &width)
 :   QGeoShape(new QGeoPathPrivate(path, width))
 {
-    initPathConversions();
 }
 
 /*!
@@ -105,7 +92,6 @@ QGeoPath::QGeoPath(const QList<QGeoCoordinate> &path, const qreal &width)
 QGeoPath::QGeoPath(const QGeoPath &other)
 :   QGeoShape(other)
 {
-    initPathConversions();
 }
 
 /*!
@@ -114,7 +100,6 @@ QGeoPath::QGeoPath(const QGeoPath &other)
 QGeoPath::QGeoPath(const QGeoShape &other)
 :   QGeoShape(other)
 {
-    initPathConversions();
     if (type() != QGeoShape::PathType)
         d_ptr = new QGeoPathPrivate();
 }
@@ -700,19 +685,16 @@ void QGeoPathPrivateEager::QGeoPathPrivateEager::updateBoundingBox()
 
 QGeoPathEager::QGeoPathEager() : QGeoPath()
 {
-    initPathConversions();
     d_ptr = new QGeoPathPrivateEager;
 }
 
 QGeoPathEager::QGeoPathEager(const QList<QGeoCoordinate> &path, const qreal &width) : QGeoPath()
 {
-    initPathConversions();
     d_ptr = new QGeoPathPrivateEager(path, width);
 }
 
 QGeoPathEager::QGeoPathEager(const QGeoPath &other) : QGeoPath()
 {
-    initPathConversions();
     d_ptr = new QGeoPathPrivateEager;
     setPath(other.path());
     setWidth(other.width());
@@ -720,7 +702,6 @@ QGeoPathEager::QGeoPathEager(const QGeoPath &other) : QGeoPath()
 
 QGeoPathEager::QGeoPathEager(const QGeoShape &other) : QGeoPath()
 {
-    initPathConversions();
     if (other.type() == QGeoShape::PathType)
         *this = QGeoPathEager(QGeoPath(other));
     else

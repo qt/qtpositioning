@@ -74,24 +74,12 @@ inline const QGeoCirclePrivate *QGeoCircle::d_func() const
     return static_cast<const QGeoCirclePrivate *>(d_ptr.constData());
 }
 
-struct CircleVariantConversions
-{
-    CircleVariantConversions()
-    {
-        QMetaType::registerConverter<QGeoShape, QGeoCircle>();
-        QMetaType::registerConverter<QGeoCircle, QGeoShape>();
-    }
-};
-
-Q_GLOBAL_STATIC(CircleVariantConversions, initCircleConversions)
-
 /*!
     Constructs a new, invalid geo circle.
 */
 QGeoCircle::QGeoCircle()
 :   QGeoShape(new QGeoCirclePrivate)
 {
-    initCircleConversions();
 }
 
 /*!
@@ -99,7 +87,6 @@ QGeoCircle::QGeoCircle()
 */
 QGeoCircle::QGeoCircle(const QGeoCoordinate &center, qreal radius)
 {
-    initCircleConversions();
     d_ptr = new QGeoCirclePrivate(center, radius);
 }
 
@@ -109,7 +96,6 @@ QGeoCircle::QGeoCircle(const QGeoCoordinate &center, qreal radius)
 QGeoCircle::QGeoCircle(const QGeoCircle &other)
 :   QGeoShape(other)
 {
-    initCircleConversions();
 }
 
 /*!
@@ -118,7 +104,6 @@ QGeoCircle::QGeoCircle(const QGeoCircle &other)
 QGeoCircle::QGeoCircle(const QGeoShape &other)
 :   QGeoShape(other)
 {
-    initCircleConversions();
     if (type() != QGeoShape::CircleType)
         d_ptr = new QGeoCirclePrivate;
 }

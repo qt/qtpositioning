@@ -71,24 +71,12 @@ inline const QGeoPolygonPrivate *QGeoPolygon::d_func() const
     return static_cast<const QGeoPolygonPrivate *>(d_ptr.constData());
 }
 
-struct PolygonVariantConversions
-{
-    PolygonVariantConversions()
-    {
-        QMetaType::registerConverter<QGeoShape, QGeoPolygon>();
-        QMetaType::registerConverter<QGeoPolygon, QGeoShape>();
-    }
-};
-
-Q_GLOBAL_STATIC(PolygonVariantConversions, initPolygonConversions)
-
 /*!
     Constructs a new, empty geo polygon.
 */
 QGeoPolygon::QGeoPolygon()
 :   QGeoShape(new QGeoPolygonPrivate())
 {
-    initPolygonConversions();
 }
 
 /*!
@@ -98,7 +86,6 @@ QGeoPolygon::QGeoPolygon()
 QGeoPolygon::QGeoPolygon(const QList<QGeoCoordinate> &path)
 :   QGeoShape(new QGeoPolygonPrivate(path))
 {
-    initPolygonConversions();
 }
 
 /*!
@@ -107,7 +94,6 @@ QGeoPolygon::QGeoPolygon(const QList<QGeoCoordinate> &path)
 QGeoPolygon::QGeoPolygon(const QGeoPolygon &other)
 :   QGeoShape(other)
 {
-    initPolygonConversions();
 }
 
 static void calculatePeripheralPoints(QList<QGeoCoordinate> &path,
@@ -151,7 +137,6 @@ static void calculatePeripheralPoints(QList<QGeoCoordinate> &path,
 QGeoPolygon::QGeoPolygon(const QGeoShape &other)
 :   QGeoShape(other)
 {
-    initPolygonConversions();
     if (type() != QGeoShape::PolygonType) {
         QGeoPolygonPrivate *poly = new QGeoPolygonPrivate();
         if (type() == QGeoShape::CircleType) {
@@ -646,19 +631,16 @@ void QGeoPolygonPrivateEager::updateBoundingBox()
 
 QGeoPolygonEager::QGeoPolygonEager() : QGeoPolygon()
 {
-    initPolygonConversions();
     d_ptr = new QGeoPolygonPrivateEager;
 }
 
 QGeoPolygonEager::QGeoPolygonEager(const QList<QGeoCoordinate> &path) : QGeoPolygon()
 {
-    initPolygonConversions();
     d_ptr = new QGeoPolygonPrivateEager(path);
 }
 
 QGeoPolygonEager::QGeoPolygonEager(const QGeoPolygon &other) : QGeoPolygon()
 {
-    initPolygonConversions();
     // without being able to dynamic_cast the d_ptr, only way to be sure is to reconstruct a new QGeoPolygonPrivateEager
     d_ptr = new QGeoPolygonPrivateEager;
     setPerimeter(other.perimeter());
@@ -668,7 +650,6 @@ QGeoPolygonEager::QGeoPolygonEager(const QGeoPolygon &other) : QGeoPolygon()
 
 QGeoPolygonEager::QGeoPolygonEager(const QGeoShape &other) : QGeoPolygon()
 {
-    initPolygonConversions();
     if (other.type() == QGeoShape::PolygonType)
         *this = QGeoPolygonEager(QGeoPolygon(other));
     else
