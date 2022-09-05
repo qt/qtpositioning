@@ -24,4 +24,20 @@ void Properties::setCoordinates(const QList<QGeoCoordinate> &values)
     emit coordinatesChanged(m_coordinates);
 }
 
+void Properties::setRectangle(const QGeoRectangle &r)
+{
+    if (m_rectangle == r)
+        return;
+    m_rectangle = r;
+    emit rectangleChanged(m_rectangle);
+}
+
+void Properties::setRegion(const QList<QGeoRectangle> &region)
+{
+    if (m_region == region)
+        return;
+    m_region = region;
+    emit regionChanged(m_region);
+}
+
 #include "moc_properties.cpp"

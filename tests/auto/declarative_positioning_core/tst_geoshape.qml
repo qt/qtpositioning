@@ -223,6 +223,22 @@ Item {
                 { latitude: 1.1, longitude: 2.2 },
                 { latitude: 3.3, longitude: 4.4, altitude: 5.5 }
             ]
+            rectangle: box
+            region: [
+                {
+                    topLeft: { latitude: 3.3, longitude: 2.2 },
+                    bottomRight: { latitude: 1.1, longitude: 4.4 }
+                },
+                {
+                    bottomLeft: { latitude: 1.1, longitude: 2.2 },
+                    topRight: { latitude: 3.3, longitude: 4.4 }
+                },
+                {
+                    center: { latitude: 5.5, longitude: 6.6 },
+                    width: 0.5,
+                    height: 0.1
+                }
+            ]
         }
 
         function test_initialization() {
@@ -230,6 +246,14 @@ Item {
             compare(properties.coordinates.length, 2)
             compare(properties.coordinates[0], QtPositioning.coordinate(1.1, 2.2))
             compare(properties.coordinates[1], QtPositioning.coordinate(3.3, 4.4, 5.5))
+
+            compare(properties.rectangle, box)
+            compare(properties.region.length, 3)
+            var r = QtPositioning.rectangle(QtPositioning.coordinate(3.3, 2.2),
+                                            QtPositioning.coordinate(1.1, 4.4))
+            compare(properties.region[0], r)
+            compare(properties.region[1], r)
+            compare(properties.region[2], QtPositioning.rectangle(QtPositioning.coordinate(5.5, 6.6), 0.5, 0.1))
         }
     }
 

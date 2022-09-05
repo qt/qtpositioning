@@ -3,6 +3,7 @@
 
 #include <private/qpositioningquickglobal_p.h>
 #include <QGeoCoordinate>
+#include <QGeoRectangle>
 #include <QtPositioningQuick/private/qquickgeocoordinateanimation_p.h>
 #include <QtCore/QVariantAnimation>
 #include <QtQml/QQmlEngineExtensionPlugin>
@@ -535,6 +536,26 @@ bool parseCoordinate(const QVariantMap &map, QGeoCoordinate &c)
     return c.isValid();
 }
 
+bool parseRectangle(const QVariantMap &map, QGeoRectangle &rect)
+{
+    if (const auto it = map.find(QStringLiteral("topLeft")); it != map.end())
+        rect.setTopLeft(it.value().value<QGeoCoordinate>());
+    if (const auto it = map.find(QStringLiteral("bottomLeft")); it != map.end())
+        rect.setBottomLeft(it.value().value<QGeoCoordinate>());
+    if (const auto it = map.find(QStringLiteral("topRight")); it != map.end())
+        rect.setTopRight(it.value().value<QGeoCoordinate>());
+    if (const auto it = map.find(QStringLiteral("bottomRight")); it != map.end())
+        rect.setBottomRight(it.value().value<QGeoCoordinate>());
+    if (const auto it = map.find(QStringLiteral("center")); it != map.end())
+        rect.setCenter(it.value().value<QGeoCoordinate>());
+    if (const auto it = map.find(QStringLiteral("width")); it != map.end())
+        rect.setWidth(it.value().toDouble());
+    if (const auto it = map.find(QStringLiteral("height")); it != map.end())
+        rect.setHeight(it.value().toDouble());
+
+    // Not considering the case where the map is valid but containing NaNs.
+    return rect.isValid();
+}
 }
 
 void QtPositioningDeclarative_initializeModule()
@@ -545,6 +566,14 @@ void QtPositioningDeclarative_initializeModule()
         return parseCoordinate(map, coord);
     }, QMetaType::fromType<QVariantMap>(), QMetaType::fromType<QGeoCoordinate>())) {
         qWarning("Failed to register conversion function from QVariantMap to QGeoCoordinate");
+    }
+
+    if (!QMetaType::registerConverterFunction([](const void *src, void *target) -> bool {
+        const QVariantMap &map = *static_cast<const QVariantMap *>(src);
+        QGeoRectangle &rect = *static_cast<QGeoRectangle *>(target);
+        return parseRectangle(map, rect);
+    }, QMetaType::fromType<QVariantMap>(), QMetaType::fromType<QGeoRectangle>())) {
+        qWarning("Failed to register conversion function from QVariantMap to QGeoRectangle");
     }
 
     qRegisterAnimationInterpolator<QGeoCoordinate>(q_coordinateInterpolator);
