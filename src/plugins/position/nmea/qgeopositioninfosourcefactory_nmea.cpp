@@ -181,7 +181,8 @@ NmeaSource::NmeaSource(QObject *parent, const QString &fileName)
 
 NmeaSource::~NmeaSource()
 {
-    deviceContainer->releaseSerial(m_sourceName, m_dataSource);
+    if (deviceContainer.exists())
+        deviceContainer->releaseSerial(m_sourceName, m_dataSource);
 }
 
 void NmeaSource::onSocketError(QAbstractSocket::SocketError error)
@@ -349,7 +350,8 @@ NmeaSatelliteSource::NmeaSatelliteSource(QObject *parent, const QString &fileNam
 
 NmeaSatelliteSource::~NmeaSatelliteSource()
 {
-    deviceContainer->releaseSerial(m_sourceName, m_port);
+    if (deviceContainer.exists())
+        deviceContainer->releaseSerial(m_sourceName, m_port);
 }
 
 void NmeaSatelliteSource::onSocketError(QAbstractSocket::SocketError error)
