@@ -120,6 +120,9 @@ static qint64 msecsTo(const QDateTime &from, const QDateTime &to)
     return from.msecsTo(to);
 }
 
+QNmeaReader::~QNmeaReader()
+    = default;
+
 QNmeaRealTimeReader::QNmeaRealTimeReader(QNmeaPositionInfoSourcePrivate *sourcePrivate)
         : QNmeaReader(sourcePrivate), m_update(*new QGeoPositionInfoPrivateNmea)
 {
@@ -144,6 +147,9 @@ QNmeaRealTimeReader::QNmeaRealTimeReader(QNmeaPositionInfoSourcePrivate *sourceP
     }
     m_pushDelay = pushDelay;
 }
+
+QNmeaRealTimeReader::~QNmeaRealTimeReader()
+    = default;
 
 void QNmeaRealTimeReader::readAvailableData()
 {
