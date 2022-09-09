@@ -356,7 +356,7 @@ void tst_QNmeaSatelliteInfoSource::parseDataStream_data()
                                    gnComplexGpsGsaMessage }
             << complexGpsGlnsInView << complexGpsGlnsInUse;
 
-    QTest::newRow("realtime multi-line GPS & GLONASS mixed")
+    QTest::newRow("simulation multi-line GPS & GLONASS mixed")
             << QNmeaSatelliteInfoSource::UpdateMode::SimulationMode
             << QList<QByteArray> { gnComplexGlnsGsaMessage, complexGlnsGsvMessage1,
                                    complexGlnsGsvMessage2,  complexGlnsGsvMessage3,
