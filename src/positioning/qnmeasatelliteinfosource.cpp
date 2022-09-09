@@ -75,6 +75,9 @@ void QNmeaSatelliteInfoSourcePrivate::processNmeaData(QNmeaSatelliteInfoUpdate &
 {
     char buf[1024];
     qint64 size = m_device->readLine(buf, sizeof(buf));
+    if (size <= 0)
+        return;
+
     QList<int> satInUse;
     const auto satSystemType = m_source->parseSatellitesInUseFromNmea(QByteArrayView{buf,static_cast<qsizetype>(size)},
                                                                       satInUse);

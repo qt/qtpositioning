@@ -162,6 +162,9 @@ void QNmeaRealTimeReader::readAvailableData()
 
         char buf[1024];
         qint64 size = m_proxy->m_device->readLine(buf, sizeof(buf));
+        if (size <= 0)
+            continue;
+
         const bool oldFix = m_hasFix;
         bool hasFix;
         const bool parsed = m_proxy->parsePosInfoFromNmeaData(
