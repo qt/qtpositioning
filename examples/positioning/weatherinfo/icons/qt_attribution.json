@@ -9,6 +9,7 @@
         "Homepage": "https://www.deviantart.com/darkobra/art/Tango-Weather-Icon-Pack-98024429",
 
         "License": "Public Domain",
+        "LicenseId": "CC0-1.0",
         "Copyright": "Copyright DarKobra (C Stark)",
         "Files": "weather-fog.png weather-haze.png weather-icy.png weather-sleet.png weather-sunny.png weather-sunny-very-few-clouds.png weather-sunny-few-clouds.png weather-thunder-shower.png"
     },
@@ -22,6 +23,7 @@
         "Homepage": "http://tango.freedesktop.org/Tango_Desktop_Project",
 
         "License": "Public Domain",
+        "LicenseId": "CC0-1.0",
         "Copyright": "Copyright Tango Project contributors",
         "Files": "weather-few-clouds.png weather-overcast.png weather-showers.png weather-storm.png weather-snow.png weather-showers-scattered.png"
     }
