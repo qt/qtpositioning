@@ -34,7 +34,8 @@ struct QGeoCoordinateForeign
 {
     Q_GADGET
     QML_FOREIGN(QGeoCoordinate)
-    QML_ANONYMOUS
+    QML_VALUE_TYPE(geoCoordinate)
+    QML_STRUCTURED_VALUE
     QML_ADDED_IN_VERSION(5, 0)
 };
 
@@ -42,7 +43,8 @@ struct QGeoAddressForeign
 {
     Q_GADGET
     QML_FOREIGN(QGeoAddress)
-    QML_ANONYMOUS
+    QML_VALUE_TYPE(geoAddress)
+    QML_STRUCTURED_VALUE
     QML_ADDED_IN_VERSION(5, 0)
 };
 
@@ -50,7 +52,8 @@ struct QGeoRectangleForeign
 {
     Q_GADGET
     QML_FOREIGN(QGeoRectangle)
-    QML_ANONYMOUS
+    QML_VALUE_TYPE(geoRectangle)
+    QML_STRUCTURED_VALUE
     QML_ADDED_IN_VERSION(5, 0)
 };
 
@@ -58,7 +61,8 @@ struct QGeoCircleForeign
 {
     Q_GADGET
     QML_FOREIGN(QGeoCircle)
-    QML_ANONYMOUS
+    QML_VALUE_TYPE(geoCircle)
+    QML_STRUCTURED_VALUE
     QML_ADDED_IN_VERSION(5, 0)
 };
 
@@ -66,7 +70,8 @@ struct QGeoPathForeign
 {
     Q_GADGET
     QML_FOREIGN(QGeoPath)
-    QML_ANONYMOUS
+    QML_VALUE_TYPE(geoPath)
+    QML_STRUCTURED_VALUE
     QML_ADDED_IN_VERSION(5, 0)
 };
 
@@ -74,7 +79,8 @@ struct QGeoPolygonForeign
 {
     Q_GADGET
     QML_FOREIGN(QGeoPolygon)
-    QML_ANONYMOUS
+    QML_VALUE_TYPE(geoPolygon)
+    QML_STRUCTURED_VALUE
     QML_ADDED_IN_VERSION(5, 0)
 };
 
@@ -82,7 +88,8 @@ struct QGeoLocationForeign
 {
     Q_GADGET
     QML_FOREIGN(QGeoLocation)
-    QML_ANONYMOUS
+    QML_VALUE_TYPE(geoLocation)
+    QML_STRUCTURED_VALUE
     QML_ADDED_IN_VERSION(5, 0)
 };
 
@@ -90,7 +97,8 @@ struct QGeoShapeForeign
 {
     Q_GADGET
     QML_FOREIGN(QGeoShape)
-    QML_ANONYMOUS
+    QML_VALUE_TYPE(geoShape)
+    QML_STRUCTURED_VALUE
     QML_ADDED_IN_VERSION(5, 0)
 };
 
@@ -106,7 +114,8 @@ struct QGeoPositionInfoForeign
 {
     Q_GADGET
     QML_FOREIGN(QGeoPositionInfo)
-    QML_ANONYMOUS
+    QML_VALUE_TYPE(geoPositionInfo)
+    QML_STRUCTURED_VALUE
     QML_ADDED_IN_VERSION(5, 0)
 };
 
