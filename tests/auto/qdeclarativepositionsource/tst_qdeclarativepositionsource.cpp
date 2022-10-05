@@ -136,7 +136,7 @@ void tst_DeclarativePositionSource::positionBinding()
                 m_positionSource->update();
                 // Wait for the update to happen. It should take around 200 ms,
                 // but we want to be on a safe side in case of high CI load.
-                QTRY_COMPARE_WITH_TIMEOUT(spy.count(), 1, 5000);
+                QTRY_COMPARE_WITH_TIMEOUT(spy.size(), 1, 5000);
             },
             [](const QDeclarativePosition *p1, const QDeclarativePosition *p2) {
                 return p1->coordinate() == p2->coordinate();
@@ -166,7 +166,7 @@ void tst_DeclarativePositionSource::activeBinding()
 
     QSignalSpy activeSpy(m_positionSource.get(), &QDeclarativePositionSource::activeChanged);
 
-    QCOMPARE(activeSpy.count(), 0);
+    QCOMPARE(activeSpy.size(), 0);
     QCOMPARE(activeObserver.value(), false);
     QCOMPARE(activeLambdaObserver.value(), false);
 
@@ -176,40 +176,40 @@ void tst_DeclarativePositionSource::activeBinding()
     activeSetter = true;
     QTest::qWait(0); // to trigger singleShot timer in setActive
 
-    QCOMPARE(activeSpy.count(), 1);
+    QCOMPARE(activeSpy.size(), 1);
     QCOMPARE(activeObserver.value(), true);
     QCOMPARE(activeLambdaObserver.value(), true);
 
     activeSetter = false;
 
-    QCOMPARE(activeSpy.count(), 2);
+    QCOMPARE(activeSpy.size(), 2);
     QCOMPARE(activeObserver.value(), false);
     QCOMPARE(activeLambdaObserver.value(), false);
 
     // calling update() does not break the binding
     m_positionSource->update(50);
-    QCOMPARE(activeSpy.count(), 3);
+    QCOMPARE(activeSpy.size(), 3);
     QCOMPARE(activeObserver.value(), true);
     QCOMPARE(activeLambdaObserver.value(), true);
 
     QTRY_COMPARE_WITH_TIMEOUT(m_positionSource->sourceError(),
                               QDeclarativePositionSource::UpdateTimeoutError, 5000);
 
-    QCOMPARE(activeSpy.count(), 4);
+    QCOMPARE(activeSpy.size(), 4);
     QCOMPARE(activeObserver.value(), false);
     QCOMPARE(activeLambdaObserver.value(), false);
 
     activeSetter = true;
     QTest::qWait(0); // to trigger singleShot timer in setActive
 
-    QCOMPARE(activeSpy.count(), 5);
+    QCOMPARE(activeSpy.size(), 5);
     QCOMPARE(activeObserver.value(), true);
     QCOMPARE(activeLambdaObserver.value(), true);
 
     // calling stop() will break the binding
     m_positionSource->stop();
 
-    QCOMPARE(activeSpy.count(), 6);
+    QCOMPARE(activeSpy.size(), 6);
     QCOMPARE(m_positionSource->isActive(), false);
     QCOMPARE(activeObserver.value(), false);
     QCOMPARE(activeLambdaObserver.value(), false);
@@ -219,7 +219,7 @@ void tst_DeclarativePositionSource::activeBinding()
     QTest::qWait(0); // to trigger singleShot timer in setActive
 
     // nothing changed, as the binding is broken
-    QCOMPARE(activeSpy.count(), 6);
+    QCOMPARE(activeSpy.size(), 6);
     QCOMPARE(m_positionSource->isActive(), false);
     QCOMPARE(activeObserver.value(), false);
     QCOMPARE(activeLambdaObserver.value(), false);
@@ -236,7 +236,7 @@ void tst_DeclarativePositionSource::startBreaksActiveBinding()
     QTest::qWait(0); // to trigger singleShot timer in setActive
 
     QCOMPARE(m_positionSource->isActive(), true);
-    QCOMPARE(activeSpy.count(), 1);
+    QCOMPARE(activeSpy.size(), 1);
     QVERIFY(m_positionSource->bindableActive().hasBinding());
 
     // Call start() explicitly, which should break the binding for 'active'
@@ -246,7 +246,7 @@ void tst_DeclarativePositionSource::startBreaksActiveBinding()
     QTest::qWait(0); // to trigger singleShot timer in setActive
 
     QCOMPARE(m_positionSource->isActive(), true);
-    QCOMPARE(activeSpy.count(), 1);
+    QCOMPARE(activeSpy.size(), 1);
     QVERIFY(!m_positionSource->bindableActive().hasBinding());
 }
 
@@ -283,7 +283,7 @@ void tst_DeclarativePositionSource::activeBindingBreak()
 
     // Wait for the single update to complete. It can be either position update
     // or timeout.
-    QTRY_VERIFY_WITH_TIMEOUT(posSpy.count() > 0 || errSpy.count() > 0, 5000);
+    QTRY_VERIFY_WITH_TIMEOUT(posSpy.size() > 0 || errSpy.size() > 0, 5000);
 
     QCOMPARE(m_positionSource->isActive(), false);
     QVERIFY(!m_positionSource->bindableActive().hasBinding());
@@ -300,18 +300,18 @@ void tst_DeclarativePositionSource::intervalOnSourceDependency()
 
     m_positionSource->setUpdateInterval(100);
     QCOMPARE(m_positionSource->updateInterval(), 100);
-    QCOMPARE(intervalSpy.count(), 1);
+    QCOMPARE(intervalSpy.size(), 1);
 
     // "test.source" has a minimum update interval of 200
     m_positionSource->setName("test.source");
     QCOMPARE(m_positionSource->updateInterval(), 200);
-    QCOMPARE(intervalSpy.count(), 2);
+    QCOMPARE(intervalSpy.size(), 2);
 
     // "dummy.source" has a minimum update interval of 100, so we expect our
     // desired interval to be applied
     m_positionSource->setName("dummy.source");
     QCOMPARE(m_positionSource->updateInterval(), 100);
-    QCOMPARE(intervalSpy.count(), 3);
+    QCOMPARE(intervalSpy.size(), 3);
 }
 
 void tst_DeclarativePositionSource::preferredMethodsOnSourceDependency()
@@ -325,20 +325,20 @@ void tst_DeclarativePositionSource::preferredMethodsOnSourceDependency()
             QDeclarativePositionSource::SatellitePositioningMethods);
     QCOMPARE(m_positionSource->preferredPositioningMethods(),
              QDeclarativePositionSource::SatellitePositioningMethods);
-    QCOMPARE(methodsSpy.count(), 1);
+    QCOMPARE(methodsSpy.size(), 1);
 
     // "dummy.source" has only non-satellite methods, so they will be used
     m_positionSource->setName("dummy.source");
     QCOMPARE(m_positionSource->preferredPositioningMethods(),
              QDeclarativePositionSource::NonSatellitePositioningMethods);
-    QCOMPARE(methodsSpy.count(), 2);
+    QCOMPARE(methodsSpy.size(), 2);
 
     // "test.source" has all positioning methods, so satellite will be used,
     // as we initially wanted
     m_positionSource->setName("test.source");
     QCOMPARE(m_positionSource->preferredPositioningMethods(),
              QDeclarativePositionSource::SatellitePositioningMethods);
-    QCOMPARE(methodsSpy.count(), 3);
+    QCOMPARE(methodsSpy.size(), 3);
 }
 
 void tst_DeclarativePositionSource::updateAfterStart()
@@ -359,7 +359,7 @@ void tst_DeclarativePositionSource::updateAfterStart()
     m_positionSource->update(210);
     // Wait for the single update to complete. It can be either position update
     // or timeout.
-    QTRY_VERIFY_WITH_TIMEOUT(posSpy.count() > 0 || errSpy.count() > 0, 5000);
+    QTRY_VERIFY_WITH_TIMEOUT(posSpy.size() > 0 || errSpy.size() > 0, 5000);
     QCOMPARE(m_positionSource->isActive(), true);
 
     m_positionSource->stop();
@@ -383,7 +383,7 @@ void tst_DeclarativePositionSource::startAfterUpdate()
     m_positionSource->start();
     // Wait for the single update to complete. It can be either position update
     // or timeout.
-    QTRY_VERIFY_WITH_TIMEOUT(posSpy.count() > 0 || errSpy.count() > 0, 5000);
+    QTRY_VERIFY_WITH_TIMEOUT(posSpy.size() > 0 || errSpy.size() > 0, 5000);
     QCOMPARE(m_positionSource->isActive(), true);
 
     m_positionSource->stop();
@@ -410,7 +410,7 @@ void tst_DeclarativePositionSource::stopAfterUpdate()
 
     // Wait for the single update to complete. It can be either position update
     // or timeout.
-    QTRY_VERIFY_WITH_TIMEOUT(posSpy.count() > 0 || errSpy.count() > 0, 5000);
+    QTRY_VERIFY_WITH_TIMEOUT(posSpy.size() > 0 || errSpy.size() > 0, 5000);
     QCOMPARE(m_positionSource->isActive(), false);
 }
 
@@ -436,7 +436,7 @@ void tst_DeclarativePositionSource::startStopAfterUpdate()
 
     // Wait for the single update to complete. It can be either position update
     // or timeout.
-    QTRY_VERIFY_WITH_TIMEOUT(posSpy.count() > 0 || errSpy.count() > 0, 5000);
+    QTRY_VERIFY_WITH_TIMEOUT(posSpy.size() > 0 || errSpy.size() > 0, 5000);
     QCOMPARE(m_positionSource->isActive(), false);
 }
 
@@ -500,7 +500,7 @@ void tst_DeclarativePositionSource::startUpdateStopWithNoIntervals()
 
     // Wait for the single update to complete. It can be either position update
     // or timeout.
-    QTRY_VERIFY_WITH_TIMEOUT(posSpy.count() > 0 || errSpy.count() > 0, 5000);
+    QTRY_VERIFY_WITH_TIMEOUT(posSpy.size() > 0 || errSpy.size() > 0, 5000);
     QCOMPARE(m_positionSource->isActive(), false);
 }
 

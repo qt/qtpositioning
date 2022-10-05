@@ -70,7 +70,7 @@ void tst_PositionPlugin::getUpdates()
 
     QSignalSpy spy(src.get(), SIGNAL(positionUpdated(QGeoPositionInfo)));
     src->startUpdates();
-    QTRY_COMPARE_WITH_TIMEOUT(spy.count(), 1, 5000);
+    QTRY_COMPARE_WITH_TIMEOUT(spy.size(), 1, 5000);
     QCOMPARE(spy[0].size(), 1);
 
     QGeoPositionInfo info = qvariant_cast<QGeoPositionInfo>(spy[0][0]);

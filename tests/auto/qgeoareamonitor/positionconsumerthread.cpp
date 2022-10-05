@@ -42,7 +42,7 @@ void PositionConsumerThread::run()
 
     m_mutex.lock();
     m_waitCondition.wait(&m_mutex);
-    m_detectedEnterCount = enterSpy.count();
-    m_detectedExitCount = exitSpy.count();
+    m_detectedEnterCount = enterSpy.size();
+    m_detectedExitCount = exitSpy.size();
     m_mutex.unlock();
 }

@@ -188,7 +188,7 @@ static QString tryFindSerialDevice(const QString &requestedPort)
     QString portName;
     if (requestedPort.isEmpty()) {
         const QList<QSerialPortInfo> ports = QSerialPortInfo::availablePorts();
-        qCDebug(lcNmea) << "Found" << ports.count() << "serial ports";
+        qCDebug(lcNmea) << "Found" << ports.size() << "serial ports";
         if (ports.isEmpty()) {
             qWarning("nmea: No serial ports found");
             return portName;

@@ -81,13 +81,13 @@ private:
 
         QList<int> intValues = tst_qgeosatelliteinfo_intTestValues();
 
-        for (int i=0; i<intValues.count(); i++) {
+        for (int i=0; i<intValues.size(); i++) {
             QGeoSatelliteInfo info;
             info.setSignalStrength(intValues[i]);
             QTest::newRow("signal strength") << info;
         }
 
-        for (int i=0; i<intValues.count(); i++) {
+        for (int i=0; i<intValues.size(); i++) {
             QGeoSatelliteInfo info;
             info.setSatelliteIdentifier(intValues[i]);
             QTest::newRow("satellite identifier") << info;
@@ -101,7 +101,7 @@ private:
 
         QList<QGeoSatelliteInfo::Attribute> attributes = tst_qgeosatelliteinfo_getAttributes();
         QList<qreal> qrealValues = tst_qgeosatelliteinfo_qrealTestValues();
-        for (int i=0; i<attributes.count(); i++) {
+        for (int i=0; i<attributes.size(); i++) {
             QTest::newRow(qPrintable(QString("Attribute %1 = %2").arg(attributes[i]).arg(qrealValues[i])))
                     << updateWithAttribute(attributes[i], qrealValues[i]);
         }
@@ -115,7 +115,7 @@ private slots:
         QCOMPARE(info.satelliteIdentifier(), -1);
         QCOMPARE(info.satelliteSystem(), QGeoSatelliteInfo::Undefined);
         QList<QGeoSatelliteInfo::Attribute> attributes = tst_qgeosatelliteinfo_getAttributes();
-        for (int i=0; i<attributes.count(); i++)
+        for (int i=0; i<attributes.size(); i++)
             QCOMPARE(info.attribute(attributes[i]), qreal(-1.0));
     }
     void constructor_copy()
@@ -210,7 +210,7 @@ private slots:
         QTest::addColumn<int>("signal");
 
         QList<int> intValues = tst_qgeosatelliteinfo_intTestValues();
-        for (int i=0; i<intValues.count(); i++)
+        for (int i=0; i<intValues.size(); i++)
             QTest::newRow(qPrintable(QString("%1").arg(intValues[i]))) << intValues[i];
     }
     void setSatelliteIdentifier()
@@ -229,7 +229,7 @@ private slots:
         QTest::addColumn<int>("satId");
 
         QList<int> intValues = tst_qgeosatelliteinfo_intTestValues();
-        for (int i=0; i<intValues.count(); i++)
+        for (int i=0; i<intValues.size(); i++)
             QTest::newRow(qPrintable(QString("%1").arg(intValues[i]))) << intValues[i];
     }
 
@@ -278,7 +278,7 @@ private slots:
         QList<QGeoSatelliteInfo::Attribute> props;
         props << QGeoSatelliteInfo::Elevation
               << QGeoSatelliteInfo::Azimuth;
-        for (int i=0; i<props.count(); i++) {
+        for (int i=0; i<props.size(); i++) {
             QTest::newRow(qPrintable(QString("Attribute %1 = -1.0").arg(props[i])))
                 << props[i]
                 << qreal(-1.0);

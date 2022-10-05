@@ -760,7 +760,7 @@ void QDeclarativePositionSource::parameter_append(QQmlListProperty<QDeclarativeP
 */
 qsizetype QDeclarativePositionSource::parameter_count(QQmlListProperty<QDeclarativePluginParameter> *prop)
 {
-    return static_cast<QDeclarativePositionSource *>(prop->object)->m_parameters.count();
+    return static_cast<QDeclarativePositionSource *>(prop->object)->m_parameters.size();
 }
 
 /*!
