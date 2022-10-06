@@ -13,8 +13,10 @@ qt_internal_add_jar(Qt${QtLocation_VERSION_MAJOR}AndroidPositioning # special ca
     OUTPUT_DIR "${QT_BUILD_DIR}/jar"
 )
 
+qt_path_join(destination ${INSTALL_DATADIR} "jar")
+
 install_jar(Qt${QtLocation_VERSION_MAJOR}AndroidPositioning # special case
-    DESTINATION jar
+    DESTINATION ${destination}
     COMPONENT Devel
 )
 
