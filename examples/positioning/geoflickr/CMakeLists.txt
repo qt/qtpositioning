@@ -10,6 +10,7 @@ endif()
 set(INSTALL_EXAMPLEDIR "${INSTALL_EXAMPLESDIR}/positioning/geoflickr")
 
 find_package(Qt6 REQUIRED COMPONENTS Core Gui Network Positioning Qml Quick)
+find_package(Qt6 OPTIONAL_COMPONENTS SerialPort)
 
 qt_add_executable(geoflickr
     qmllocationflickr.cpp
@@ -28,6 +29,16 @@ target_link_libraries(geoflickr PRIVATE
     Qt::Qml
     Qt::Quick
 )
+
+# For mobile platforms we need to explicitly link with Qt::SerialPort
+# to use NMEA plugin. The reason for such behavior is that, at least on Android,
+# the plugin dependencies were not explicitly added to the list of deployment
+# targets until Qt 6.5.
+if(ANROID)
+    if (TARGET Qt::SerialPort)
+        target_link_libraries(geoflickr PRIVATE Qt::SerialPort)
+    endif()
+endif()
 
 # Resources:
 set(flickr_resource_files
