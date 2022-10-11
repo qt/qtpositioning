@@ -325,27 +325,6 @@ bool QDeclarativePositionSource::isValidActualComputation() const
     return m_positionSource != nullptr;
 }
 
-void QDeclarativePositionSource::handleUpdateTimeout()
-{
-    // notify will be called by the calling method
-    m_sourceError.setValueBypassingBindings(QDeclarativePositionSource::UpdateTimeoutError);
-
-    if (!m_active)
-        return;
-
-    if (m_singleUpdate) {
-        m_singleUpdate = false;
-
-        if (!m_regularUpdates) {
-            // only singleUpdate based timeouts change activity
-            // continuous updates may resume again
-            // (see QGeoPositionInfoSource::startUpdates())
-            m_active.setValueBypassingBindings(false);
-            m_active.notify();
-        }
-    }
-}
-
 /*!
     \internal
 */
@@ -868,7 +847,7 @@ void QDeclarativePositionSource::sourceErrorReceived(const QGeoPositionInfoSourc
     else if (error == QGeoPositionInfoSource::ClosedError)
         m_sourceError.setValueBypassingBindings(QDeclarativePositionSource::ClosedError);
     else if (error == QGeoPositionInfoSource::UpdateTimeoutError)
-        handleUpdateTimeout(); // also sets m_sourceError
+        m_sourceError.setValueBypassingBindings(QDeclarativePositionSource::UpdateTimeoutError);
     else if (error == QGeoPositionInfoSource::NoError)
         return; //nothing to do
     else
@@ -876,6 +855,16 @@ void QDeclarativePositionSource::sourceErrorReceived(const QGeoPositionInfoSourc
 
     m_sourceError.notify();
     emit sourceErrorChanged();
+
+    // if an error occurred during single update, the update is stopped, so we
+    // need to change the active state.
+    if (m_active && m_singleUpdate) {
+        m_singleUpdate = false;
+        if (!m_regularUpdates) {
+            m_active.setValueBypassingBindings(false);
+            m_active.notify();
+        }
+    }
 }
 
 QT_END_NAMESPACE

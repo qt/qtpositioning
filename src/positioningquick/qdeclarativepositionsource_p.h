@@ -132,7 +132,6 @@ private Q_SLOTS:
     void notifySupportedPositioningMethodsChanged();
 
 private:
-    void handleUpdateTimeout();
     void setPosition(const QGeoPositionInfo &pi);
     void setSource(QGeoPositionInfoSource *source);
     bool parametersReady();
