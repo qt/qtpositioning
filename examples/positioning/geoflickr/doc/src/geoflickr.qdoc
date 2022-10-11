@@ -56,11 +56,19 @@
 
     \snippet geoflickr/flickrmobile/GeoTab.qml possrc
 
-    When the "Locate and update" button is pressed, we first interrogate
-    the \l PositionSource to check if it has an available backend for
-    positioning data. If it does not, we fall back to using a pre-recorded
-    NMEA log for demonstration. We then instruct the \l PositionSource to
-    request a location \l {QtPositioning::PositionSource::}{update}.
+    When the "Locate and update" button is pressed, we instruct the
+    \l PositionSource to request a location
+    \l {QtPositioning::PositionSource::}{update}. If the update finishes with
+    an error, we check if the default backend is capable of providing
+    positioning data. If it's not, we switch to \c {nmea} backend with
+    pre-recorded data, and request the location
+    \l {QtPositioning::PositionSource::}{update} again.
+
+    We cannot check the \l {PositionSource::}{supportedPositioningMethods} in
+    advance, because on mobile platforms (Android and iOS) this method will
+    return \c {NoPositioningMethods} before the permissions are granted.
+    And the permissions request is first performed when location update is
+    requested.
 
     \snippet geoflickr/flickrmobile/GeoTab.qml locatebutton-top
     \snippet geoflickr/flickrmobile/GeoTab.qml locatebutton-clicked
