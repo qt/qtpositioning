@@ -4,6 +4,6 @@
     "Position": true,
     "Satellite": true,
     "Monitor" : false,
-    "Priority": 1000,
+    "Priority": 900,
     "Testable": false
 }
