@@ -2,7 +2,7 @@
     "Keys": ["nmea"],
     "Provider": "nmea",
     "Position": true,
-    "Satellite": false,
+    "Satellite": true,
     "Monitor" : false,
     "Priority": 1000,
     "Testable": false
