@@ -13,3 +13,9 @@ OTHER_FILES += flickr.qml \
 
 target.path = $$[QT_INSTALL_EXAMPLES]/positioning/geoflickr
 INSTALLS += target
+
+android {
+    # explicitly link with serialport on mobile platforms in order to
+    # deploy it as a dependecy for nmea plugin
+    QT += serialport
+}
