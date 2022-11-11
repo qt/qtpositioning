@@ -48,7 +48,7 @@ static QString addressLine(const QStringList &parts)
     }
 
     if (parts.at(parts.size() - 2).isEmpty()) {
-        line.chop(penultimateSeparator.length());
+        line.chop(penultimateSeparator.size());
 
         if (!line.isEmpty())
             line.append(parts.at(parts.size() - 1));
@@ -301,7 +301,7 @@ static QString formattedAddress(const QGeoAddress &address,
         text += addressLine(QStringList() << address.country() << newLine);
     }
 
-    text.chop(newLine.length());
+    text.chop(newLine.size());
     return text;
 }
 

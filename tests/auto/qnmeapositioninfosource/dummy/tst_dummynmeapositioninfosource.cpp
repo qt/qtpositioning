@@ -87,7 +87,7 @@ void tst_DummyNmeaPositionInfoSource::testOverloadedParseFunction()
 
     proxy->feedBytes(QString("The parser converts\n").toLatin1());
 
-    QTRY_VERIFY_WITH_TIMEOUT((spy.count() == 1), 10000);
+    QTRY_VERIFY_WITH_TIMEOUT((spy.size() == 1), 10000);
     pos = spy.at(0).at(0).value<QGeoPositionInfo>();
 
     QVERIFY((pos.coordinate().latitude() == 0.0)
@@ -98,7 +98,7 @@ void tst_DummyNmeaPositionInfoSource::testOverloadedParseFunction()
 
     proxy->feedBytes(QString("any data it receives\n").toLatin1());
 
-    QTRY_VERIFY_WITH_TIMEOUT((spy.count() == 1), 10000);
+    QTRY_VERIFY_WITH_TIMEOUT((spy.size() == 1), 10000);
     pos = spy.at(0).at(0).value<QGeoPositionInfo>();
 
     QVERIFY((pos.coordinate().latitude() == 1.0)
@@ -109,7 +109,7 @@ void tst_DummyNmeaPositionInfoSource::testOverloadedParseFunction()
 
     proxy->feedBytes(QString("into positions\n").toLatin1());
 
-    QTRY_VERIFY_WITH_TIMEOUT((spy.count() == 1), 10000);
+    QTRY_VERIFY_WITH_TIMEOUT((spy.size() == 1), 10000);
     pos = spy.at(0).at(0).value<QGeoPositionInfo>();
 
     QVERIFY((pos.coordinate().latitude() == 2.0)

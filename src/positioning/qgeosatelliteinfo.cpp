@@ -289,7 +289,7 @@ QDebug QGeoSatelliteInfo::debugStreaming(QDebug dbg, const QGeoSatelliteInfo &in
 
 
     QList<int> attribs = info.d->doubleAttribs.keys();
-    for (int i = 0; i < attribs.count(); ++i) {
+    for (int i = 0; i < attribs.size(); ++i) {
         dbg << ", ";
         switch (attribs[i]) {
             case QGeoSatelliteInfo::Elevation:

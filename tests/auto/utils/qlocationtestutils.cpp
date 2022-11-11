@@ -15,11 +15,11 @@ bool QLocationTestUtils::hasDefaultMonitor()
 
 QString QLocationTestUtils::addNmeaChecksumAndBreaks(const QString &sentence)
 {
-    Q_ASSERT(sentence[0] == '$' && sentence[sentence.length()-1] == '*');
+    Q_ASSERT(sentence[0] == '$' && sentence[sentence.size()-1] == '*');
 
     // XOR byte value of all characters between '$' and '*'
     int result = 0;
-    for (int i=1; i<sentence.length()-1; i++)
+    for (int i=1; i<sentence.size()-1; i++)
         result ^= sentence[i].toLatin1();
     const QString sum = QString::asprintf("%02x", result);
     return sentence + sum + "\r\n";

@@ -83,8 +83,8 @@ private:
 
         QList<QGeoPositionInfo::Attribute> attributes = tst_qgeopositioninfo_getAttributes();
         QList<qreal> values = tst_qgeopositioninfo_qrealTestValues();
-        for (int i=0; i<attributes.count(); i++) {
-            for (int j=0; j<values.count(); j++) {
+        for (int i=0; i<attributes.size(); i++) {
+            for (int j=0; j<values.size(); j++) {
                 QTest::newRow(qPrintable(QString("Attribute %1 = %2").arg(attributes[i]).arg(values[j])))
                         << infoWithAttribute(attributes[i], values[j]);
             }
@@ -278,8 +278,8 @@ private slots:
 
         QList<QGeoPositionInfo::Attribute> attributes = tst_qgeopositioninfo_getAttributes();
         QList<qreal> values = tst_qgeopositioninfo_qrealTestValues();
-        for (int i=0; i<attributes.count(); i++) {
-            for (int j=0; j<values.count(); j++) {
+        for (int i=0; i<attributes.size(); i++) {
+            for (int j=0; j<values.size(); j++) {
                 QTest::newRow(qPrintable(QString("Attribute %1 = %2").arg(attributes[i]).arg(values[j])))
                         << attributes[i] << values[j];
             }

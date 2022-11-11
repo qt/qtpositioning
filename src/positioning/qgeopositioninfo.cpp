@@ -272,7 +272,7 @@ QDebug QGeoPositionInfo::debugStreaming(QDebug dbg, const QGeoPositionInfo &info
 
     QList<QGeoPositionInfo::Attribute> attribs = info.d->doubleAttribs.keys();
     std::stable_sort(attribs.begin(), attribs.end()); // Output a sorted list from an unsorted hash.
-    for (int i = 0; i < attribs.count(); ++i) {
+    for (int i = 0; i < attribs.size(); ++i) {
         dbg << ", ";
         switch (attribs[i]) {
             case QGeoPositionInfo::Direction:

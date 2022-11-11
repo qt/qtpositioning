@@ -114,8 +114,8 @@ void tst_DummyNmeaSatelliteInfoSource::testOverloadedParseFunction()
     // then - used ones
     proxy->feedBytes("USE:5;15\n");
 
-    QTRY_VERIFY_WITH_TIMEOUT(inUseSpy.count() == 1, 10000);
-    QTRY_VERIFY_WITH_TIMEOUT(inViewSpy.count() == 1, 10000);
+    QTRY_VERIFY_WITH_TIMEOUT(inUseSpy.size() == 1, 10000);
+    QTRY_VERIFY_WITH_TIMEOUT(inViewSpy.size() == 1, 10000);
 
     QGeoSatelliteInfo info_1_5;
     info_1_5.setSatelliteSystem(QGeoSatelliteInfo::GPS);

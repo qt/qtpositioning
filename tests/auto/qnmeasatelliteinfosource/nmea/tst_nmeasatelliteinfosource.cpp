@@ -108,13 +108,13 @@ void tst_QNmeaSatelliteInfoSource::backendProperty()
     source.startUpdates();
     feeder->setMessages(messages);
 
-    QTRY_VERIFY_WITH_TIMEOUT(inViewSpy.count() == 1, timeout);
+    QTRY_VERIFY_WITH_TIMEOUT(inViewSpy.size() == 1, timeout);
 
     QCOMPARE(source.backendProperty(QNmeaSatelliteInfoSource::SimulationUpdateInterval).toInt(),
              simulationRate);
     QCOMPARE(source.updateInterval(), updateInterval);
 
-    QCOMPARE(messageSentSpy.count(), desiredMessagesSent);
+    QCOMPARE(messageSentSpy.size(), desiredMessagesSent);
 }
 
 void tst_QNmeaSatelliteInfoSource::backendProperty_data()
@@ -161,7 +161,7 @@ void tst_QNmeaSatelliteInfoSource::parseDataStream()
     source.startUpdates();
     feeder->setMessages(messages);
 
-    QTRY_VERIFY_WITH_TIMEOUT(messageSentSpy.count() == messages.count(), 2000);
+    QTRY_VERIFY_WITH_TIMEOUT(messageSentSpy.size() == messages.size(), 2000);
     QVERIFY(!inViewSpy.isEmpty());
     QVERIFY(!inUseSpy.isEmpty());
 
