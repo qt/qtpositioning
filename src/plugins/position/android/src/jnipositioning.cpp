@@ -19,6 +19,8 @@ Q_DECLARE_JNI_CLASS(QtPositioning, "org/qtproject/qt/android/positioning/QtPosit
 Q_DECLARE_JNI_CLASS(GnssStatus, "android/location/GnssStatus")
 Q_DECLARE_JNI_CLASS(Location, "android/location/Location")
 
+using namespace Qt::StringLiterals;
+
 template<typename T>
 class GlobalClassRefWrapper
 {
@@ -528,7 +530,7 @@ namespace AndroidPositioning {
         // We can only check if we have the needed permissions. Also make sure
         // to request the background location permissions.
         if (!QNativeInterface::QAndroidApplication::isActivityContext()) {
-            const auto permission = QtAndroidPrivate::PreciseBackgroundLocation;
+            const auto permission = "android.permission.ACCESS_BACKGROUND_LOCATION"_L1;
             const auto result = QtAndroidPrivate::checkPermission(permission).result();
             if (result != QtAndroidPrivate::Authorized) {
                 qCWarning(lcPositioning)
@@ -540,7 +542,7 @@ namespace AndroidPositioning {
             // permissions if necessary.
 
             // Android v23+ requires runtime permission check and requests
-            const auto permission = QtAndroidPrivate::PreciseLocation;
+            const QString permission = "android.permission.ACCESS_FINE_LOCATION"_L1;
             auto checkFuture = QtAndroidPrivate::checkPermission(permission);
             if (checkFuture.result() == QtAndroidPrivate::Denied) {
                 auto requestFuture = QtAndroidPrivate::requestPermission(permission);
