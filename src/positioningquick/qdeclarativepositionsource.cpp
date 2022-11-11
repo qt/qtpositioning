@@ -331,7 +331,7 @@ bool QDeclarativePositionSource::isValidActualComputation() const
 void QDeclarativePositionSource::onParameterInitialized()
 {
     m_parametersInitialized = true;
-    for (QDeclarativePluginParameter *p: qAsConst(m_parameters)) {
+    for (QDeclarativePluginParameter *p: std::as_const(m_parameters)) {
         if (!p->isInitialized()) {
             m_parametersInitialized = false;
             break;
@@ -372,7 +372,7 @@ void QDeclarativePositionSource::setSource(QGeoPositionInfoSource *source)
 
 bool QDeclarativePositionSource::parametersReady()
 {
-    for (const QDeclarativePluginParameter *p: qAsConst(m_parameters)) {
+    for (const QDeclarativePluginParameter *p: std::as_const(m_parameters)) {
         if (!p->isInitialized())
             return false;
     }
@@ -782,7 +782,7 @@ void QDeclarativePositionSource::componentComplete()
 {
     m_componentComplete = true;
     m_parametersInitialized = true;
-    for (QDeclarativePluginParameter *p: qAsConst(m_parameters)) {
+    for (QDeclarativePluginParameter *p: std::as_const(m_parameters)) {
         if (!p->isInitialized()) {
             m_parametersInitialized = false;
             connect(p, &QDeclarativePluginParameter::initialized,

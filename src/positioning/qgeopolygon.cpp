@@ -560,7 +560,7 @@ bool QGeoPolygonPrivate::polygonContains(const QGeoCoordinate &coordinate) const
         return false;
 
     // else iterates the holes List checking whether the point is contained inside the holes
-    for (const QList<QGeoCoordinate> &holePath : qAsConst(m_holesList)) {
+    for (const QList<QGeoCoordinate> &holePath : std::as_const(m_holesList)) {
         // ToDo: cache these
         QGeoPolygon holePolygon;
         holePolygon.setPerimeter(holePath);
