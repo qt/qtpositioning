@@ -22,6 +22,7 @@ qt_internal_add_qml_module(PositioningQuick
         qdeclarativepluginparameter_p.h qdeclarativepluginparameter.cpp
         qdeclarativeposition_p.h qdeclarativeposition.cpp
         qdeclarativepositionsource_p.h qdeclarativepositionsource.cpp
+        qdeclarativesatellitesource_p.h qdeclarativesatellitesource.cpp
         qquickgeocoordinateanimation_p.h qquickgeocoordinateanimation.cpp
         locationsingleton_p.h locationsingleton.cpp
         qquickgeocoordinateanimation_p_p.h

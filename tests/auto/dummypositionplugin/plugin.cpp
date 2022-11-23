@@ -3,9 +3,9 @@
 
 #include <QtPositioning/qgeopositioninfosource.h>
 #include <QtPositioning/qgeopositioninfosourcefactory.h>
+#include <QtPositioning/qgeosatelliteinfosource.h>
 #include <QObject>
 #include <QtPlugin>
-#include <QTimer>
 
 QT_USE_NAMESPACE
 
@@ -91,6 +91,66 @@ void DummyPluginSource::requestUpdate(int timeout)
 
 DummyPluginSource::~DummyPluginSource() { }
 
+class DummySatelliteSourcePlugin : public QGeoSatelliteInfoSource
+{
+    Q_OBJECT
+public:
+    DummySatelliteSourcePlugin(const QVariantMap &parameters, QObject *parent = 0);
+    ~DummySatelliteSourcePlugin();
+
+    int minimumUpdateInterval() const override;
+    Error error() const override;
+
+public slots:
+    void startUpdates() override;
+    void stopUpdates() override;
+    void requestUpdate(int timeout = 0) override;
+
+private:
+    Error lastError = QGeoSatelliteInfoSource::NoError;
+};
+
+DummySatelliteSourcePlugin::DummySatelliteSourcePlugin(const QVariantMap &parameters,
+                                                       QObject *parent)
+    : QGeoSatelliteInfoSource(parent)
+{
+    Q_UNUSED(parameters)
+}
+
+DummySatelliteSourcePlugin::~DummySatelliteSourcePlugin()
+{
+}
+
+int DummySatelliteSourcePlugin::minimumUpdateInterval() const
+{
+    return 100;
+}
+
+QGeoSatelliteInfoSource::Error DummySatelliteSourcePlugin::error() const
+{
+    return lastError;
+}
+
+void DummySatelliteSourcePlugin::startUpdates()
+{
+    lastError = QGeoSatelliteInfoSource::NoError;
+}
+
+void DummySatelliteSourcePlugin::stopUpdates()
+{
+    lastError = QGeoSatelliteInfoSource::NoError;
+}
+
+void DummySatelliteSourcePlugin::requestUpdate(int timeout)
+{
+    lastError = QGeoSatelliteInfoSource::NoError;
+    if (timeout < minimumUpdateInterval()) {
+        lastError = QGeoSatelliteInfoSource::UpdateTimeoutError;
+        emit errorOccurred(lastError);
+    }
+}
+
+
 class DummyPluginForTestsFactory : public QObject, public QGeoPositionInfoSourceFactory
 {
     Q_OBJECT
@@ -114,9 +174,7 @@ DummyPluginForTestsFactory::positionInfoSource(QObject *parent, const QVariantMa
 QGeoSatelliteInfoSource *
 DummyPluginForTestsFactory::satelliteInfoSource(QObject *parent, const QVariantMap &parameters)
 {
-    Q_UNUSED(parent);
-    Q_UNUSED(parameters);
-    return nullptr;
+    return new DummySatelliteSourcePlugin(parameters, parent);
 }
 
 QGeoAreaMonitorSource *DummyPluginForTestsFactory::areaMonitor(QObject *parent,
