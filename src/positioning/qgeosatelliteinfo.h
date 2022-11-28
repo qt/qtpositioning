@@ -27,11 +27,17 @@ QT_DECLARE_QESDP_SPECIALIZATION_DTOR_WITH_EXPORT(QGeoSatelliteInfoPrivate, Q_POS
 
 class Q_POSITIONING_EXPORT QGeoSatelliteInfo
 {
+    Q_GADGET
+    Q_PROPERTY(SatelliteSystem satelliteSystem READ satelliteSystem FINAL)
+    Q_PROPERTY(int satelliteIdentifier READ satelliteIdentifier FINAL)
+    Q_PROPERTY(qreal signalStrength READ signalStrength FINAL)
+
 public:
     enum Attribute {
         Elevation,
         Azimuth
     };
+    Q_ENUM(Attribute)
 
     enum SatelliteSystem {
         Undefined = 0x00,
@@ -43,6 +49,7 @@ public:
         Multiple = 0xFF,
         CustomType = 0x100
     };
+    Q_ENUM(SatelliteSystem)
 
     QGeoSatelliteInfo();
     QGeoSatelliteInfo(const QGeoSatelliteInfo &other);
@@ -74,10 +81,10 @@ public:
     int signalStrength() const;
 
     void setAttribute(Attribute attribute, qreal value);
-    qreal attribute(Attribute attribute) const;
+    Q_INVOKABLE qreal attribute(Attribute attribute) const;
     void removeAttribute(Attribute attribute);
 
-    bool hasAttribute(Attribute attribute) const;
+    Q_INVOKABLE bool hasAttribute(Attribute attribute) const;
 
     void detach();
 

@@ -26,6 +26,7 @@
 #include <QtPositioning/QGeoLocation>
 #include <QtPositioning/QGeoShape>
 #include <QtPositioning/QGeoPositionInfo>
+#include <QtPositioning/QGeoSatelliteInfo>
 #include <QtPositioning/private/qgeocoordinateobject_p.h>
 
 QT_BEGIN_NAMESPACE
@@ -118,6 +119,21 @@ struct QGeoPositionInfoForeign
     QML_STRUCTURED_VALUE
     QML_ADDED_IN_VERSION(5, 0)
 };
+
+struct QGeoSatelliteInfoForeign
+{
+    Q_GADGET
+    QML_FOREIGN(QGeoSatelliteInfo)
+    QML_VALUE_TYPE(geoSatelliteInfo)
+    QML_ADDED_IN_VERSION(6, 5)
+};
+
+namespace QGeoSatelliteInfoForeignNamespace
+{
+    Q_NAMESPACE
+    QML_FOREIGN_NAMESPACE(QGeoSatelliteInfo)
+    QML_NAMED_ELEMENT(GeoSatelliteInfo)
+}
 
 QT_END_NAMESPACE
 

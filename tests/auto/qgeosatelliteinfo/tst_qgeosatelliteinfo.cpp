@@ -374,37 +374,44 @@ private slots:
         QGeoSatelliteInfo info;
 
         QTest::newRow("uninitialized") << info << 45
-                << QByteArray("QGeoSatelliteInfo(system=0, satId=-1, signal-strength=-1) 45");
+                << QByteArray("QGeoSatelliteInfo(system=QGeoSatelliteInfo::Undefined, "
+                              "satId=-1, signal-strength=-1) 45");
 
         info = QGeoSatelliteInfo();
         info.setSignalStrength(1);
         QTest::newRow("with SignalStrength") << info << 60
-                << QByteArray("QGeoSatelliteInfo(system=0, satId=-1, signal-strength=1) 60");
+                << QByteArray("QGeoSatelliteInfo(system=QGeoSatelliteInfo::Undefined, "
+                              "satId=-1, signal-strength=1) 60");
 
         info = QGeoSatelliteInfo();
         info.setSatelliteIdentifier(1);
         QTest::newRow("with SatelliteIdentifier") << info << -1
-                << QByteArray("QGeoSatelliteInfo(system=0, satId=1, signal-strength=-1) -1");
+                << QByteArray("QGeoSatelliteInfo(system=QGeoSatelliteInfo::Undefined, "
+                              "satId=1, signal-strength=-1) -1");
 
         info = QGeoSatelliteInfo();
         info.setSatelliteSystem(QGeoSatelliteInfo::GPS);
         QTest::newRow("with System GPS") << info << 1
-                << QByteArray("QGeoSatelliteInfo(system=1, satId=-1, signal-strength=-1) 1");
+                << QByteArray("QGeoSatelliteInfo(system=QGeoSatelliteInfo::GPS, "
+                              "satId=-1, signal-strength=-1) 1");
 
         info = QGeoSatelliteInfo();
         info.setSatelliteSystem(QGeoSatelliteInfo::GLONASS);
         QTest::newRow("with System GLONASS") << info << 56
-                << QByteArray("QGeoSatelliteInfo(system=2, satId=-1, signal-strength=-1) 56");
+                << QByteArray("QGeoSatelliteInfo(system=QGeoSatelliteInfo::GLONASS, "
+                              "satId=-1, signal-strength=-1) 56");
 
         info = QGeoSatelliteInfo();
         info.setAttribute(QGeoSatelliteInfo::Elevation, 1.1);
         QTest::newRow("with Elevation") << info << 0
-                << QByteArray("QGeoSatelliteInfo(system=0, satId=-1, signal-strength=-1, Elevation=1.1) 0");
+                << QByteArray("QGeoSatelliteInfo(system=QGeoSatelliteInfo::Undefined, "
+                              "satId=-1, signal-strength=-1, Elevation=1.1) 0");
 
         info = QGeoSatelliteInfo();
         info.setAttribute(QGeoSatelliteInfo::Azimuth, 1.1);
         QTest::newRow("with Azimuth") << info << 45
-                << QByteArray("QGeoSatelliteInfo(system=0, satId=-1, signal-strength=-1, Azimuth=1.1) 45");
+                << QByteArray("QGeoSatelliteInfo(system=QGeoSatelliteInfo::Undefined, "
+                              "satId=-1, signal-strength=-1, Azimuth=1.1) 45");
     }
 };
 
