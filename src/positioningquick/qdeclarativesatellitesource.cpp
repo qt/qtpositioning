@@ -5,6 +5,64 @@
 
 QT_BEGIN_NAMESPACE
 
+/*!
+    \qmltype SatelliteSource
+    \inqmlmodule QtPositioning
+    \since 6.5
+    \brief The SatelliteSource class provides the satellite information.
+
+    The SatelliteSource class provides information about satellites in use and
+    satellites in view. This class is a QML representation of
+    \l QGeoSatelliteInfoSource.
+
+    Like its C++ equivalent, the class supports different plugins. Use the
+    \l name property to specify the name of the plugin to be used, and provide
+    \l {PluginParameter}s, if required. If the \l name property is not set,
+    a default plugin will be used. See \l {Qt Positioning Plugins} for more
+    information on the available plugins.
+
+    Use the \l valid property to check the SatelliteSource state.
+
+    Use the \l updateInterval property to indicate how often your application
+    wants to receive the satellite information updates. The \l start(),
+    \l stop() and \l update() methods can be used to control the operation
+    of the SatelliteSource, as well as the \l active property, which when set
+    is equivalent to calling \l start() or \l stop().
+
+    When the SatelliteSource is active, satellite information updates can
+    be retrieved using the \l satellitesInView and \l satellitesInUse
+    properties.
+
+    If an error happens during satellite information updates, use the
+    \l sourceError property to get the actual error code.
+
+    \section2 Example Usage
+
+    The following example shows a SatelliteSource which is using the
+    \l {Qt Positioning NMEA plugin}{NMEA} plugin to receive satellite
+    information updates every second and print the amount of satellites
+    in view and satellites in use to the console.
+
+    \qml
+    SatelliteSource {
+        id: source
+        name: "nmea"
+        active: true
+        updateInterval: 1000
+        PluginParameter { name: "nmea.source"; value: "serial:/dev/ttyACM0" }
+
+        onSatellitesInUseChanged: {
+            console.log("Satellites in use:", source.satellitesInUse.length)
+        }
+        onSatellitesInViewChanged: {
+            console.log("Satellites in view:", source.satellitesInView.length)
+        }
+    }
+    \endqml
+
+    \sa QGeoSatelliteInfoSource, PluginParameter, geoSatelliteInfo
+*/
+
 QDeclarativeSatelliteSource::QDeclarativeSatelliteSource()
     : m_active(0), m_componentComplete(0), m_parametersInitialized(0),
       m_startRequested(0), m_defaultSourceUsed(0), m_regularUpdates(0),
@@ -14,31 +72,99 @@ QDeclarativeSatelliteSource::QDeclarativeSatelliteSource()
 
 QDeclarativeSatelliteSource::~QDeclarativeSatelliteSource() = default;
 
+/*!
+    \qmlproperty bool SatelliteSource::active
+
+    This property indicates whether the satellite source is active.
+    Setting this property to \c false equals calling \l stop, and
+    setting this property to \c true equals calling \l start.
+
+    \sa start, stop, update
+*/
 bool QDeclarativeSatelliteSource::isActive() const
 {
     return m_active;
 }
 
+/*!
+    \qmlproperty bool SatelliteSource::valid
+    \readonly
+
+    This property is \c true if the SatelliteSource object has acquired a valid
+    backend plugin to provide data, and \c false otherwise.
+
+    Applications should check this property to determine whether providing
+    satellite information is available and enabled on the runtime platform,
+    and react accordingly.
+*/
 bool QDeclarativeSatelliteSource::isValid() const
 {
     return m_source != nullptr;
 }
 
+/*!
+    \qmlproperty int SatelliteSource::updateInterval
+
+    This property holds the desired interval between updates in milliseconds.
+*/
 int QDeclarativeSatelliteSource::updateInterval() const
 {
     return m_source ? m_source->updateInterval() : m_updateInterval;
 }
 
+/*!
+    \qmlproperty enumeration SatelliteSource::sourceError
+    \readonly
+
+    This property holds the error which last occurred with the backend data
+    provider.
+
+    \list
+        \li SatelliteSource.AccessError - The connection setup to the satellite
+            backend failed because the application lacked the required
+            privileges.
+        \li SatelliteSource.ClosedError - The satellite backend closed the
+            connection, which happens for example in case the user is switching
+            location services to off.
+        \li SatelliteSource.NoError - No error has occurred.
+        \li SatelliteSource.UnknownSourceError - An unidentified error occurred.
+        \li SatelliteSource.UpdateTimeoutError - The satellite information
+            could not be retrieved within the specified timeout.
+    \endlist
+*/
 QDeclarativeSatelliteSource::SourceError QDeclarativeSatelliteSource::sourceError() const
 {
     return m_error;
 }
 
+/*!
+    \qmlproperty string SatelliteSource::name
+
+    This property holds the unique internal name for the plugin currently
+    providing satellite information.
+
+    Setting the property causes the SatelliteSource to use a particular
+    backend plugin. If the SatelliteSource is active at the time that the name
+    property is changed, it will become inactive. If the specified backend
+    cannot be loaded the satellite source will become invalid.
+
+    Changing the name property may cause the \l updateInterval property
+    to change as well.
+*/
 QString QDeclarativeSatelliteSource::name() const
 {
     return m_source ? m_source->sourceName() : m_name;
 }
 
+/*!
+    \qmlproperty list<PluginParameter> SatelliteSource::parameters
+    \readonly
+    \qmldefault
+
+    This property holds the list of plugin parameters.
+
+    \sa PluginParameter
+*/
 QQmlListProperty<QDeclarativePluginParameter> QDeclarativeSatelliteSource::parameters()
 {
     return QQmlListProperty<QDeclarativePluginParameter>(this, nullptr,
@@ -48,11 +174,25 @@ QQmlListProperty<QDeclarativePluginParameter> QDeclarativeSatelliteSource::param
                                                          parameter_clear);
 }
 
+/*!
+    \qmlproperty list<geoSatelliteInfo> SatelliteSource::satellitesInUse
+    \readonly
+
+    This property holds the list of satellites that are currently in use.
+    These are the satellites that are used to get a "fix" - that
+    is, those used to determine the current position.
+*/
 QList<QGeoSatelliteInfo> QDeclarativeSatelliteSource::satellitesInUse() const
 {
     return m_satellitesInUse;
 }
 
+/*!
+    \qmlproperty list<geoSatelliteInfo> SatelliteSource::satellitesInView
+    \readonly
+
+    This property holds the list of satellites that are currently in view.
+*/
 QList<QGeoSatelliteInfo> QDeclarativeSatelliteSource::satellitesInView() const
 {
     return m_satellitesInView;
@@ -119,6 +259,13 @@ void QDeclarativeSatelliteSource::componentComplete()
         createSource(m_name);
 }
 
+/*!
+    \qmlmethod bool SatelliteSource::setBackendProperty(string name, var value)
+
+    Sets the backend-specific property named \a name to \a value.
+    Returns true on success, false otherwise, including if called on an
+    uninitialized SatelliteSource.
+*/
 bool QDeclarativeSatelliteSource::setBackendProperty(const QString &name, const QVariant &value)
 {
     if (m_source)
@@ -126,11 +273,34 @@ bool QDeclarativeSatelliteSource::setBackendProperty(const QString &name, const 
     return false;
 }
 
+/*!
+    \qmlmethod var SatelliteSource::backendProperty(string name)
+
+    Returns the value of the backend-specific property named \a name, if
+    present. Otherwise, including if called on an uninitialized SatelliteSource,
+    the return value will be invalid.
+*/
 QVariant QDeclarativeSatelliteSource::backendProperty(const QString &name) const
 {
     return m_source ? m_source->backendProperty(name) : QVariant{};
 }
 
+/*!
+    \qmlmethod SatelliteSource::update(int timeout = 0)
+
+    A convenience method to request a single update from the satellite source.
+    If there is no source available, this method has no effect.
+
+    If the satellite source is not active, it will be activated for as
+    long as it takes to receive an update, or until the request times
+    out. The request timeout period is plugin-specific.
+
+    The \a timeout is specified in milliseconds. If the \a timeout is zero
+    (the default value), it defaults to a reasonable timeout period as
+    appropriate for the source.
+
+    \sa start, stop, active
+*/
 void QDeclarativeSatelliteSource::update(int timeout)
 {
     if (m_componentComplete && m_parametersInitialized) {
@@ -141,6 +311,15 @@ void QDeclarativeSatelliteSource::update(int timeout)
     }
 }
 
+/*!
+    \qmlmethod SatelliteSource::start()
+
+    Requests updates from the satellite source. Uses \l updateInterval if set,
+    default interval otherwise. If there is no source available, this method
+    has no effect.
+
+    \sa stop, update, active
+*/
 void QDeclarativeSatelliteSource::start()
 {
     if (m_componentComplete && m_parametersInitialized)
@@ -149,6 +328,14 @@ void QDeclarativeSatelliteSource::start()
         m_startRequested = true;
 }
 
+/*!
+    \qmlmethod SatelliteSource::stop()
+
+    Stops updates from the satellite source. If there is no source available or
+    it is not active, this method has no effect.
+
+    \sa start, update, active
+*/
 void QDeclarativeSatelliteSource::stop()
 {
     if (m_source) {
