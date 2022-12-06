@@ -346,6 +346,8 @@ void QDeclarativeSatelliteSource::stop()
             m_active = false;
             emit activeChanged();
         }
+    } else {
+        m_startRequested = false;
     }
 }
 

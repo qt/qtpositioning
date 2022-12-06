@@ -25,6 +25,17 @@ TestCase {
         }
     }
 
+    Component {
+        id: sourceWithIncompleteParameter
+        SatelliteSource {
+            name: "satellitesource.test"
+            PluginParameter {
+                objectName: "incompleteProperty"
+                name: "satellitesystem"
+            }
+        }
+    }
+
     SignalSpy { id: inViewSpy; signalName: "satellitesInViewChanged" }
     SignalSpy { id: inUseSpy; signalName: "satellitesInUseChanged" }
     SignalSpy { id: activeSpy; signalName: "activeChanged" }
@@ -410,6 +421,58 @@ TestCase {
         tryCompare(inViewSpy, "count", 1)
         // after the update is received, the source switches to inactive state
         compare(source.active, false)
+    }
+
+    function test_start_when_incomplete() {
+        var source = sourceWithIncompleteParameter.createObject(top, {})
+        inViewSpy.target = source
+        inViewSpy.clear()
+        var parameterObj = findChild(source, "incompleteProperty")
+
+        source.start() // does nothing, as the parameter is not initialized
+        compare(source.active, false)
+
+        // init parameter
+        parameterObj.value = GeoSatelliteInfo.BEIDOU
+        // source created - should start providing updates
+        tryCompare(source, "active", true)
+
+        tryVerify(function() { return inViewSpy.count > 0 })
+
+        source.stop()
+        tryCompare(source, "active", false)
+    }
+
+    function test_start_stop_when_incomplete() {
+        var source = sourceWithIncompleteParameter.createObject(top, {})
+        var parameterObj = findChild(source, "incompleteProperty")
+
+        source.start() // does nothing, as the parameter is not initialized
+        compare(source.active, false)
+        source.stop() // calling stop() should invalidate request for start
+
+        // init parameter
+        parameterObj.value = GeoSatelliteInfo.BEIDOU
+        // source still should be inactive
+        tryCompare(source, "active", false)
+    }
+
+    function test_update_when_incomplete() {
+        var source = sourceWithIncompleteParameter.createObject(top, {})
+        inViewSpy.target = source
+        inViewSpy.clear()
+        var parameterObj = findChild(source, "incompleteProperty")
+
+        source.update() // does nothing, as the parameter is not initialized
+        compare(source.active, false)
+
+        // init parameter
+        parameterObj.value = GeoSatelliteInfo.BEIDOU
+        // source created - should provide exactly 1 update
+        tryCompare(source, "active", true)
+
+        tryVerify(function() { return inViewSpy.count == 1 })
+        tryCompare(source, "active", false)
     }
 }
 
