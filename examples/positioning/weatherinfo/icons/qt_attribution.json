@@ -11,7 +11,7 @@
         "License": "Public Domain",
         "LicenseId": "CC0-1.0",
         "Copyright": "Copyright DarKobra (C Stark)",
-        "Files": "weather-fog.png weather-haze.png weather-icy.png weather-sleet.png weather-sunny.png weather-sunny-very-few-clouds.png weather-sunny-few-clouds.png weather-thunder-shower.png"
+        "Files": "weather-fog.png weather-haze.png weather-icy.png weather-sleet.png weather-sunny.png weather-sunny-very-few-clouds.png weather-thundershower.png"
     },
     {
         "Id": "weatherinfo-tango-icons",
