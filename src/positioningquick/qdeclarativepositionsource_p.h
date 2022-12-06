@@ -149,15 +149,9 @@ private:
 
     QGeoPositionInfoSource *m_positionSource = nullptr;
     PositioningMethods m_preferredPositioningMethods = AllPositioningMethods;
-    bool m_singleUpdate = false;
-    bool m_regularUpdates = false;
     int m_updateInterval = 0;
     QList<QDeclarativePluginParameter *> m_parameters;
-    bool m_componentComplete = false;
-    bool m_parametersInitialized = false;
-    bool m_startRequested = false;
 
-    bool m_defaultSourceUsed = false;
     Q_OBJECT_COMPAT_PROPERTY(QDeclarativePositionSource, QString, m_sourceName,
                              &QDeclarativePositionSource::setName,
                              &QDeclarativePositionSource::nameChanged)
@@ -177,6 +171,13 @@ private:
 
     Q_OBJECT_COMPUTED_PROPERTY(QDeclarativePositionSource, bool, m_isValid,
                                &QDeclarativePositionSource::isValidActualComputation)
+
+    quint8 m_singleUpdate : 1;
+    quint8 m_regularUpdates : 1;
+    quint8 m_componentComplete : 1;
+    quint8 m_parametersInitialized : 1;
+    quint8 m_startRequested : 1;
+    quint8 m_defaultSourceUsed : 1;
 };
 
 QT_END_NAMESPACE

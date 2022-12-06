@@ -151,6 +151,8 @@ QT_BEGIN_NAMESPACE
 */
 
 QDeclarativePositionSource::QDeclarativePositionSource()
+    : m_singleUpdate(0), m_regularUpdates(0), m_componentComplete(0),
+      m_parametersInitialized(0), m_startRequested(0), m_defaultSourceUsed(0)
 {
     m_position.setValueBypassingBindings(new QDeclarativePosition(this));
 }
@@ -786,7 +788,8 @@ void QDeclarativePositionSource::componentComplete()
         if (!p->isInitialized()) {
             m_parametersInitialized = false;
             connect(p, &QDeclarativePluginParameter::initialized,
-                    this, &QDeclarativePositionSource::onParameterInitialized);
+                    this, &QDeclarativePositionSource::onParameterInitialized,
+                    Qt::SingleShotConnection);
         }
     }
 
