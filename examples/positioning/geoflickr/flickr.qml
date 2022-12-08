@@ -36,13 +36,19 @@ Item {
 
             }
 
-            Mobile.GridDelegate { id: gridDelegate }
+            Component {
+                id: gridDelegate
+                Mobile.GridDelegate {}
+            }
             GridView {
                 x: (width/4-79)/2; y: x
                 id: photoGridView; model: restModel; delegate: gridDelegate; cacheBuffer: 100
                 cellWidth: (parent.width-2)/4; cellHeight: cellWidth; width: parent.width; height: parent.height - 1; z: 6
             }
-            Mobile.ListDelegate { id: listDelegate }
+            Component {
+                id: listDelegate
+                Mobile.ListDelegate {}
+            }
             ListView {
                 id: photoListView; model: restModel; delegate: listDelegate; z: 6
                 width: parent.width; height: parent.height; x: -(parent.width * 1.5); cacheBuffer: 100;
