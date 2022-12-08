@@ -1,7 +1,7 @@
 // Copyright (C) 2017 The Qt Company Ltd.
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR BSD-3-Clause
 
-import QtQuick 2.0
+import QtQuick
 
 Item {
     id: toolbar
@@ -11,17 +11,30 @@ Item {
     signal button1Clicked
     signal button2Clicked
 
-    BorderImage { source: "images/titlebar.sci"; width: parent.width; height: parent.height + 14; y: -7 }
+    BorderImage {
+        source: "images/titlebar.sci"
+        width: parent.width
+        height: parent.height + 14
+        y: -7
+    }
 
     Button {
         id: button1
-        anchors.left: parent.left; anchors.leftMargin: 5; y: 3; width: 140; height: 32
+        anchors.left: parent.left
+        anchors.leftMargin: 5
+        y: 3
+        width: 140
+        height: 32
         onClicked: toolbar.button1Clicked()
     }
 
     Button {
         id: button2
-        anchors.right: parent.right; anchors.rightMargin: 5; y: 3; width: 140; height: 32
+        anchors.right: parent.right
+        anchors.rightMargin: 5
+        y: 3
+        width: 140
+        height: 32
         onClicked: toolbar.button2Clicked()
     }
 }
