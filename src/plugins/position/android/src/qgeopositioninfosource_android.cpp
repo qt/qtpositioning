@@ -212,6 +212,17 @@ void QGeoPositionInfoSourceAndroid::processSinglePositionUpdate(const QGeoPositi
         return;
 
     queuedSingleUpdates.append(pInfo);
+    // Calculate the maximum amount of possibly received updates. It depends on
+    // preferred positioning methods. Two updates if we have both Satellite and
+    // Network, and only one otherwise.
+    const qsizetype maxPossibleUpdates =
+            (preferredPositioningMethods() == QGeoPositionInfoSource::AllPositioningMethods)
+            ? 2 : 1;
+    // If we get the maximum number of updates, we do not need to wait for more
+    if (queuedSingleUpdates.size() == maxPossibleUpdates) {
+        m_requestTimer.stop();
+        requestTimeout();
+    }
 }
 
 void QGeoPositionInfoSourceAndroid::locationProviderDisabled()
