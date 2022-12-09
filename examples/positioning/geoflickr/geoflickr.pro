@@ -11,6 +11,8 @@ OTHER_FILES += flickr.qml \
                flickrcommon/* \
                flickrmobile/*
 
+ios: QMAKE_INFO_PLIST = ../shared/Info.qmake.ios.plist
+
 target.path = $$[QT_INSTALL_EXAMPLES]/positioning/geoflickr
 INSTALLS += target
 
