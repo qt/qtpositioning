@@ -43,6 +43,14 @@ if(ANROID)
     endif()
 endif()
 
+if (IOS)
+    # Using absolute path for shared plist files is a Ninja bug workaround
+    get_filename_component(SHARED_PLIST_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../shared ABSOLUTE)
+    set_target_properties(geoflickr PROPERTIES
+       MACOSX_BUNDLE_INFO_PLIST "${SHARED_PLIST_DIR}/Info.cmake.ios.plist"
+    )
+endif()
+
 # Resources:
 set(flickr_resource_files
     "flickr-90.qml"
