@@ -640,11 +640,10 @@ static void notifySatelliteInfoUpdated(const QList<QGeoSatelliteInfo> &inView,
         return;
     }
 
-    QMetaObject::invokeMethod(source, "processSatelliteUpdateInView", Qt::AutoConnection,
-                              Q_ARG(QList<QGeoSatelliteInfo>, inView), Q_ARG(bool, isSingleUpdate));
-
-    QMetaObject::invokeMethod(source, "processSatelliteUpdateInUse", Qt::AutoConnection,
-                              Q_ARG(QList<QGeoSatelliteInfo>, inUse), Q_ARG(bool, isSingleUpdate));
+    QMetaObject::invokeMethod(source, "processSatelliteUpdate", Qt::AutoConnection,
+                              Q_ARG(QList<QGeoSatelliteInfo>, inView),
+                              Q_ARG(QList<QGeoSatelliteInfo>, inUse),
+                              Q_ARG(bool, isSingleUpdate));
 }
 
 static void satelliteGpsUpdated(JNIEnv *env, jobject thiz, jobjectArray satellites,
