@@ -463,7 +463,7 @@ namespace AndroidPositioning {
                                            androidClassKey);
     }
 
-    QGeoPositionInfoSource::Error requestUpdate(int androidClassKey)
+    QGeoPositionInfoSource::Error requestUpdate(int androidClassKey, int timeout)
     {
         QJniEnvironment env;
         if (!env.jniEnv())
@@ -477,7 +477,8 @@ namespace AndroidPositioning {
 
             int errorCode = QJniObject::callStaticMethod<jint>(
                     positioningClass(), requestUpdateMethodId, androidClassKey,
-                    positioningMethodToInt(source->preferredPositioningMethods()));
+                    positioningMethodToInt(source->preferredPositioningMethods()),
+                    timeout);
             switch (errorCode) {
             case 0:
             case 1:
@@ -693,7 +694,7 @@ static bool registerNatives()
                                 QtJniTypes::Location, bool);
     GET_AND_CHECK_STATIC_METHOD(startUpdatesMethodId, "startUpdates", jint, jint, jint, jint);
     GET_AND_CHECK_STATIC_METHOD(stopUpdatesMethodId, "stopUpdates", void, jint);
-    GET_AND_CHECK_STATIC_METHOD(requestUpdateMethodId, "requestUpdate", jint, jint, jint);
+    GET_AND_CHECK_STATIC_METHOD(requestUpdateMethodId, "requestUpdate", jint, jint, jint, jint);
     GET_AND_CHECK_STATIC_METHOD(startSatelliteUpdatesMethodId, "startSatelliteUpdates",
                                 jint, jint, jint, bool);
 

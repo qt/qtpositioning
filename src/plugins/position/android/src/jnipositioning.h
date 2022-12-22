@@ -17,7 +17,7 @@ namespace AndroidPositioning
 
     QGeoPositionInfoSource::Error startUpdates(int androidClassKey);
     void stopUpdates(int androidClassKey);
-    QGeoPositionInfoSource::Error requestUpdate(int androidClassKey);
+    QGeoPositionInfoSource::Error requestUpdate(int androidClassKey, int timeout);
 
     QGeoSatelliteInfoSource::Error startSatelliteUpdates(int androidClassKey,
                                                          bool isSingleRequest,

@@ -149,7 +149,8 @@ void QGeoPositionInfoSourceAndroid::requestUpdate(int timeout)
     if (updatesRunning && updateInterval() <= timeout)
         return;
 
-    QGeoPositionInfoSource::Error error = AndroidPositioning::requestUpdate(androidClassKeyForSingleRequest);
+    const QGeoPositionInfoSource::Error error =
+            AndroidPositioning::requestUpdate(androidClassKeyForSingleRequest, timeout);
     if (error != QGeoPositionInfoSource::NoError) {
         m_requestTimer.stop();
         setError(error);
