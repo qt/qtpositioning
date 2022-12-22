@@ -37,8 +37,9 @@ public Q_SLOTS:
     void stopUpdates() override;
     void requestUpdate(int timeout = 0) override;
 
-    void processSatelliteUpdateInView(const QList<QGeoSatelliteInfo> &satsInView, bool isSingleUpdate);
-    void processSatelliteUpdateInUse(const QList<QGeoSatelliteInfo> &satsInUse, bool isSingleUpdate);
+    void processSatelliteUpdate(const QList<QGeoSatelliteInfo> &satsInView,
+                                const QList<QGeoSatelliteInfo> &satsInUse,
+                                bool isSingleUpdate);
 
     void locationProviderDisabled();
 private Q_SLOTS:
