@@ -152,24 +152,6 @@ public class QtPositioning implements LocationListener
     }
 
 
-    static private void addActiveListener(QtPositioning listener, String provider)
-    {
-        int androidClassKey = listener.nativeClassReference;
-        //start update thread
-        listener.setActiveLooper(true);
-
-        if (runningListeners.containsKey(androidClassKey) && runningListeners.get(androidClassKey) != listener) {
-            removeActiveListener(androidClassKey);
-        }
-
-        locationManager.requestSingleUpdate(provider,
-                                            listener,
-                                            listener.looper());
-
-        runningListeners.put(androidClassKey, listener);
-    }
-
-
     static private void addActiveListener(QtPositioning listener, String provider, long minTime, float minDistance)
     {
         int androidClassKey = listener.nativeClassReference;
@@ -275,7 +257,7 @@ public class QtPositioning implements LocationListener
         }
     }
 
-    static public int requestUpdate(int androidClassKey, int locationProvider)
+    static public int requestUpdate(int androidClassKey, int locationProvider, int timeout)
     {
         synchronized (m_syncObject) {
             try {
@@ -289,7 +271,8 @@ public class QtPositioning implements LocationListener
                 if ((locationProvider & QT_GPS_PROVIDER) > 0) {
                     Log.d(TAG, "Single update using GPS");
                     try {
-                        addActiveListener(positioningListener, LocationManager.GPS_PROVIDER);
+                        addActiveListener(positioningListener, LocationManager.GPS_PROVIDER,
+                                          timeout, 0);
                     } catch (SecurityException se) {
                         se.printStackTrace();
                         exceptionOccurred = true;
@@ -299,7 +282,8 @@ public class QtPositioning implements LocationListener
                 if ((locationProvider & QT_NETWORK_PROVIDER) > 0) {
                     Log.d(TAG, "Single update using network");
                     try {
-                        addActiveListener(positioningListener, LocationManager.NETWORK_PROVIDER);
+                        addActiveListener(positioningListener, LocationManager.NETWORK_PROVIDER,
+                                          timeout, 0);
                     } catch (SecurityException se) {
                          se.printStackTrace();
                          exceptionOccurred = true;
