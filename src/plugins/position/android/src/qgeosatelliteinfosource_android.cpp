@@ -142,13 +142,18 @@ void QGeoSatelliteInfoSourceAndroid::processSatelliteUpdateInUse(const QList<QGe
     }
 
     m_satsInUse = satsInUse;
+
+    if (!m_satsInView.isEmpty() || !m_satsInUse.isEmpty()) {
+        requestTimer.stop();
+        requestTimeout();
+    }
 }
 
 void QGeoSatelliteInfoSourceAndroid::requestTimeout()
 {
     AndroidPositioning::stopUpdates(androidClassKeyForSingleRequest);
 
-    if (m_satsInView.isEmpty()) {
+    if (m_satsInView.isEmpty() && m_satsInUse.isEmpty()) {
         setError(QGeoSatelliteInfoSource::UpdateTimeoutError);
         return;
     }
