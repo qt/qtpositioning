@@ -17,8 +17,15 @@ qt_internal_add_plugin(QGeoPositionInfoSourceFactoryNmeaPlugin
     LIBRARIES
         Qt::CorePrivate
         Qt::Positioning
-        Qt::SerialPort
         Qt::Network
+)
+
+qt_internal_extend_target(QGeoPositionInfoSourceFactoryNmeaPlugin
+    CONDITION (TARGET Qt::SerialPort)
+    LIBRARIES
+        Qt::SerialPort
+    DEFINES
+        QT_NMEA_PLUGIN_HAS_SERIALPORT
 )
 
 #### Keys ignored in scope 1:.:.:serialnmea.pro:<TRUE>:
