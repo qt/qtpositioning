@@ -4,8 +4,6 @@
 #include "qgeopositioninfosourcefactory_nmea.h"
 #include <QtPositioning/QNmeaPositionInfoSource>
 #include <QtPositioning/QNmeaSatelliteInfoSource>
-#include <QtSerialPort/QSerialPort>
-#include <QtSerialPort/QSerialPortInfo>
 #include <QtNetwork/QTcpSocket>
 #include <QLoggingCategory>
 #include <QSet>
@@ -14,6 +12,12 @@
 #include <QSharedPointer>
 #include "qiopipe_p.h"
 
+#ifdef QT_NMEA_PLUGIN_HAS_SERIALPORT
+#  include <QtSerialPort/QSerialPort>
+#  include <QtSerialPort/QSerialPortInfo>
+#endif
+
+
 Q_LOGGING_CATEGORY(lcNmea, "qt.positioning.nmea")
 
 QT_BEGIN_NAMESPACE
@@ -21,6 +25,8 @@ QT_BEGIN_NAMESPACE
 static const auto sourceParameterName = QStringLiteral("nmea.source");
 static const auto socketScheme = QStringLiteral("socket:");
 static const auto serialScheme = QStringLiteral("serial:");
+
+#ifdef QT_NMEA_PLUGIN_HAS_SERIALPORT
 
 // This class is used only for SerialPort devices, because we can't open the
 // same serial port twice.
@@ -95,6 +101,8 @@ private:
 
 Q_GLOBAL_STATIC(IODeviceContainer, deviceContainer)
 
+#endif // QT_NMEA_PLUGIN_HAS_SERIALPORT
+
 // We use a string prefix to distinguish between the different data sources.
 // "socket:" means that we use a socket connection
 // "serial:" means that we use a serial port connection
@@ -145,8 +153,10 @@ NmeaSource::NmeaSource(QObject *parent, const QString &fileName)
 
 NmeaSource::~NmeaSource()
 {
+#ifdef QT_NMEA_PLUGIN_HAS_SERIALPORT
     if (deviceContainer.exists())
         deviceContainer->releaseSerial(m_sourceName, m_dataSource);
+#endif
 }
 
 void NmeaSource::onSocketError(QAbstractSocket::SocketError error)
@@ -183,6 +193,7 @@ void NmeaSource::parseSourceParameter(const QString &source)
     }
 }
 
+#ifdef QT_NMEA_PLUGIN_HAS_SERIALPORT
 static QString tryFindSerialDevice(const QString &requestedPort)
 {
     QString portName;
@@ -215,9 +226,11 @@ static QString tryFindSerialDevice(const QString &requestedPort)
     }
     return portName;
 }
+#endif // QT_NMEA_PLUGIN_HAS_SERIALPORT
 
 void NmeaSource::addSerialDevice(const QString &requestedPort)
 {
+#ifdef QT_NMEA_PLUGIN_HAS_SERIALPORT
     m_sourceName = tryFindSerialDevice(requestedPort);
     if (m_sourceName.isEmpty())
         return;
@@ -227,6 +240,12 @@ void NmeaSource::addSerialDevice(const QString &requestedPort)
         return;
 
     setDevice(m_dataSource.data());
+#else
+    // As we are not calling setDevice(), the source will be invalid, so
+    // the factory methods will return nullptr.
+    qWarning() << "Plugin was built without serialport support!"
+               << requestedPort << "cannot be used!";
+#endif
 }
 
 void NmeaSource::setFileName(const QString &fileName)
@@ -314,8 +333,10 @@ NmeaSatelliteSource::NmeaSatelliteSource(QObject *parent, const QString &fileNam
 
 NmeaSatelliteSource::~NmeaSatelliteSource()
 {
+#ifdef QT_NMEA_PLUGIN_HAS_SERIALPORT
     if (deviceContainer.exists())
         deviceContainer->releaseSerial(m_sourceName, m_port);
+#endif
 }
 
 void NmeaSatelliteSource::onSocketError(QAbstractSocket::SocketError error)
@@ -360,6 +381,7 @@ void NmeaSatelliteSource::parseRealtimeSource(const QString &source)
             qWarning("nmea: incorrect socket parameters %s:%d", qPrintable(host), port);
         }
     } else {
+#ifdef QT_NMEA_PLUGIN_HAS_SERIALPORT
         // Last chance - this can be serial device.
         m_sourceName = tryFindSerialDevice(source);
         if (m_sourceName.isEmpty())
@@ -370,6 +392,12 @@ void NmeaSatelliteSource::parseRealtimeSource(const QString &source)
             return;
 
         setDevice(m_port.data());
+#else
+        // As we are not calling setDevice(), the source will be invalid, so
+        // the factory methods will return nullptr.
+        qWarning() << "Plugin was built without serialport support!"
+                   << source << "cannot be used!";
+#endif // QT_NMEA_PLUGIN_HAS_SERIALPORT
     }
 }
 
