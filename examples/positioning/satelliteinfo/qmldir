@@ -1,0 +1,8 @@
+module SatelliteInformation
+prefer :/qt/qml/SatelliteInformation/
+Button 1.0 Button.qml
+Main 1.0 Main.qml
+RssiView 1.0 RssiView.qml
+PositionAndStatus 1.0 PositionAndStatus.qml
+SkyView 1.0 SkyView.qml
+ViewSwitch 1.0 ViewSwitch.qml
