@@ -1,24 +1,17 @@
-// Copyright (C) 2017 The Qt Company Ltd.
+// Copyright (C) 2023 The Qt Company Ltd.
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR BSD-3-Clause
 
-#include <QtGui/QGuiApplication>
-#include <QtQml/qqml.h>
-#include <QtQml/QQmlEngine>
-#include <QtQuick/QQuickView>
-#include "satellitemodel.h"
+#include <QtGui/qguiapplication.h>
+#include <QtQml/qqmlapplicationengine.h>
 
 int main(int argc, char *argv[])
 {
     QGuiApplication app(argc, argv);
 
-    QQuickView view;
-    view.setSource(QStringLiteral("qrc:///satelliteinfo.qml"));
-    view.setResizeMode(QQuickView::SizeRootObjectToView);
-
-    QObject::connect(view.engine(), SIGNAL(quit()), qApp, SLOT(quit()));
-    view.show();
+    QQmlApplicationEngine engine;
+    QObject::connect(&engine, &QQmlApplicationEngine::objectCreationFailed, &app,
+                     []() { QCoreApplication::exit(1); }, Qt::QueuedConnection);
+    engine.loadFromModule("SatelliteInformation", "Main");
 
     return app.exec();
 }
-
-
