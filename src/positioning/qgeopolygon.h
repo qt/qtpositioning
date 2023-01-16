@@ -57,11 +57,11 @@ private:
 #ifndef QT_NO_DATASTREAM
     friend QDataStream &operator<<(QDataStream &stream, const QGeoPolygon &polygon)
     {
-        return dataStreamOut(stream, polygon);
+        return stream << static_cast<const QGeoShape &>(polygon);
     }
     friend QDataStream &operator>>(QDataStream &stream, QGeoPolygon &polygon)
     {
-        return dataStreamIn(stream, polygon);
+        return stream >> static_cast<QGeoShape &>(polygon);
     }
 #endif
 };
