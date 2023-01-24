@@ -79,10 +79,4 @@ time stamp of each NMEA sentence to produce a "replay" of the recorded data.
 
 See the \l {Qt Positioning NMEA plugin}{plugin description} for usage examples.
 
-
-\section2 GeoFlickr Example
-
-The \l{GeoFlickr (QML)}{GeoFlickr Example} uses the \l PositionSource to
-download thumbnail images from Flickr relevant to the current location.
-
 */
