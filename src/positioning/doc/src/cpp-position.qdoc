@@ -153,15 +153,17 @@ location data source.
 The \l {Log File Position Source (C++)} example demonstrates how to subclass
 \l QGeoPositionInfoSource to create a custom positioning source.
 
-
 \section1 Examples
 
-\section3 \b{Flickr Example}
+\section3 \b{Log File Position Source Example}
 
-The \l{GeoFlickr QML}{Flickr Example} uses the current location to download thumbnail
-images from Flickr relevant to the current location.
+The \l{Log File Position Source (C++)}{Log File Position Source} Example demonstrates
+how to subclass \l QGeoPositionInfoSource to create a custom positioning source.
 
+\section3 \b{Weather Info Example}
 
+The \l{Weather Info (C++/QML)}{Weather Info} example shows how to use the user's current
+position to retrieve local content from a web service in a C++ plugin for QML.
 
 \section1 Positioning Classes
 

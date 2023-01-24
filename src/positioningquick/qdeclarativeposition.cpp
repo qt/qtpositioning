@@ -37,11 +37,6 @@ QT_BEGIN_NAMESPACE
 
     Position objects are read-only and can only be produced by a PositionSource.
 
-    \section2 Example Usage
-
-    See the example given for the \l{PositionSource} type, or the
-    \l{geoflickr}{GeoFlickr} example application.
-
     \sa PositionSource, coordinate
 */
 

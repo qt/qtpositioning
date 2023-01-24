@@ -49,7 +49,6 @@ qhelpgenerator_wrapper.sh
 target_wrapper.sh
 QtPositioning.version*
 src/positioning/doc/snippets/cpp/positioning_cppsnippet
-examples/positioning/geoflickr/geoflickr
 examples/positioning/logfilepositionsource/logfilepositionsource
 examples/positioning/satelliteinfo/satelliteinfo
 examples/positioning/weatherinfo/weatherinfo

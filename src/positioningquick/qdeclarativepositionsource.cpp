@@ -69,10 +69,6 @@ QT_BEGIN_NAMESPACE
     }
     \endcode
 
-    The \l{geoflickr}{GeoFlickr} example application shows how to use
-    a PositionSource in your application to retrieve local data for users
-    from a REST web service.
-
     \section2 Controlling Operation State
 
     As it's mentioned above, PositionSource provides two ways to control its
