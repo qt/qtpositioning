@@ -3,7 +3,7 @@
 #ifndef CLIENTAPPLICATION_H
 #define CLIENTAPPLICATION_H
 
-#include <QMainWindow>
+#include <QtWidgets/qmainwindow.h>
 
 QT_BEGIN_NAMESPACE
 class QGeoPositionInfo;

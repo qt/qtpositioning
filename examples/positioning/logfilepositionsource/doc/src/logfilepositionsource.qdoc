@@ -5,6 +5,7 @@
 \example logfilepositionsource
 \title Log File Position Source (C++)
 \ingroup qtpositioning-examples
+\meta category {Positioning & Location}
 
 \brief Logfile Position Source shows how to create and work with a custom
        position source. It can be useful for simulating GPS data, or when the

@@ -1,22 +1,25 @@
 // Copyright (C) 2017 The Qt Company Ltd.
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR BSD-3-Clause
-#include <QtCore>
 
 #include "logfilepositionsource.h"
+
+#include <QtCore/qdebug.h>
+#include <QtCore/qfile.h>
+#include <QtCore/qtimer.h>
 
 LogFilePositionSource::LogFilePositionSource(QObject *parent)
     : QGeoPositionInfoSource(parent),
       logFile(new QFile(this)),
       timer(new QTimer(this))
 {
-    connect(timer, SIGNAL(timeout()), this, SLOT(readNextPosition()));
+    connect(timer, &QTimer::timeout, this, &LogFilePositionSource::readNextPosition);
 
     logFile->setFileName(":/simplelog.txt");
     if (!logFile->open(QIODevice::ReadOnly))
         qWarning() << "Error: cannot open source file" << logFile->fileName();
 }
 
-QGeoPositionInfo LogFilePositionSource::lastKnownPosition(bool /*fromSatellitePositioningMethodsOnly*/) const
+QGeoPositionInfo LogFilePositionSource::lastKnownPosition(bool /*satelliteMethodsOnly*/) const
 {
     return lastPosition;
 }

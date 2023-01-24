@@ -16,7 +16,7 @@ class LogFilePositionSource : public QGeoPositionInfoSource
 public:
     LogFilePositionSource(QObject *parent = 0);
 
-    QGeoPositionInfo lastKnownPosition(bool fromSatellitePositioningMethodsOnly = false) const override;
+    QGeoPositionInfo lastKnownPosition(bool satelliteMethodsOnly = false) const override;
 
     PositioningMethods supportedPositioningMethods() const override;
     int minimumUpdateInterval() const override;

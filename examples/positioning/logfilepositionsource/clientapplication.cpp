@@ -1,25 +1,28 @@
 // Copyright (C) 2017 The Qt Company Ltd.
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR BSD-3-Clause
-#include <QtCore>
-#include <QTextEdit>
 
-#include "logfilepositionsource.h"
 #include "clientapplication.h"
+#include "logfilepositionsource.h"
+
+#include <QtWidgets/qtextedit.h>
 
 ClientApplication::ClientApplication(QWidget *parent)
     : QMainWindow(parent)
 {
+    resize(700, 525);
+
     textEdit = new QTextEdit;
     setCentralWidget(textEdit);
 
     LogFilePositionSource *source = new LogFilePositionSource(this);
-    connect(source, SIGNAL(positionUpdated(QGeoPositionInfo)),
-            this, SLOT(positionUpdated(QGeoPositionInfo)));
+    connect(source, &LogFilePositionSource::positionUpdated,
+            this, &ClientApplication::positionUpdated);
 
     source->startUpdates();
 }
 
 void ClientApplication::positionUpdated(const QGeoPositionInfo &info)
 {
-    textEdit->append(QString("Position updated: Date/time = %1, Coordinate = %2").arg(info.timestamp().toString()).arg(info.coordinate().toString()));
+    textEdit->append(tr("Position updated: Date/time = %1, Coordinate = %2").
+                     arg(info.timestamp().toString(), info.coordinate().toString()));
 }
