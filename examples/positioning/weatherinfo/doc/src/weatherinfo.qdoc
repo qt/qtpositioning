@@ -24,20 +24,21 @@
 
     \section1 Weather Data Providers
 
-    The example uses two unrelated weather data providers:
+    The example uses several unrelated weather data providers:
 
     \list
     \li \l {http://www.openweathermap.org}{OpenWeather}
     \li \l {https://www.weatherapi.com/}{WeatherAPI.com}
+    \li \l {https://open-meteo.com/}{Open-Meteo}
     \endlist
 
     The provider to be used is selected automatically at runtime and can be
     changed if the selected provider is not available. However, it can't be
     specified manually.
 
-    \note Free plans are used for both providers, which implies certain
+    \note Free plans are used for all providers, which implies certain
     limitations on the amount of weather requests. If the limits are exceeded,
-    the providers become temporary unavailable. When both providers are
+    the providers become temporary unavailable. When all providers are
     unavailable, the application would not be able to show any weather
     information. In this case it is required to wait until at least one of the
     providers becomes available again.

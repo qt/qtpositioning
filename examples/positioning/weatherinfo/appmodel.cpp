@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR BSD-3-Clause
 
 #include "appmodel.h"
+#include "openmeteobackend.h"
 #include "openweathermapbackend.h"
 #include "weatherapibackend.h"
 
@@ -219,6 +220,7 @@ AppModel::AppModel(QObject *parent) :
 
     d->m_supportedBackends.push_back(new OpenWeatherMapBackend(this));
     d->m_supportedBackends.push_back(new WeatherApiBackend(this));
+    d->m_supportedBackends.push_back(new OpenMeteoBackend(this));
     registerBackend(0);
 
 //! [1]

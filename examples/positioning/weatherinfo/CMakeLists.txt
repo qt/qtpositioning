@@ -46,6 +46,7 @@ qt_add_qml_module(weatherinfo
     AUTO_RESOURCE_PREFIX
     SOURCES
         appmodel.cpp appmodel.h
+        openmeteobackend.cpp openmeteobackend.h
         openweathermapbackend.cpp openweathermapbackend.h
         providerbackend.cpp providerbackend.h
         weatherapibackend.cpp weatherapibackend.h
