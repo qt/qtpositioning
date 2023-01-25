@@ -1,39 +1,43 @@
 // Copyright (C) 2017 The Qt Company Ltd.
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR BSD-3-Clause
 
-import QtQuick 2.0
-import "components"
-//! [0]
-import WeatherInfo 1.0
+pragma ComponentBehavior: Bound
+import QtQuick
 
-Item {
+//! [0]
+Window {
     id: window
 //! [0]
     width: 360
     height: 640
+    visible: true
 
-    state: "loading"
+    Item {
+        id: statesItem
+        visible: false
+        state: "loading"
+        states: [
+            State {
+                name: "loading"
+                PropertyChanges { target: main; opacity: 0 }
+                PropertyChanges { target: wait; opacity: 1 }
+            },
+            State {
+                name: "ready"
+                PropertyChanges { target: main; opacity: 1 }
+                PropertyChanges { target: wait; opacity: 0 }
+            }
+        ]
+    }
 
-    states: [
-        State {
-            name: "loading"
-            PropertyChanges { target: main; opacity: 0 }
-            PropertyChanges { target: wait; opacity: 1 }
-        },
-        State {
-            name: "ready"
-            PropertyChanges { target: main; opacity: 1 }
-            PropertyChanges { target: wait; opacity: 0 }
-        }
-    ]
 //! [1]
     AppModel {
         id: appModel
         onReadyChanged: {
             if (appModel.ready)
-                window.state = "ready"
+                statesItem.state = "ready"
             else
-                window.state = "loading"
+                statesItem.state = "loading"
         }
     }
 //! [1]
@@ -66,7 +70,8 @@ Item {
                 color: "lightgrey"
 
                 Text {
-                    text: (appModel.hasValidCity ? appModel.city : "Unknown location") + (appModel.useGps ? " (GPS)" : "")
+                    text: (appModel.hasValidCity ? appModel.city : "Unknown location")
+                          + (appModel.useGps ? " (GPS)" : "")
                     anchors.fill: parent
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
@@ -98,7 +103,7 @@ Item {
                 }
             }
 
-//! [3]
+        //! [3]
             BigForecastIcon {
                 id: current
 
@@ -106,9 +111,9 @@ Item {
                 height: 2 * (main.height - 25 - 12) / 3
 
                 weatherIcon: (appModel.hasValidWeather
-                          ? appModel.weather.weatherIcon
-                          : "sunny")
-//! [3]
+                              ? appModel.weather.weatherIcon
+                              : "sunny")
+        //! [3]
                 topText: (appModel.hasValidWeather
                           ? appModel.weather.temperature
                           : "??")
@@ -122,9 +127,9 @@ Item {
                         appModel.refreshWeather()
                     }
                 }
-//! [4]
+        //! [4]
             }
-//! [4]
+        //! [4]
 
             Row {
                 id: iconRow
@@ -141,16 +146,16 @@ Item {
                 Repeater {
                     model: appModel.forecast
                     ForecastIcon {
+                        required property string dayOfWeek
+                        required property string temperature
+                        required property string weatherIcon
                         id: forecast1
                         width: iconRow.iconWidth
                         height: iconRow.iconHeight
 
-                        topText: (appModel.hasValidWeather ?
-                                  modelData.dayOfWeek : "??")
-                        bottomText: (appModel.hasValidWeather ?
-                                     modelData.temperature : "??/??")
-                        weatherIcon: (appModel.hasValidWeather ?
-                                      modelData.weatherIcon : "sunny")
+                        topText: (appModel.hasValidWeather ? dayOfWeek : "??")
+                        bottomText: (appModel.hasValidWeather ? temperature : ("??" + "/??"))
+                        weatherIcon: (appModel.hasValidWeather ? weatherIcon : "sunny")
                     }
                 }
             }

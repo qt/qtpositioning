@@ -1,7 +1,7 @@
 // Copyright (C) 2017 The Qt Company Ltd.
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR BSD-3-Clause
 
-import QtQuick 2.0
+import QtQuick
 
 Item {
     id: top
@@ -28,9 +28,9 @@ Item {
         property real side: {
             var h = 3 * top.height / 5
             if (top.width < h)
-                top.width;
+                return top.width;
             else
-                h;
+                return h;
         }
 
         width: icon.side

@@ -1,10 +1,13 @@
+# Copyright (C) 2023 The Qt Company Ltd.
+# SPDX-License-Identifier: BSD-3-Clause
+
 TEMPLATE = app
 TARGET = weatherinfo
 
 QT += core network positioning qml quick
 
 CONFIG += qmltypes
-QML_IMPORT_NAME = WeatherInfo
+QML_IMPORT_NAME = Weather
 QML_IMPORT_MAJOR_VERSION = 1
 
 SOURCES += main.cpp \
@@ -13,20 +16,36 @@ SOURCES += main.cpp \
     providerbackend.cpp \
     weatherapibackend.cpp
 
-OTHER_FILES += weatherinfo.qml \
-    components/WeatherIcon.qml \
-    components/ForecastIcon.qml \
-    components/BigForecastIcon.qml \
-    icons/*
-
-ios: QMAKE_INFO_PLIST = ../shared/Info.qmake.ios.plist
-
-RESOURCES += weatherinfo.qrc
-
 HEADERS += appmodel.h \
     openweathermapbackend.h \
     providerbackend.h \
     weatherapibackend.h
+
+qml_resources.files = \
+    qmldir \
+    BigForecastIcon.qml \
+    ForecastIcon.qml \
+    WeatherIcon.qml \
+    WeatherInfo.qml \
+    icons/weather-few-clouds.png \
+    icons/weather-fog.png \
+    icons/weather-haze.png \
+    icons/weather-icy.png \
+    icons/weather-overcast.png \
+    icons/weather-showers.png \
+    icons/weather-showers-scattered.png \
+    icons/weather-sleet.png \
+    icons/weather-snow.png \
+    icons/weather-storm.png \
+    icons/weather-sunny-very-few-clouds.png \
+    icons/weather-sunny.png \
+    icons/weather-thundershower.png
+
+qml_resources.prefix = /qt/qml/Weather
+
+RESOURCES += qml_resources
+
+ios: QMAKE_INFO_PLIST = ../shared/Info.qmake.ios.plist
 
 target.path = $$[QT_INSTALL_EXAMPLES]/positioning/weatherinfo
 INSTALLS += target

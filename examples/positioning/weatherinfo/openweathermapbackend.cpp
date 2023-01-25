@@ -3,15 +3,15 @@
 
 #include "openweathermapbackend.h"
 
-#include <QNetworkAccessManager>
-#include <QNetworkReply>
-#include <QUrlQuery>
-#include <QJsonDocument>
-#include <QJsonObject>
-#include <QJsonValue>
-#include <QJsonArray>
-#include <QGeoCoordinate>
-#include <QLoggingCategory>
+#include <QtCore/qjsonarray.h>
+#include <QtCore/qjsondocument.h>
+#include <QtCore/qjsonobject.h>
+#include <QtCore/qjsonvalue.h>
+#include <QtCore/qloggingcategory.h>
+#include <QtCore/qurlquery.h>
+#include <QtNetwork/qnetworkaccessmanager.h>
+#include <QtNetwork/qnetworkreply.h>
+#include <QtPositioning/qgeocoordinate.h>
 
 Q_DECLARE_LOGGING_CATEGORY(requestsLog)
 
