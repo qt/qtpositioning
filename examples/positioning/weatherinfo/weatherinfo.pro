@@ -12,11 +12,13 @@ QML_IMPORT_MAJOR_VERSION = 1
 
 SOURCES += main.cpp \
     appmodel.cpp \
+    openmeteobackend.cpp \
     openweathermapbackend.cpp \
     providerbackend.cpp \
     weatherapibackend.cpp
 
 HEADERS += appmodel.h \
+    openmeteobackend.h \
     openweathermapbackend.h \
     providerbackend.h \
     weatherapibackend.h
