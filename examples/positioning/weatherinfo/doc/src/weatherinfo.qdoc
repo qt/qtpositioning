@@ -4,6 +4,7 @@
 /*!
     \example weatherinfo
     \title Weather Info (C++/QML)
+    \meta category {Positioning & Location}
 
     \brief The Weather Info example shows how to use the user's current position
            to retrieve local content from a web service in a C++ plugin for QML.
@@ -110,20 +111,22 @@
     \quotefromfile weatherinfo/weatherinfo.pro
     \skipto CONFIG
     \printuntil QML_IMPORT_MAJOR_VERSION
+    \skipto qml_resources.files
+    \printuntil RESOURCES
 
     \section1 Instantiate the Models in QML
 
     Finally, in the actual QML, we instantiate the \c {AppModel}:
 
-    \snippet weatherinfo/weatherinfo.qml 0
-    \snippet weatherinfo/weatherinfo.qml 1
-    \snippet weatherinfo/weatherinfo.qml 2
+    \snippet weatherinfo/WeatherInfo.qml 0
+    \snippet weatherinfo/WeatherInfo.qml 1
+    \snippet weatherinfo/WeatherInfo.qml 2
 
     Once the model is instantiated like this, we can use its properties
     elsewhere in the QML document:
 
-    \snippet weatherinfo/weatherinfo.qml 3
-    \snippet weatherinfo/weatherinfo.qml 4
+    \snippet weatherinfo/WeatherInfo.qml 3
+    \snippet weatherinfo/WeatherInfo.qml 4
 
     \section1 Files and Attributions
 

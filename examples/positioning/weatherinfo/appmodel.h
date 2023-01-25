@@ -4,15 +4,14 @@
 #ifndef APPMODEL_H
 #define APPMODEL_H
 
-#include <QtCore/QObject>
-#include <QtCore/QString>
-#include <QtNetwork/QNetworkReply>
-#include <QtQml/QQmlListProperty>
-#include <QtQml/qqml.h>
-
-#include <QtPositioning/QGeoPositionInfoSource>
-
 #include "providerbackend.h"
+
+#include <QtCore/qobject.h>
+#include <QtCore/qstring.h>
+#include <QtPositioning/qgeopositioninfo.h>
+#include <QtPositioning/qgeopositioninfosource.h>
+#include <QtQml/qqml.h>
+#include <QtQml/qqmllist.h>
 
 //! [0]
 class WeatherData : public QObject {

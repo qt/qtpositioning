@@ -4,8 +4,6 @@
 cmake_minimum_required(VERSION 3.16)
 project(weatherinfo LANGUAGES CXX)
 
-set(CMAKE_AUTOMOC ON)
-
 if(NOT DEFINED INSTALL_EXAMPLESDIR)
     set(INSTALL_EXAMPLESDIR "examples")
 endif()
@@ -14,11 +12,9 @@ set(INSTALL_EXAMPLEDIR "${INSTALL_EXAMPLESDIR}/positioning/weatherinfo")
 
 find_package(Qt6 REQUIRED COMPONENTS Core Gui Network Positioning Qml Quick)
 
+qt_standard_project_setup()
+
 qt_add_executable(weatherinfo
-    appmodel.cpp appmodel.h
-    providerbackend.cpp providerbackend.h
-    openweathermapbackend.cpp openweathermapbackend.h
-    weatherapibackend.cpp weatherapibackend.h
     main.cpp
 )
 
@@ -45,13 +41,19 @@ if (IOS)
 endif()
 
 qt_add_qml_module(weatherinfo
-    URI WeatherInfo
+    URI Weather
     VERSION 1.0
+    AUTO_RESOURCE_PREFIX
+    SOURCES
+        appmodel.cpp appmodel.h
+        openweathermapbackend.cpp openweathermapbackend.h
+        providerbackend.cpp providerbackend.h
+        weatherapibackend.cpp weatherapibackend.h
     QML_FILES
-        components/BigForecastIcon.qml
-        components/ForecastIcon.qml
-        components/WeatherIcon.qml
-        weatherinfo.qml
+        BigForecastIcon.qml
+        ForecastIcon.qml
+        WeatherIcon.qml
+        WeatherInfo.qml
     RESOURCES
         icons/weather-few-clouds.png
         icons/weather-fog.png
@@ -66,7 +68,6 @@ qt_add_qml_module(weatherinfo
         icons/weather-sunny.png
         icons/weather-thundershower.png
         icons/weather-showers-scattered.png
-    NO_RESOURCE_TARGET_PATH
 )
 
 install(TARGETS weatherinfo

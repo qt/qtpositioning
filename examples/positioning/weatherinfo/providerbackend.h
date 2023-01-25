@@ -4,8 +4,8 @@
 #ifndef PROVIDERBACKEND_H
 #define PROVIDERBACKEND_H
 
-#include <QObject>
-#include <QGeoCoordinate>
+#include <QtCore/qobject.h>
+#include <QtPositioning/qgeocoordinate.h>
 
 struct WeatherInfo
 {
