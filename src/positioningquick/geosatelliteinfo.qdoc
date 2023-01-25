@@ -83,7 +83,7 @@
 /*!
     \qmlmethod bool QtPositioning::geoSatelliteInfo::hasAttribute(Attribute attr)
 
-    Returns \c true if the satellite information contains the attribute \e attr.
+    Returns \c true if the satellite information contains the attribute \a attr.
     Otherwise returns \c false.
 
     See \l attribute() for the list of supported attributes.
