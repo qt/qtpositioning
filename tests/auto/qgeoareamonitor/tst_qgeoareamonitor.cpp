@@ -859,6 +859,9 @@ private slots:
 
     void multipleThreads()
     {
+#if defined(Q_OS_MACOS) && defined(Q_PROCESSOR_ARM)
+        QSKIP("This test randomly hangs on macOS ARM (QTBUG-110931)");
+#endif
         std::unique_ptr<QGeoAreaMonitorSource> obj(
                 QGeoAreaMonitorSource::createSource(QStringLiteral("positionpoll"), 0));
         QVERIFY(obj != nullptr);
