@@ -19,13 +19,13 @@ Window {
         states: [
             State {
                 name: "loading"
-                PropertyChanges { target: main; opacity: 0 }
-                PropertyChanges { target: wait; opacity: 1 }
+                PropertyChanges { main.opacity: 0 }
+                PropertyChanges { wait.opacity: 1 }
             },
             State {
                 name: "ready"
-                PropertyChanges { target: main; opacity: 1 }
-                PropertyChanges { target: wait; opacity: 0 }
+                PropertyChanges { main.opacity: 1 }
+                PropertyChanges { wait.opacity: 0 }
             }
         ]
     }
