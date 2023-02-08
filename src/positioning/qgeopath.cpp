@@ -16,7 +16,6 @@ QT_BEGIN_NAMESPACE
 
 QT_IMPL_METATYPE_EXTERN(QGeoPath)
 
-constexpr int kMaxInt = std::numeric_limits<int>::max();
 constexpr auto kWarningString = u"The path has more elements than fit into an int. "
                                  "This can cause errors while querying elements from QML";
 
@@ -249,7 +248,7 @@ qsizetype QGeoPath::size() const
 {
     Q_D(const QGeoPath);
     const qsizetype result = d->size();
-    if (result > kMaxInt)
+    if (result > std::numeric_limits<int>::max())
         qWarning() << kWarningString;
     return result;
 }
@@ -261,7 +260,7 @@ void QGeoPath::addCoordinate(const QGeoCoordinate &coordinate)
 {
     Q_D(QGeoPath);
     d->addCoordinate(coordinate);
-    if (d->size() > kMaxInt)
+    if (d->size() > std::numeric_limits<int>::max())
         qWarning() << kWarningString;
 }
 
