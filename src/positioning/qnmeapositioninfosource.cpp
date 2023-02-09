@@ -19,9 +19,9 @@
 
 QT_BEGIN_NAMESPACE
 
-#define USE_NMEA_PIMPL 0
+#define USE_POSITION_NMEA_PIMPL 0
 
-#if USE_NMEA_PIMPL
+#if USE_POSITION_NMEA_PIMPL
 class QGeoPositionInfoPrivateNmea : public QGeoPositionInfoPrivate
 {
 public:
@@ -102,7 +102,7 @@ static bool mergePositions(QGeoPositionInfo &dst, const QGeoPositionInfo &src, Q
     updated |= propagateDate(dst, src);
     updated |= propagateAttributes(dst, src);
 
-#if USE_NMEA_PIMPL
+#if USE_POSITION_NMEA_PIMPL
     QGeoPositionInfoPrivateNmea *dstPimpl = static_cast<QGeoPositionInfoPrivateNmea *>(QGeoPositionInfoPrivate::get(dst));
     dstPimpl->nmeaSentences.append(nmeaSentence);
 #else
@@ -225,7 +225,7 @@ void QNmeaRealTimeReader::readAvailableData()
             }
         } else {
             // there was no info with valid TS. Overwrite with whatever is parsed.
-#if USE_NMEA_PIMPL
+#if USE_POSITION_NMEA_PIMPL
             pimpl->nmeaSentences.append(QByteArray(buf, size));
 #endif
             propagateAttributes(pos, m_update);
@@ -375,7 +375,7 @@ static int processSentence(QGeoPositionInfo &info,
                 }
             } else {
                 // there was no info with valid TS. Overwrite with whatever is parsed.
-#if USE_NMEA_PIMPL
+#if USE_POSITION_NMEA_PIMPL
                 pimpl->nmeaSentences.append(QByteArray(buf, size));
 #endif
                 info = pos;

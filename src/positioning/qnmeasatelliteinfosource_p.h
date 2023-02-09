@@ -28,7 +28,7 @@
 
 QT_BEGIN_NAMESPACE
 
-#define USE_NMEA_PIMPL 1
+#define USE_SATELLITE_NMEA_PIMPL 1
 
 struct SatelliteInfo
 {
@@ -48,7 +48,7 @@ struct QNmeaSatelliteInfoUpdate
     bool m_validInView = false; // global state for all satellite systems
     bool m_validInUse = false; // global state for all satellite systems
     bool m_fresh = false;
-#if USE_NMEA_PIMPL
+#if USE_SATELLITE_NMEA_PIMPL
     QByteArray gsa;
     QList<QByteArray> gsv;
 #endif
