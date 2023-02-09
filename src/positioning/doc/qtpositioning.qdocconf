@@ -30,7 +30,7 @@ qhp.QtPositioning.subprojects.examples.selectors = fake:example
 
 tagfile                 = ../../../doc/qtpositioning/qtpositioning.tags
 
-depends += qtcore qtdoc qtquick qtqml qtnetwork qtqmlxmllistmodel qmake qtcmake
+depends += qtcore qtdoc qtquick qtqml qtnetwork qtqmlxmllistmodel qmake qtcmake qtserialport
 
 headerdirs  += .. \
                 ../../positioningquick
