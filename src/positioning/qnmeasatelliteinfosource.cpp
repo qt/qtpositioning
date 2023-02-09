@@ -17,7 +17,7 @@
 
 QT_BEGIN_NAMESPACE
 
-#if USE_NMEA_PIMPL
+#if USE_SATELLITE_NMEA_PIMPL
 class QGeoSatelliteInfoPrivateNmea : public QGeoSatelliteInfoPrivate
 {
 public:
@@ -83,7 +83,7 @@ void QNmeaSatelliteInfoSourcePrivate::processNmeaData(QNmeaSatelliteInfoUpdate &
                                                                       satInUse);
     if (satSystemType != QGeoSatelliteInfo::Undefined) {
         const bool res = updateInfo.setSatellitesInUse(satSystemType, satInUse);
-#if USE_NMEA_PIMPL
+#if USE_SATELLITE_NMEA_PIMPL
         if (res) {
             updateInfo.gsa = QByteArray(buf, size);
             auto &info = updateInfo.m_satellites[satSystemType];
@@ -100,7 +100,7 @@ void QNmeaSatelliteInfoSourcePrivate::processNmeaData(QNmeaSatelliteInfoUpdate &
         }
 #else
         Q_UNUSED(res)
-#endif // USE_NMEA_PIMPL
+#endif // USE_SATELLITE_NMEA_PIMPL
     } else {
         // Here we have the assumption that multiple parts of GSV sentence
         // come one after another. At least this is how it should be.
@@ -109,11 +109,11 @@ void QNmeaSatelliteInfoSourcePrivate::processNmeaData(QNmeaSatelliteInfoUpdate &
                 QByteArrayView{buf,static_cast<qsizetype>(size)}, updateInfo.m_satellitesInViewParsed, systemType);
         if (parserStatus == QNmeaSatelliteInfoSource::PartiallyParsed) {
             updateInfo.m_satellites[systemType].updatingGSV = true;
-#if USE_NMEA_PIMPL
+#if USE_SATELLITE_NMEA_PIMPL
             updateInfo.gsv.append(QByteArray(buf, size));
 #endif
         } else if (parserStatus == QNmeaSatelliteInfoSource::FullyParsed) {
-#if USE_NMEA_PIMPL
+#if USE_SATELLITE_NMEA_PIMPL
             updateInfo.gsv.append(QByteArray(buf, size));
             for (int i = 0; i < updateInfo.m_satellitesInViewParsed.size(); i++) {
                 const QGeoSatelliteInfo &s = updateInfo.m_satellitesInViewParsed.at(i);
@@ -795,7 +795,7 @@ void QNmeaSatelliteInfoUpdate::clear()
     m_validInView = false;
     m_validInUse = false;
     m_fresh = false;
-#if USE_NMEA_PIMPL
+#if USE_SATELLITE_NMEA_PIMPL
     gsa.clear();
     gsv.clear();
 #endif
