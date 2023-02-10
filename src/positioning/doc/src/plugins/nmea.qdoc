@@ -134,8 +134,25 @@ type of source data.
 \section1 Satellite information source usage example
 
 Apart from the position information, \b nmea plugin is also capable of providing
-satellite information. For now it does not have any QML object, but can be
-created directly from C++ code.
+satellite information.
+
+\section2 QML
+
+\code
+// serial port
+SatelliteSource {
+    name: "nmea"
+    PluginParameter { name: "nmea.source"; value: "serial:/dev/ttyUSB0" }
+}
+
+// socket
+SatelliteSource {
+    name: "nmea"
+    PluginParameter { name: "nmea.source"; value: "socket://localhost:22222" }
+}
+\endcode
+
+\section2 C++
 
 \code
 // serial port
@@ -147,6 +164,8 @@ QGeoSatelliteInfoSource *serialSource = QGeoSatelliteInfoSource::createSource("n
 parameters["nmea.source"] = "socket://localhost:22222";
 QGeoSatelliteInfoSource *socketSource = QGeoSatelliteInfoSource::createSource("nmea", parameters, this);
 \endcode
+
+\section2 Settings Custom Simulation Speed
 
 If you want to use \l QGeoSatelliteInfoSource to read file with NMEA stream, you
 can also use additional parameter \c "nmea.satellite_info_simulation_interval".
