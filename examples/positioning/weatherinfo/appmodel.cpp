@@ -6,9 +6,13 @@
 #include "openweathermapbackend.h"
 #include "weatherapibackend.h"
 
-#include <QtCore/qloggingcategory.h>
 #include <QtPositioning/qgeocircle.h>
 #include <QtPositioning/qgeocoordinate.h>
+#if QT_CONFIG(permissions)
+#include <QtCore/qpermissions.h>
+#endif
+#include <QtCore/qcoreapplication.h>
+#include <QtCore/qloggingcategory.h>
 
 Q_LOGGING_CATEGORY(requestsLog, "wapp.requests")
 
@@ -232,7 +236,31 @@ AppModel::AppModel(QObject *parent) :
                 this, &AppModel::positionUpdated);
         connect(d->src, &QGeoPositionInfoSource::errorOccurred,
                 this, &AppModel::positionError);
+#if QT_CONFIG(permissions)
+        QLocationPermission permission;
+        permission.setAccuracy(QLocationPermission::Precise);
+        permission.setAvailability(QLocationPermission::WhenInUse);
+
+        switch (qApp->checkPermission(permission)) {
+        case Qt::PermissionStatus::Undetermined:
+            qApp->requestPermission(permission, [this] (const QPermission& permission) {
+                if (permission.status() == Qt::PermissionStatus::Granted)
+                    d->src->startUpdates();
+                else
+                    positionError(QGeoPositionInfoSource::AccessError);
+            });
+            break;
+        case Qt::PermissionStatus::Denied:
+            qWarning("Location permission is denied");
+            positionError(QGeoPositionInfoSource::AccessError);
+            break;
+        case Qt::PermissionStatus::Granted:
+            d->src->startUpdates();
+            break;
+        }
+#else
         d->src->startUpdates();
+#endif
     } else {
         d->useGps = false;
         d->city = "Brisbane";

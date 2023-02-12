@@ -21,6 +21,7 @@ qt_add_executable(weatherinfo
 set_target_properties(weatherinfo PROPERTIES
     WIN32_EXECUTABLE TRUE
     MACOSX_BUNDLE TRUE
+    MACOSX_BUNDLE_GUI_IDENTIFIER "io.qt.examples.weatherinfo"
 )
 
 target_link_libraries(weatherinfo PRIVATE
@@ -32,12 +33,18 @@ target_link_libraries(weatherinfo PRIVATE
     Qt::Quick
 )
 
-if (IOS)
+if (APPLE)
     # Using absolute path for shared plist files is a Ninja bug workaround
     get_filename_component(SHARED_PLIST_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../shared ABSOLUTE)
-    set_target_properties(weatherinfo PROPERTIES
-       MACOSX_BUNDLE_INFO_PLIST "${SHARED_PLIST_DIR}/Info.cmake.ios.plist"
-    )
+    if (IOS)
+        set_target_properties(weatherinfo PROPERTIES
+            MACOSX_BUNDLE_INFO_PLIST "${SHARED_PLIST_DIR}/Info.cmake.ios.plist"
+        )
+    else()
+        set_target_properties(weatherinfo PROPERTIES
+            MACOSX_BUNDLE_INFO_PLIST "${SHARED_PLIST_DIR}/Info.cmake.macos.plist"
+        )
+    endif()
 endif()
 
 qt_add_qml_module(weatherinfo
@@ -76,3 +83,9 @@ install(TARGETS weatherinfo
     BUNDLE DESTINATION "${INSTALL_EXAMPLEDIR}"
     LIBRARY DESTINATION "${INSTALL_EXAMPLEDIR}"
 )
+
+if(APPLE AND NOT CMAKE_GENERATOR STREQUAL "Xcode")
+    # Need to sign application for location permissions to work
+    add_custom_command(TARGET weatherinfo
+        POST_BUILD COMMAND codesign -s - weatherinfo.app)
+endif()

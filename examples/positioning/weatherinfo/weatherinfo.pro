@@ -48,6 +48,10 @@ qml_resources.prefix = /qt/qml/Weather
 RESOURCES += qml_resources
 
 ios: QMAKE_INFO_PLIST = ../shared/Info.qmake.ios.plist
+macos: QMAKE_INFO_PLIST = ../shared/Info.qmake.macos.plist
 
 target.path = $$[QT_INSTALL_EXAMPLES]/positioning/weatherinfo
 INSTALLS += target
+
+# Sign the app for location permissions to work properly
+macos:!macx-xcode: QMAKE_POST_LINK += codesign -s - weatherinfo.app

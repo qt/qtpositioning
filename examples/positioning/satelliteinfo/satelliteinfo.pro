@@ -29,6 +29,7 @@ data_resources.prefix = /
 RESOURCES += data_resources
 
 ios: QMAKE_INFO_PLIST = ../shared/Info.qmake.ios.plist
+macos: QMAKE_INFO_PLIST = ../shared/Info.qmake.macos.plist
 
 android {
     # explicitly link with serialport in order to
@@ -38,3 +39,6 @@ android {
 
 target.path = $$[QT_INSTALL_EXAMPLES]/positioning/satelliteinfo
 INSTALLS += target
+
+# Sign the app for location permissions to work properly
+macos:!macx-xcode: QMAKE_POST_LINK += codesign -s - satelliteinfo.app
