@@ -453,7 +453,7 @@ QGeoPositionInfoSource::QGeoPositionInfoSource(QGeoPositionInfoSourcePrivate &dd
         \li GeoClue2
         \li Individual providers are not distinguishable but disabled Location services reflected.
     \row
-        \li iOS/tvOS
+        \li iOS
         \li Hardcoced to always return AllPositioningMethods.
     \row
         \li macOS
