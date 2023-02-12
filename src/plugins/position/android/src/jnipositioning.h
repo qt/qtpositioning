@@ -22,7 +22,7 @@ namespace AndroidPositioning
     QGeoSatelliteInfoSource::Error startSatelliteUpdates(int androidClassKey,
                                                          bool isSingleRequest,
                                                          int updateRequestTimeout);
-    bool requestionPositioningPermissions();
+    bool hasPositioningPermissions();
 }
 
 #endif // JNIPOSITIONING_H
