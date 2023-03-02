@@ -324,17 +324,17 @@ static int processSentence(QGeoPositionInfo &info,
 {
     int timeToNextUpdate = -1;
     QDateTime prevTs;
-    if (m_pendingUpdates.size() > 0)
+    if (!m_pendingUpdates.isEmpty())
         prevTs = m_pendingUpdates.head().info.timestamp();
 
     // find the next update with a valid time (as long as the time is valid,
     // we can calculate when the update should be emitted)
-    while (m_nextLine.size() || (m_proxy->m_device && m_proxy->m_device->bytesAvailable() > 0)) {
+    while (!m_nextLine.isEmpty() || (m_proxy->m_device && m_proxy->m_device->bytesAvailable() > 0)) {
         char static_buf[1024];
         char *buf = static_buf;
         QByteArray nextLine;
         qint64 size = 0;
-        if (m_nextLine.size()) {
+        if (!m_nextLine.isEmpty()) {
             // Read something in the previous call, but TS was later.
             size = m_nextLine.size();
             nextLine = m_nextLine;
@@ -432,7 +432,7 @@ bool QNmeaSimulatedReader::setFirstDateTime()
 
 void QNmeaSimulatedReader::simulatePendingUpdate()
 {
-    if (m_pendingUpdates.size() > 0) {
+    if (!m_pendingUpdates.isEmpty()) {
         // will be dequeued in processNextSentence()
         QPendingGeoPositionInfo &pending = m_pendingUpdates.head();
         m_proxy->notifyNewUpdate(&pending.info, pending.hasFix);

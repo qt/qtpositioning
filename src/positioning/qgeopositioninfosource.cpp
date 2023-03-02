@@ -163,7 +163,7 @@ void QGeoPositionInfoSourcePrivate::loadPluginMetadata(QMultiHash<QString, QJson
 {
     QFactoryLoader *l = loader();
     QList<QJsonObject> meta = l->metaData();
-    for (int i = 0; i < meta.size(); ++i) {
+    for (qsizetype i = 0; i < meta.size(); ++i) {
         QJsonObject obj = meta.at(i).value(QStringLiteral("MetaData")).toObject();
         const QString testableKey = QStringLiteral("Testable");
         if (obj.contains(testableKey) && !obj.value(testableKey).toBool()) {
@@ -171,7 +171,7 @@ void QGeoPositionInfoSourcePrivate::loadPluginMetadata(QMultiHash<QString, QJson
             if (inTest)
                 continue;
         }
-        obj.insert(QStringLiteral("index"), i);
+        obj.insert(QStringLiteral("index"), static_cast<qint64>(i));
         plugins.insert(obj.value(QStringLiteral("Provider")).toString(), obj);
     }
 }

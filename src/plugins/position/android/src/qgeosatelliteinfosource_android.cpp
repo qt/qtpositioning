@@ -184,8 +184,7 @@ void QGeoSatelliteInfoSourceAndroid::requestTimeout()
 {
     AndroidPositioning::stopUpdates(androidClassKeyForSingleRequest);
 
-    const int count = m_satsInView.count();
-    if (!count) {
+    if (m_satsInView.isEmpty()) {
         setError(QGeoSatelliteInfoSource::UpdateTimeoutError);
         return;
     }
