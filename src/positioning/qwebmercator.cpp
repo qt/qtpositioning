@@ -8,9 +8,14 @@
 #include <qmath.h>
 
 #include "qdoublevector2d_p.h"
-#include "qdoublevector3d_p.h"
 
 QT_BEGIN_NAMESPACE
+
+// y-Coordinates of maps aproach +-infinity when latitudes approach +-90 and
+// they have to be limited to avoid numerical problems. Here the limit is
+// chosen such that only points below/above +-89.9999999999 deg latituide are
+// cut off, which corresponds to accuracy of qFuzzyCompare
+const static double yCutOff = 4.0;
 
 QDoubleVector2D QWebMercator::coordToMercator(const QGeoCoordinate &coord)
 {
@@ -20,7 +25,7 @@ QDoubleVector2D QWebMercator::coordToMercator(const QGeoCoordinate &coord)
 
     double lat = coord.latitude();
     lat = 0.5 - (std::log(std::tan((pi / 4.0) + (pi / 2.0) * lat / 180.0)) / pi) / 2.0;
-    lat = qBound(0.0, lat, 1.0);
+    lat = qBound(-yCutOff, lat, 1.0 + yCutOff);
 
     return QDoubleVector2D(lon, lat);
 }
@@ -35,19 +40,14 @@ QGeoCoordinate QWebMercator::mercatorToCoord(const QDoubleVector2D &mercator)
 {
     const double pi = M_PI;
 
-    double fx = mercator.x();
-    double fy = mercator.y();
-
-    if (fy < 0.0)
-        fy = 0.0;
-    else if (fy > 1.0)
-        fy = 1.0;
+    const double fx = mercator.x();
+    const double fy = mercator.y();
 
     double lat;
 
-    if (fy == 0.0)
+    if (fy <= -yCutOff)
         lat = 90.0;
-    else if (fy == 1.0)
+    else if (fy >= 1.0 + yCutOff)
         lat = -90.0;
     else
         lat = (180.0 / pi) * (2.0 * std::atan(std::exp(pi * (1.0 - 2.0 * fy))) - (pi / 2.0));
