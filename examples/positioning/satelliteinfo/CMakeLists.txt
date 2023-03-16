@@ -13,7 +13,7 @@ set(INSTALL_EXAMPLEDIR "${INSTALL_EXAMPLESDIR}/positioning/satelliteinfo")
 find_package(Qt6 REQUIRED COMPONENTS Core Quick PositioningQuick)
 find_package(Qt6 OPTIONAL_COMPONENTS SerialPort)
 
-qt_standard_project_setup()
+qt_standard_project_setup(REQUIRES 6.5)
 
 qt_add_executable(satelliteinfo
     main.cpp
@@ -53,7 +53,6 @@ qt_add_resources(satelliteinfo "resources"
 qt_add_qml_module(satelliteinfo
     URI SatelliteInformation
     VERSION 1.0
-    AUTO_RESOURCE_PREFIX
     QML_FILES
         Button.qml
         Main.qml

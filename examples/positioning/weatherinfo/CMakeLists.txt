@@ -12,7 +12,7 @@ set(INSTALL_EXAMPLEDIR "${INSTALL_EXAMPLESDIR}/positioning/weatherinfo")
 
 find_package(Qt6 REQUIRED COMPONENTS Core Gui Network Positioning Qml Quick)
 
-qt_standard_project_setup()
+qt_standard_project_setup(REQUIRES 6.5)
 
 qt_add_executable(weatherinfo
     main.cpp
@@ -43,7 +43,6 @@ endif()
 qt_add_qml_module(weatherinfo
     URI Weather
     VERSION 1.0
-    AUTO_RESOURCE_PREFIX
     SOURCES
         appmodel.cpp appmodel.h
         openmeteobackend.cpp openmeteobackend.h
