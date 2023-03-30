@@ -932,21 +932,21 @@ private slots:
 
     void hash()
     {
-        uint s1 = qHash(QGeoCoordinate(1, 1, 2));
-        uint s2 = qHash(QGeoCoordinate(2, 1, 1));
-        uint s3 = qHash(QGeoCoordinate(1, 2, 1));
-        uint s10 = qHash(QGeoCoordinate(0, 0, 2));
-        uint s20 = qHash(QGeoCoordinate(2, 0, 0));
-        uint s30 = qHash(QGeoCoordinate(0, 2, 0));
-        uint s30NoAlt = qHash(QGeoCoordinate(0, 2));
-        uint s30WithSeed = qHash(QGeoCoordinate(0, 2, 0), 1);
-        uint nullCoordinate = qHash(QGeoCoordinate());
+        auto s1 = qHash(QGeoCoordinate(1, 1, 2));
+        auto s2 = qHash(QGeoCoordinate(2, 1, 1));
+        auto s3 = qHash(QGeoCoordinate(1, 2, 1));
+        auto s10 = qHash(QGeoCoordinate(0, 0, 2));
+        auto s20 = qHash(QGeoCoordinate(2, 0, 0));
+        auto s30 = qHash(QGeoCoordinate(0, 2, 0));
+        auto s30NoAlt = qHash(QGeoCoordinate(0, 2));
+        auto s30WithSeed = qHash(QGeoCoordinate(0, 2, 0), 1);
+        auto nullCoordinate = qHash(QGeoCoordinate());
 
-        uint north1 = qHash(QGeoCoordinate(90.0, 34.7, 0));
-        uint north2 = qHash(QGeoCoordinate(90.0, 180, 0));
+        auto north1 = qHash(QGeoCoordinate(90.0, 34.7, 0));
+        auto north2 = qHash(QGeoCoordinate(90.0, 180, 0));
 
-        uint south1 = qHash(QGeoCoordinate(90.0, 67.7, 34.0));
-        uint south2 = qHash(QGeoCoordinate(90.0, 111, 34.0));
+        auto south1 = qHash(QGeoCoordinate(90.0, 67.7, 34.0));
+        auto south2 = qHash(QGeoCoordinate(90.0, 111, 34.0));
 
         QVERIFY(s1 != s2);
         QVERIFY(s2 != s3);
