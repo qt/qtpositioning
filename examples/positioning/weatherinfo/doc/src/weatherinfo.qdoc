@@ -4,7 +4,7 @@
 /*!
     \example weatherinfo
     \title Weather Info (C++/QML)
-    \meta category {Positioning & Location}
+    \examplecategory {Positioning & Location}
 
     \brief The Weather Info example shows how to use the user's current position
            to retrieve local content from a web service in a C++ plugin for QML.
