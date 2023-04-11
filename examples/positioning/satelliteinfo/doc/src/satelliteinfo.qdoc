@@ -4,7 +4,7 @@
 /*!
     \example satelliteinfo
     \title SatelliteInfo (QML)
-    \meta category {Positioning & Location}
+    \examplecategory {Positioning & Location}
 
     \brief The SatelliteInfo example shows the available satellites
     using Sky View or RSSI View and the user's current position. The satellites
