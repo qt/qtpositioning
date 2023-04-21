@@ -7,6 +7,7 @@
 #include <QtCore/qglobal.h>
 #include <QtCore/private/qglobal_p.h>
 #include <QtCore/qtimezone.h>
+#include <QtCore/qvariantmap.h>
 
 #include "qgeopositioninfosource_cl_p.h"
 
@@ -82,7 +83,9 @@
 
 QT_BEGIN_NAMESPACE
 
-QGeoPositionInfoSourceCL::QGeoPositionInfoSourceCL(QObject *parent)
+static const auto alwaysPermissionKey = QStringLiteral("RequestAlwaysPermission");
+
+QGeoPositionInfoSourceCL::QGeoPositionInfoSourceCL(const QVariantMap &parameters, QObject *parent)
     : QGeoPositionInfoSource(parent),
       m_locationManager(0),
       m_updatesWanted(false),
@@ -90,6 +93,7 @@ QGeoPositionInfoSourceCL::QGeoPositionInfoSourceCL(QObject *parent)
       m_updateTimeout(0),
       m_positionError(QGeoPositionInfoSource::NoError)
 {
+    m_requestAlwaysPermission = parameters.value(alwaysPermissionKey, false).toBool();
 }
 
 QGeoPositionInfoSourceCL::~QGeoPositionInfoSourceCL()
@@ -137,19 +141,30 @@ bool QGeoPositionInfoSourceCL::enableLocationManager()
         m_locationManager.delegate = [[PositionLocationDelegate alloc] initWithInfoSource:this];
     }
 
-    // -requestAlwaysAuthorization requires both NSLocationAlwaysAndWhenInUseUsageDescription and
-    // NSLocationWhenInUseUsageDescription entries present in Info.plist (otherwise,
-    // while probably a noop, the call generates a warning).
-    // -requestWhenInUseAuthorization only requires NSLocationWhenInUseUsageDescription
-    // entry in Info.plist
+    // According to QTBUG-109359, Apple now requires both NSLocationWhenInUseUsageDescription
+    // and NSLocationAlwaysAndWhenInUseUsageDescription entries to present in Info.plist
+    // if the binary has capabilities to request both (symbols for that are present).
+    // This means that we cannot use the presence of permission keys to decide
+    // which authorization type to request (as both need to be present).
+    // Use an explicit plugin parameter instead.
 #ifdef Q_OS_IOS
     NSDictionary<NSString *, id> *infoDict = NSBundle.mainBundle.infoDictionary;
     const bool hasAlwaysUseUsage = !![infoDict objectForKey:@"NSLocationAlwaysAndWhenInUseUsageDescription"];
     const bool hasWhenInUseUsage = !![infoDict objectForKey:@"NSLocationWhenInUseUsageDescription"];
-    if (hasAlwaysUseUsage && hasWhenInUseUsage)
-        [m_locationManager requestAlwaysAuthorization];
-    else if (hasWhenInUseUsage)
+    if (hasAlwaysUseUsage && hasWhenInUseUsage) {
+        if (m_requestAlwaysPermission)
+            [m_locationManager requestAlwaysAuthorization];
+        else
+            [m_locationManager requestWhenInUseAuthorization];
+    } else if (hasWhenInUseUsage) {
+        qWarning("Requesting \"When In Use\" location permission in fallback mode. "
+                 "Your application is missing the NSLocationAlwaysAndWhenInUseUsageDescription "
+                 "entry in the Info.plist file. It will be impossible to publish the application "
+                 "into App Store without this entry. Please add both "
+                 "NSLocationWhenInUseUsageDescription and "
+                 "NSLocationAlwaysAndWhenInUseUsageDescription to your Info.plist file.");
         [m_locationManager requestWhenInUseAuthorization];
+    }
 #endif // Q_OS_IOS
 
     return (m_locationManager != nullptr);

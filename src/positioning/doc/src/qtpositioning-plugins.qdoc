@@ -18,7 +18,9 @@ Some plugins already ship with Qt. These are:
         \li Wraps Android positioning subsystem. Available only on Android.
     \row
         \li \b corelocation
-        \li Wraps iOS and macOS positioning subsystems. Available only on Apple platforms supporting corelocation.
+        \li A \l {Qt Positioning Core Location plugin}{Core Location} backend
+        wraps iOS and macOS positioning subsystems. Available only on Apple
+        platforms supporting corelocation.
     \row
         \li \b geoclue2
         \li A \l {Qt Positioning GeoClue v2 plugin}{GeoClue v2} backend that
