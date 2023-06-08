@@ -53,7 +53,7 @@ LocationSingleton::LocationSingleton(QObject *parent)
 }
 
 /*!
-    \qmlmethod coordinate ::QtPositioning::coordinate()
+    \qmlmethod coordinate QtPositioning::coordinate()
 
     Constructs an invalid coordinate.
 
@@ -129,7 +129,7 @@ QGeoRectangle LocationSingleton::rectangle(const QGeoCoordinate &topLeft,
 }
 
 /*!
-    \qmlmethod georectangle QtLocation5::QtLocation::rectangle(list<coordinate> coordinates) const
+    \qmlmethod georectangle QtPositioning::rectangle(list<coordinate> coordinates) const
 
     Constructs a georectangle from the list of coordinates, the returned list is the smallest possible
     containing all the coordinates.
