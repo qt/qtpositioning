@@ -99,7 +99,7 @@ struct QGeoShapeForeign
     Q_GADGET
     QML_FOREIGN(QGeoShape)
     QML_VALUE_TYPE(geoShape)
-    QML_STRUCTURED_VALUE
+    QML_CONSTRUCTIBLE_VALUE
     QML_ADDED_IN_VERSION(5, 0)
 };
 
