@@ -24,7 +24,7 @@ class Q_POSITIONING_EXPORT QGeoShape
 
 public:
     QGeoShape();
-    QGeoShape(const QGeoShape &other);
+    Q_INVOKABLE QGeoShape(const QGeoShape &other);
     ~QGeoShape();
 
     enum ShapeType {
