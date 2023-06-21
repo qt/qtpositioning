@@ -80,9 +80,9 @@
     string representations of latitude and longitude are extracted from the
     \l {Position::}{coordinate} property.
 
-    \snippet satelliteinfo/Main.qml 3
-    \snippet satelliteinfo/Main.qml 4
-    \snippet satelliteinfo/Main.qml 5
+    \snippet satelliteinfo/ApplicationScreen.qml 3
+    \snippet satelliteinfo/ApplicationScreen.qml 4
+    \snippet satelliteinfo/ApplicationScreen.qml 5
 
     \section1 Retrieving Satellite Information
 
@@ -93,9 +93,9 @@
     combined into a single model, which is passed to both \e {Sky View} and
     \e {RSSI View} tabs.
 
-    \snippet satelliteinfo/Main.qml 0
-    \snippet satelliteinfo/Main.qml 1
-    \snippet satelliteinfo/Main.qml 2
+    \snippet satelliteinfo/ApplicationScreen.qml 0
+    \snippet satelliteinfo/ApplicationScreen.qml 1
+    \snippet satelliteinfo/ApplicationScreen.qml 2
 
     \section1 QML Module Registration
 

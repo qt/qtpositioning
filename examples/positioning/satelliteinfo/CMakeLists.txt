@@ -61,9 +61,11 @@ qt_add_qml_module(satelliteinfo
     URI SatelliteInformation
     VERSION 1.0
     QML_FILES
+        ApplicationScreen.qml
         Button.qml
         Main.qml
         RssiView.qml
+        PermissionsScreen.qml
         PositionAndStatus.qml
         SkyView.qml
         ViewSwitch.qml

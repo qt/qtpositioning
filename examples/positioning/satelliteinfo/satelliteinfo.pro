@@ -10,9 +10,11 @@ SOURCES += main.cpp
 
 qml_resources.files = \
     qmldir \
+    ApplicationScreen.qml \
     Button.qml \
     Main.qml \
     RssiView.qml \
+    PermissionsScreen.qml \
     PositionAndStatus.qml \
     SkyView.qml \
     ViewSwitch.qml
