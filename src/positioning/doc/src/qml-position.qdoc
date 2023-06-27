@@ -39,25 +39,27 @@ providing the other attributes listed above.
 
 \section2 Coordinates
 
-The \l {coordinate} is a basic unit of geographical information. The
-\l {coordinate} type has attributes to hold the \c {latitude},
-\c longitude and \c altitude.
+The \l coordinate is a basic unit of geographical information. The
+\l coordinate type has attributes to hold the \c latitude,
+\c longitude and \c altitude. The \l {QtPositioning::}{Location} contains this
+\l coordinate in addition to a physical address and a bounding box.
+\b {See also}: \l {Place::location}{retrieving a location}
 
 \section2 Positions
 
-The three dimensional position of an object such as a mobile device can be specified by giving
-the latitude, longitude and altitude.  That is the values held in the
-\l {coordinate} type.  Additionally for computation of future
-positions we would like to know if the object is moving, what \l [QML] {Position::}{speed} it is
-doing and what is the \l {Position::timestamp}{timestamp} of the last position data.  Position
-therefore includes values for the \l {Position::coordinate}{coordinate},
-\l {Position::speed}{speed} and a \l {Position::timestamp}{timestamp}.  \l Position also takes
-responsibility for validation of sensible values for these properties.  These are exposed as
-the \l {Position::latitudeValid}{latitudeValid}, \l {Position::longitudeValid}{longitudeValid},
-\l {Position::altitudeValid}{altitudeValid}, \l {Position::speedValid}{speedValid},
-\l {Position::horizontalAccuracyValid}{horizontalAccuracyValid}, and
-\l {Position::verticalAccuracyValid}{verticalAccuracyValid} properties.
-
+In addition to the \l coordinate type, which holds the three-dimensional
+position of an object, \l Position provides \l {Position::speed}{speed} and a
+\l {Position::timestamp}{timestamp} to compute future positions.
+\l Position validates sensible values for these properties, which are
+exposed as the following properties:
+\list
+    \li \l {Position::latitudeValid}{latitudeValid}
+    \li \l {Position::longitudeValid}{longitudeValid}
+    \li \l {Position::altitudeValid}{altitudeValid}
+    \li \l {Position::speedValid}{speedValid}
+    \li \l {Position::horizontalAccuracyValid}{horizontalAccuracyValid}
+    \li \l {Position::verticalAccuracyValid}{verticalAccuracyValid}
+\endlist
 
 \section2 PositionSource Type
 
