@@ -5,7 +5,6 @@
     \group qtpositioning-examples
     \title Qt Positioning Examples
     \brief Examples for the Qt Positioning module
-    \ingroup all-examples
     \ingroup qtpositioning
 
     The list of \l {Qt Positioning} examples demonstrating how to use
