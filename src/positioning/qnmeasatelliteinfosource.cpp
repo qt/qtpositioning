@@ -869,7 +869,7 @@ void QNmeaSatelliteSimulationReader::readAvailableData()
         // messages, so we will try not to get stuck here infinitely.
         int numSatInUseMsgs = 0;
         int numSatInViewMsgs = 0;
-        while (!numSatInUseMsgs || !numSatInViewMsgs) {
+        while (!m_proxy->m_device->atEnd() && (!numSatInUseMsgs || !numSatInViewMsgs)) {
             m_proxy->processNmeaData(m_proxy->m_pendingUpdate);
             if (m_proxy->m_pendingUpdate.m_validInUse)
                 numSatInUseMsgs++;
