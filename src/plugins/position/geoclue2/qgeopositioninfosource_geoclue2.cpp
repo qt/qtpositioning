@@ -214,7 +214,7 @@ void QGeoPositionInfoSourceGeoclue2::createClient()
 {
     const QDBusPendingReply<QDBusObjectPath> reply = m_manager.GetClient();
     const auto watcher = new QDBusPendingCallWatcher(reply, this);
-    connect(watcher, &QDBusPendingCallWatcher::finished,
+    connect(watcher, &QDBusPendingCallWatcher::finished, this,
             [this](QDBusPendingCallWatcher *watcher) {
         const QScopedPointer<QDBusPendingCallWatcher, QScopedPointerDeleteLater>
                 scopedWatcher(watcher);
@@ -264,7 +264,7 @@ void QGeoPositionInfoSourceGeoclue2::startClient()
 
     const QDBusPendingReply<> reply = m_client->Start();
     const auto watcher = new QDBusPendingCallWatcher(reply, this);
-    connect(watcher, &QDBusPendingCallWatcher::finished,
+    connect(watcher, &QDBusPendingCallWatcher::finished, this,
             [this](QDBusPendingCallWatcher *watcher) {
         const QScopedPointer<QDBusPendingCallWatcher, QScopedPointerDeleteLater>
                 scopedWatcher(watcher);
@@ -296,7 +296,7 @@ void QGeoPositionInfoSourceGeoclue2::stopClient()
 
     const QDBusPendingReply<> reply = m_client->Stop();
     const auto watcher = new QDBusPendingCallWatcher(reply, this);
-    connect(watcher, &QDBusPendingCallWatcher::finished,
+    connect(watcher, &QDBusPendingCallWatcher::finished, this,
             [this](QDBusPendingCallWatcher *watcher) {
         const QScopedPointer<QDBusPendingCallWatcher, QScopedPointerDeleteLater>
                 scopedWatcher(watcher);
