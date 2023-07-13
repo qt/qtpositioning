@@ -483,13 +483,12 @@ void QDeclarativeSatelliteSource::handleSingleUpdateReceived()
 void QDeclarativeSatelliteSource::executeStart()
 {
     if (m_source) {
-        m_source->startUpdates();
         m_regularUpdates = true;
-
         if (!m_active) {
             m_active = true;
             emit activeChanged();
         }
+        m_source->startUpdates();
     }
 }
 
@@ -497,11 +496,11 @@ void QDeclarativeSatelliteSource::executeSingleUpdate(int timeout)
 {
     if (m_source) {
         m_singleUpdate = true;
-        m_source->requestUpdate(timeout);
         if (!m_active) {
             m_active = true;
             emit activeChanged();
         }
+        m_source->requestUpdate(timeout);
     }
 }
 
