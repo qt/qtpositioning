@@ -14,6 +14,8 @@ qt_internal_add_plugin(QGeoPositionInfoSourceFactoryNmeaPlugin
     SOURCES
         qgeopositioninfosourcefactory_nmea.cpp qgeopositioninfosourcefactory_nmea.h
         qiopipe.cpp qiopipe_p.h
+    DEFINES
+        QT_NO_CONTEXTLESS_CONNECT
     LIBRARIES
         Qt::CorePrivate
         Qt::Positioning

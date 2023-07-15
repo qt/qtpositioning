@@ -14,6 +14,8 @@ qt_internal_add_plugin(QGeoPositionInfoSourceFactoryPollPlugin
     SOURCES
         positionpollfactory.cpp positionpollfactory.h
         qgeoareamonitor_polling.cpp qgeoareamonitor_polling.h
+    DEFINES
+        QT_NO_CONTEXTLESS_CONNECT
     LIBRARIES
         Qt::Core
         Qt::Positioning
