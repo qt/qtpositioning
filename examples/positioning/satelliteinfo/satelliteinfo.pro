@@ -12,16 +12,37 @@ qml_resources.files = \
     qmldir \
     ApplicationScreen.qml \
     Button.qml \
+    Header.qml \
+    HelpPopup.qml \
     Main.qml \
     RssiView.qml \
+    PageButton.qml \
     PermissionsScreen.qml \
-    PositionAndStatus.qml \
+    PositionBox.qml \
+    SatelliteView.qml \
+    SettingsView.qml \
     SkyView.qml \
     ViewSwitch.qml
 
 qml_resources.prefix = /qt/qml/SatelliteInformation
 
 RESOURCES += qml_resources
+
+icon_resources.files = \
+    icons/darkmode.svg \
+    icons/help.svg \
+    icons/lightmode.svg \
+    icons/place.svg \
+    icons/qtlogo_green.png \
+    icons/qtlogo_white.png \
+    icons/rssiview.svg \
+    icons/settings.svg \
+    icons/skyview.svg \
+    icons/tableview.svg
+
+icon_resources.prefix = /qt/qml/SatelliteInformation
+
+RESOURCES += icon_resources
 
 data_resources.files = \
     nmealog.txt

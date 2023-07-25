@@ -3,6 +3,7 @@
 
 import QtPositioning
 import QtQuick
+import QtQuick.Controls as QC
 import QtQuick.Layouts
 
 Rectangle {
@@ -79,11 +80,12 @@ Rectangle {
         }
     //! [1]
         onSourceErrorChanged: {
-            if (sourceError != SatelliteSource.NoError) {
+            if (sourceError !== SatelliteSource.NoError) {
                 // If the positionSource is in simulation mode, switch the
                 // whole app into this mode. Otherwise show an error.
                 if (positionSource.name !== "nmea") {
-                    positionAndStatus.statusString = qsTr("SatelliteSource Error: %1").arg(sourceError)
+                    applicationHeader.statusString =
+                            qsTr("SatelliteSource Error: %1").arg(sourceError)
                 } else {
                     root.simulation = true
                     active = true
@@ -106,16 +108,17 @@ Rectangle {
     //! [4]
         onPositionChanged: {
             let posData = position.coordinate.toString().split(", ")
-            positionAndStatus.latitudeString = posData[0]
-            positionAndStatus.longitudeString = posData[1]
+            positionBox.latitudeString = posData[0]
+            positionBox.longitudeString = posData[1]
         }
     // ![4]
         onSourceErrorChanged: {
-            if (sourceError != PositionSource.NoError) {
+            if (sourceError !== PositionSource.NoError) {
                 // If the satelliteSource is in simulation mode, switch the
                 // whole app into this mode. Otherwise show an error.
                 if (satelliteSource.name !== "nmea") {
-                    positionAndStatus.statusString = qsTr("PositionSource Error: %1").arg(sourceError)
+                    applicationHeader.statusString =
+                            qsTr("PositionSource Error: %1").arg(sourceError)
                 } else {
                     root.simulation = true
                     active = true
@@ -126,24 +129,28 @@ Rectangle {
     }
     //! [5]
 
-    ViewSwitch {
-        id: navigationTab
-        anchors.top: parent.top
+    Header {
+        id: applicationHeader
         width: parent.width
+        anchors.top: parent.top
+        simulation: root.simulation
     }
 
     StackLayout {
         id: viewsLayout
         width: parent.width
         anchors {
-            top: navigationTab.bottom
-            bottom: positionAndStatus.top
+            top: applicationHeader.bottom
+            bottom: positionBox.top
         }
-        currentIndex: navigationTab.currentIndex
+        currentIndex: navigationTab.currentIndex !== navigationTab.settingsIndex
+                      ? navigationTab.currentIndex : currentIndex
         SkyView {
             satellitesModel: root.satellitesModel
             inViewColor: root.inViewColor
             inUseColor: root.inUseColor
+        }
+        SatelliteView {
         }
         RssiView {
             satellitesModel: root.satellitesModel
@@ -152,26 +159,57 @@ Rectangle {
         }
     }
 
-    PositionAndStatus {
-        id: positionAndStatus
+    PositionBox {
+        id: positionBox
         width: parent.width
-        anchors {
-            bottom: modeButton.top
-        }
-        simulation: root.simulation
+        anchors.bottom: modeButton.top
+        visible: viewsLayout.currentIndex !== navigationTab.tableViewIndex
     }
 
     Button {
         id: modeButton
         anchors {
-            left: parent.left
-            leftMargin: 5
-            right: parent.right
-            rightMargin: 5
-            bottom: parent.bottom
+            horizontalCenter: parent.horizontalCenter
+            bottom: navigationTab.top
             bottomMargin: 5
         }
+        width: parent.width * 0.8
         onClicked: root.toggleState()
+    }
+
+    ViewSwitch {
+        id: navigationTab
+        anchors.bottom: parent.bottom
+        width: parent.width
+        onCurrentIndexChanged: {
+            if (currentIndex === navigationTab.settingsIndex)
+                settingsView.open()
+            else
+                settingsView.close()
+        }
+    }
+
+    QC.Drawer {
+        id: settingsView
+        dragMargin: -1
+        edge: Qt.RightEdge
+        height: root.height - navigationTab.height
+        width: root.width / 2
+        onClosed: navigationTab.currentIndex = viewsLayout.currentIndex
+
+        SettingsView {
+            anchors.fill: parent
+            onShowHelp: {
+                settingsView.close()
+                helpPopup.open()
+            }
+        }
+    }
+
+    HelpPopup {
+        id: helpPopup
+        width: root.width
+        height: root.height
     }
 
     Item {
@@ -182,12 +220,10 @@ Rectangle {
             State {
                 name: "stopped"
                 PropertyChanges {
-                    target: modeButton
-                    text: qsTr("Single")
+                    modeButton.text: qsTr("Single")
                 }
                 PropertyChanges {
-                    target: positionAndStatus
-                    statusString: qsTr("Stopped")
+                    applicationHeader.statusString: qsTr("Stopped")
                 }
                 StateChangeScript {
                     script: root.updateActive(false)
@@ -196,12 +232,10 @@ Rectangle {
             State {
                 name: "single"
                 PropertyChanges {
-                    target: modeButton
-                    text: qsTr("Start")
+                    modeButton.text: qsTr("Start")
                 }
                 PropertyChanges {
-                    target: positionAndStatus
-                    statusString: qsTr("Single Request")
+                    applicationHeader.statusString: qsTr("Single Request")
                 }
                 StateChangeScript {
                     script: root.enterSingle()
@@ -210,12 +244,10 @@ Rectangle {
             State {
                 name: "running"
                 PropertyChanges {
-                    target: modeButton
-                    text: qsTr("Stop")
+                    modeButton.text: qsTr("Stop")
                 }
                 PropertyChanges {
-                    target: positionAndStatus
-                    statusString: qsTr("Running")
+                    applicationHeader.statusString: qsTr("Running")
                 }
                 StateChangeScript {
                     script: root.updateActive(true)

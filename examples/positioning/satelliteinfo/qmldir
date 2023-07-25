@@ -2,9 +2,14 @@ module SatelliteInformation
 prefer :/qt/qml/SatelliteInformation/
 ApplicationScreen 1.0 ApplicationScreen.qml
 Button 1.0 Button.qml
+Header 1.0 Header.qml
+HelpPopup 1.0 HelpPopup.qml
 Main 1.0 Main.qml
 RssiView 1.0 RssiView.qml
+PageButton 1.0 PageButton.qml
 PermissionsScreen 1.0 PermissionsScreen.qml
-PositionAndStatus 1.0 PositionAndStatus.qml
+PositionBox 1.0 PositionBox.qml
+SatelliteView 1.0 SatelliteView.qml
+SettingsView 1.0 SettingsView.qml
 SkyView 1.0 SkyView.qml
 ViewSwitch 1.0 ViewSwitch.qml

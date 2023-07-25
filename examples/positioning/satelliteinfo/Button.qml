@@ -2,31 +2,25 @@
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR BSD-3-Clause
 
 import QtQuick
+import QtQuick.Controls
 
-Rectangle {
+ItemDelegate {
     id: root
-    border {
-        width: 1
-        color: "black"
+
+    property alias bold: root.font.bold
+
+    contentItem: Text {
+        text: root.text
+        horizontalAlignment: Text.AlignHCenter
+        verticalAlignment: Text.AlignVCenter
+        font: root.font
     }
-    color: mouseArea.pressed ? "lightGray" : "white"
-    radius: 5
-    implicitWidth: textItem.implicitWidth + textItem.anchors.margins * 2
-    implicitHeight: textItem.implicitHeight + textItem.anchors.margins * 2
-
-    property alias text: textItem.text
-    property alias bold: textItem.font.bold
-
-    signal clicked
-
-    Text {
-        id: textItem
-        anchors.centerIn: parent
-        anchors.margins: 5
-    }
-    MouseArea {
-        id: mouseArea
-        anchors.fill: parent
-        onClicked: root.clicked()
+    background: Rectangle {
+        border {
+            width: 1
+            color: "black"
+        }
+        radius: 5
+        color: root.pressed ? "lightGray" : "white"
     }
 }
