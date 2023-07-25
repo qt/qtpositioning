@@ -10,7 +10,7 @@ endif()
 
 set(INSTALL_EXAMPLEDIR "${INSTALL_EXAMPLESDIR}/positioning/satelliteinfo")
 
-find_package(Qt6 REQUIRED COMPONENTS Core Quick PositioningQuick)
+find_package(Qt6 REQUIRED COMPONENTS Core Svg Quick PositioningQuick)
 find_package(Qt6 OPTIONAL_COMPONENTS SerialPort)
 
 qt_standard_project_setup(REQUIRES 6.5)
@@ -29,6 +29,7 @@ target_link_libraries(satelliteinfo PRIVATE
     Qt::Core
     Qt::PositioningQuick
     Qt::Quick
+    Qt::Svg
 )
 
 # For mobile platforms we need to explicitly link with Qt::SerialPort
@@ -63,12 +64,28 @@ qt_add_qml_module(satelliteinfo
     QML_FILES
         ApplicationScreen.qml
         Button.qml
+        Header.qml
+        HelpPopup.qml
         Main.qml
         RssiView.qml
+        PageButton.qml
         PermissionsScreen.qml
-        PositionAndStatus.qml
+        PositionBox.qml
+        SatelliteView.qml
+        SettingsView.qml
         SkyView.qml
         ViewSwitch.qml
+    RESOURCES
+        icons/darkmode.svg
+        icons/help.svg
+        icons/lightmode.svg
+        icons/place.svg
+        icons/qtlogo_green.png
+        icons/qtlogo_white.png
+        icons/rssiview.svg
+        icons/settings.svg
+        icons/skyview.svg
+        icons/tableview.svg
 )
 
 install(TARGETS satelliteinfo

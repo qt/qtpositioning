@@ -4,7 +4,7 @@
 if(TARGET Qt::Widgets)
     qt_internal_add_example(logfilepositionsource)
 endif()
-if(TARGET Qt::Quick)
+if(TARGET Qt::Quick AND TARGET Qt::Svg)
     qt_internal_add_example(satelliteinfo)
 endif()
 if(TARGET Qt::Network AND TARGET Qt::Quick)
