@@ -71,6 +71,11 @@
     mode uses an \l {Qt Positioning NMEA plugin}{NMEA plugin} with pre-recorded
     NMEA data.
 
+    \note Apple does not provide any APIs to retrieve satellite information, so
+    on \c macOS and \c iOS the satellite information will always be taken from
+    pre-recorded data. These API limitations do not affect positioning
+    information, so current position can be displayed correctly.
+
     \include examples-run.qdocinc
 
     \section1 Retrieving Current Position
