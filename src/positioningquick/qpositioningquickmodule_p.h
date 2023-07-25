@@ -128,11 +128,19 @@ struct QGeoSatelliteInfoForeign
     QML_ADDED_IN_VERSION(6, 5)
 };
 
+// To prevent the same QGeoSatelliteInfo type from being exported into qmltypes
+// twice for a value type and the enums. See QTBUG-115361.
+class QGeoSatelliteInfoDerived : public QGeoSatelliteInfo
+{
+    Q_GADGET
+};
+
 namespace QGeoSatelliteInfoForeignNamespace
 {
     Q_NAMESPACE
-    QML_FOREIGN_NAMESPACE(QGeoSatelliteInfo)
+    QML_FOREIGN_NAMESPACE(QGeoSatelliteInfoDerived)
     QML_NAMED_ELEMENT(GeoSatelliteInfo)
+    QML_ADDED_IN_VERSION(6, 5)
 }
 
 QT_END_NAMESPACE
