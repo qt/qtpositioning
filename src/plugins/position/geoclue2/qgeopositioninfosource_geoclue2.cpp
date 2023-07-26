@@ -266,15 +266,17 @@ void QGeoPositionInfoSourceGeoclue2::startClient()
     const auto watcher = new QDBusPendingCallWatcher(reply, this);
     connect(watcher, &QDBusPendingCallWatcher::finished,
             [this](QDBusPendingCallWatcher *watcher) {
-        const QScopedPointer<QDBusPendingCallWatcher, QScopedPointerDeleteLater>
-                scopedWatcher(watcher);
+        QScopedPointer<QDBusPendingCallWatcher, QScopedPointerDeleteLater> scopedWatcher(watcher);
         const QDBusPendingReply<> reply = *scopedWatcher;
         if (reply.isError()) {
             const auto error = reply.error();
             qCCritical(lcPositioningGeoclue2) << "Unable to start the client:"
                                               << error.name() << error.message();
-            setError(AccessError);
             delete m_client;
+            scopedWatcher.reset();
+            // This can potentially lead to calling ~QGeoPositionInfoSourceGeoclue2(),
+            // so do all the cleanup before.
+            setError(AccessError);
         } else {
             qCDebug(lcPositioningGeoclue2) << "Client successfully started";
 
