@@ -11,12 +11,13 @@ Rectangle {
     property alias longitudeString: lonValue.text
 
     implicitHeight: rootLayout.implicitHeight + 2 * rootLayout.anchors.margins
+    color: Theme.darkBackgroundColor
 
     GridLayout {
         id: rootLayout
         anchors {
             fill: parent
-            margins: 5
+            margins: Theme.defaultSpacing * 2
         }
         columns: 3
         Image {
@@ -27,18 +28,30 @@ Rectangle {
         }
         Text {
             text: qsTr("latitude")
+            color: Theme.textMainColor
+            font.pixelSize: Theme.mediumFontSize
+            font.weight: Theme.fontDefaultWeight
         }
         Text {
             id: latValue
             text: qsTr("N/A")
+            color: Theme.textMainColor
+            font.pixelSize: Theme.mediumFontSize
+            font.weight: Theme.fontLightWeight
             Layout.fillWidth: true
         }
         Text {
             text: qsTr("longitude")
+            color: Theme.textMainColor
+            font.pixelSize: Theme.mediumFontSize
+            font.weight: Theme.fontDefaultWeight
         }
         Text {
             id: lonValue
             text: qsTr("N/A")
+            color: Theme.textMainColor
+            font.pixelSize: Theme.mediumFontSize
+            font.weight: Theme.fontLightWeight
             Layout.fillWidth: true
         }
     }

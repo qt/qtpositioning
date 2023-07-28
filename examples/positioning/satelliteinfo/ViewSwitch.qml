@@ -13,12 +13,13 @@ Rectangle {
     readonly property int settingsIndex: 3
 
     implicitHeight: rootLayout.implicitHeight + 2 * rootLayout.anchors.margins
+    color: Theme.backgroundColor
 
     RowLayout {
         id: rootLayout
         anchors {
             fill: parent
-            margins: 5
+            margins: Theme.defaultSpacing
         }
         spacing: 0
         property real itemWidth: rootLayout.width / repeater.model.length

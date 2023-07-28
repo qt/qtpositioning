@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR BSD-3-Clause
 
 import QtQuick
-import QtQuick.Controls
+import QtQuick.Controls.Basic
 
 ItemDelegate {
     id: root
@@ -17,6 +17,13 @@ ItemDelegate {
 
     icon.height: iconSize
     icon.width: iconSize
+    icon.color: selected ? Theme.iconSelected : Theme.iconNormal
+    palette.text: selected ? Theme.iconTextSelected : Theme.iconTextNormal
     display: AbstractButton.TextUnderIcon
-    font.bold: selected
+    font.pixelSize: Theme.smallFontSize
+    font.weight: Theme.fontDefaultWeight
+
+    background: Rectangle {
+        color: "transparent"
+    }
 }

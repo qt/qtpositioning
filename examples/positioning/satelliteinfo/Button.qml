@@ -2,25 +2,29 @@
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR BSD-3-Clause
 
 import QtQuick
-import QtQuick.Controls
+import QtQuick.Controls.Basic
 
 ItemDelegate {
     id: root
 
-    property alias bold: root.font.bold
+    property bool redHover: false
+    readonly property color pressedColor: root.redHover ? Theme.buttonRedTextPressedColor
+                                                        : Theme.buttonTextPressedColor
 
     contentItem: Text {
         text: root.text
+        font.pixelSize: Theme.mediumFontSize
+        font.weight: Theme.fontDefaultWeight
+        color: root.pressed ? root.pressedColor : Theme.buttonTextColor
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter
-        font: root.font
     }
     background: Rectangle {
         border {
-            width: 1
-            color: "black"
+            width: 2
+            color: root.pressed ? root.pressedColor : Theme.buttonTextColor
         }
-        radius: 5
-        color: root.pressed ? "lightGray" : "white"
+        radius: 10
+        color: Theme.buttonBackgroundColor
     }
 }
