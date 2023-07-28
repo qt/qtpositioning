@@ -2,28 +2,45 @@
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR BSD-3-Clause
 
 import QtQuick
-import QtQuick.Controls as QC
+import QtQuick.Controls.Basic as QC
 import QtQuick.Layouts
 
 QC.Popup {
     id: root
+    padding: 0
     Rectangle {
         anchors.fill: parent
+        color: Theme.backgroundColor
         ColumnLayout {
             anchors.fill: parent
+
+            Item {
+                implicitHeight: root.height * 0.1
+                Layout.fillWidth: true
+            }
             Image {
-                source: "icons/qtlogo_green.png"
+                source: Theme.darkMode ? "icons/qtlogo_white.png" : "icons/qtlogo_green.png"
                 fillMode: Image.PreserveAspectFit
                 Layout.alignment: Qt.AlignHCenter
             }
             Text {
                 text: qsTr("SatelliteInfo")
+                color: Theme.textMainColor
+                font.pixelSize: Theme.largeFontSize
+                font.weight: Theme.fontDefaultWeight
                 Layout.alignment: Qt.AlignHCenter
+            }
+            Item {
+                implicitHeight: root.height * 0.05
+                Layout.fillWidth: true
             }
             Text {
                 text: qsTr("Explore satellite information using the SkyView and\nRSSI View. ")
                       + qsTr("Track the satellites contributing to your\nGPS fix in real-time.")
                 horizontalAlignment: Text.AlignHCenter
+                color: Theme.textSecondaryColor
+                font.pixelSize: Theme.smallFontSize
+                font.weight: Theme.fontDefaultWeight
                 Layout.alignment: Qt.AlignHCenter
             }
             Item {
@@ -36,7 +53,8 @@ QC.Popup {
                 onClicked: root.close()
             }
             Item {
-                Layout.fillHeight: true
+                implicitHeight: root.height * 0.2
+                Layout.fillWidth: true
             }
         }
     }

@@ -3,14 +3,14 @@
 
 import QtPositioning
 import QtQuick
-import QtQuick.Controls as QC
+import QtQuick.Controls.Basic as QC
 import QtQuick.Layouts
 
 Rectangle {
     id: root
 
-    property color inUseColor: "#7FFF0000"
-    property color inViewColor: "#7F0000FF"
+    property color inUseColor: Theme.inUseColor
+    property color inViewColor: Theme.inViewColor
 
     property bool simulation: false
 
@@ -18,6 +18,8 @@ Rectangle {
     // { "id": 1, "rssi": 10, "azimuth": 150, "elevation": 25, "inUse": false }
     property var satellitesModel: []
     property var inUseIds: new Set()
+
+    color: Theme.darkBackgroundColor
 
     function updateModel() {
         let intermediateModel = []
@@ -86,6 +88,7 @@ Rectangle {
                 if (positionSource.name !== "nmea") {
                     applicationHeader.statusString =
                             qsTr("SatelliteSource Error: %1").arg(sourceError)
+                    applicationHeader.redStatus = true
                 } else {
                     root.simulation = true
                     active = true
@@ -119,6 +122,7 @@ Rectangle {
                 if (satelliteSource.name !== "nmea") {
                     applicationHeader.statusString =
                             qsTr("PositionSource Error: %1").arg(sourceError)
+                    applicationHeader.redStatus = true
                 } else {
                     root.simulation = true
                     active = true
@@ -170,11 +174,19 @@ Rectangle {
         id: modeButton
         anchors {
             horizontalCenter: parent.horizontalCenter
-            bottom: navigationTab.top
-            bottomMargin: 5
+            bottom: separator.top
+            bottomMargin: Theme.defaultSpacing
         }
         width: parent.width * 0.8
         onClicked: root.toggleState()
+    }
+
+    Rectangle {
+        id: separator
+        anchors.bottom: navigationTab.top
+        color: Theme.separatorColor
+        height: 1
+        width: parent.width
     }
 
     ViewSwitch {
@@ -203,6 +215,10 @@ Rectangle {
                 settingsView.close()
                 helpPopup.open()
             }
+            onToggleMode: {
+                settingsView.close()
+                Theme.darkMode = !Theme.darkMode
+            }
         }
     }
 
@@ -220,10 +236,16 @@ Rectangle {
             State {
                 name: "stopped"
                 PropertyChanges {
-                    modeButton.text: qsTr("Single")
+                    modeButton {
+                        text: qsTr("Single")
+                        redHover: false
+                    }
                 }
                 PropertyChanges {
-                    applicationHeader.statusString: qsTr("Stopped")
+                    applicationHeader {
+                        statusString: qsTr("Stopped")
+                        redStatus: true
+                    }
                 }
                 StateChangeScript {
                     script: root.updateActive(false)
@@ -232,10 +254,16 @@ Rectangle {
             State {
                 name: "single"
                 PropertyChanges {
-                    modeButton.text: qsTr("Start")
+                    modeButton {
+                        text: qsTr("Start")
+                        redHover: false
+                    }
                 }
                 PropertyChanges {
-                    applicationHeader.statusString: qsTr("Single Request")
+                    applicationHeader {
+                        statusString: qsTr("Single Request")
+                        redStatus: false
+                    }
                 }
                 StateChangeScript {
                     script: root.enterSingle()
@@ -244,10 +272,16 @@ Rectangle {
             State {
                 name: "running"
                 PropertyChanges {
-                    modeButton.text: qsTr("Stop")
+                    modeButton {
+                        text: qsTr("Stop")
+                        redHover: true
+                    }
                 }
                 PropertyChanges {
-                    applicationHeader.statusString: qsTr("Running")
+                    applicationHeader {
+                        statusString: qsTr("Running")
+                        redStatus: false
+                    }
                 }
                 StateChangeScript {
                     script: root.updateActive(true)

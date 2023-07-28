@@ -6,4 +6,5 @@ import QtQuick
 Rectangle {
     // Intentionally left empty.
     // Will be filled in a follow-up patch.
+    color: Theme.darkBackgroundColor
 }

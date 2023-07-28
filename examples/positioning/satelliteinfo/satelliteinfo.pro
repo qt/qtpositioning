@@ -14,6 +14,7 @@ qml_resources.files = \
     Button.qml \
     Header.qml \
     HelpPopup.qml \
+    LegendBox.qml \
     Main.qml \
     RssiView.qml \
     PageButton.qml \
@@ -22,6 +23,7 @@ qml_resources.files = \
     SatelliteView.qml \
     SettingsView.qml \
     SkyView.qml \
+    Theme.qml \
     ViewSwitch.qml
 
 qml_resources.prefix = /qt/qml/SatelliteInformation
@@ -36,6 +38,7 @@ icon_resources.files = \
     icons/qtlogo_green.png \
     icons/qtlogo_white.png \
     icons/rssiview.svg \
+    icons/satellite_small.png \
     icons/settings.svg \
     icons/skyview.svg \
     icons/tableview.svg
@@ -45,7 +48,9 @@ icon_resources.prefix = /qt/qml/SatelliteInformation
 RESOURCES += icon_resources
 
 data_resources.files = \
-    nmealog.txt
+    nmealog.txt \
+    fonts/TitilliumWeb-Regular.ttf \
+    fonts/TitilliumWeb-SemiBold.ttf
 
 data_resources.prefix = /
 

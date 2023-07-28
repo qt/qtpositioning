@@ -55,7 +55,14 @@ if (APPLE)
 endif()
 
 qt_add_resources(satelliteinfo "resources"
-    FILES nmealog.txt
+    FILES
+        nmealog.txt
+        fonts/TitilliumWeb-Regular.ttf
+        fonts/TitilliumWeb-SemiBold.ttf
+)
+
+set_source_files_properties(Theme.qml PROPERTIES
+    QT_QML_SINGLETON_TYPE TRUE
 )
 
 qt_add_qml_module(satelliteinfo
@@ -66,6 +73,7 @@ qt_add_qml_module(satelliteinfo
         Button.qml
         Header.qml
         HelpPopup.qml
+        LegendBox.qml
         Main.qml
         RssiView.qml
         PageButton.qml
@@ -74,6 +82,7 @@ qt_add_qml_module(satelliteinfo
         SatelliteView.qml
         SettingsView.qml
         SkyView.qml
+        Theme.qml
         ViewSwitch.qml
     RESOURCES
         icons/darkmode.svg
@@ -83,6 +92,7 @@ qt_add_qml_module(satelliteinfo
         icons/qtlogo_green.png
         icons/qtlogo_white.png
         icons/rssiview.svg
+        icons/satellite_small.png
         icons/settings.svg
         icons/skyview.svg
         icons/tableview.svg
