@@ -153,7 +153,7 @@ public:
         const std::lock_guard<QRecursiveMutex> locker(mutex);
 
         bool signalsConnected = false;
-        foreach (const QGeoAreaMonitorPolling *client, registeredClients) {
+        for (const QGeoAreaMonitorPolling *client : std::as_const(registeredClients)) {
             if (client->hasConnections()) {
                 signalsConnected = true;
                 break;
