@@ -159,10 +159,10 @@ private slots:
         QVERIFY(obj != nullptr);
         QCOMPARE(obj->sourceName(), QStringLiteral("positionpoll"));
 
-        QList<QGeoAreaMonitorInfo> list = obj->activeMonitors();
+        const QList<QGeoAreaMonitorInfo> list = obj->activeMonitors();
         if (list.size() > 0) {
             //cleanup installed monitors
-            foreach (const QGeoAreaMonitorInfo& info, list) {
+            for (const QGeoAreaMonitorInfo& info : list) {
                 QVERIFY(obj->stopMonitoring(info));
             }
         }
