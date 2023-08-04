@@ -248,9 +248,7 @@ AppModel::~AppModel()
         d->src->stopUpdates();
     if (d->fcProp)
         delete d->fcProp;
-    foreach (WeatherData *inf, d->forecast)
-        delete inf;
-    d->forecast.clear();
+    qDeleteAll(d->forecast);
     delete d;
 }
 
@@ -327,8 +325,7 @@ bool AppModel::applyWeatherData(const QString &city, const QList<WeatherInfo> &w
     }
 
     // delete previous forecast
-    foreach (WeatherData *inf, d->forecast)
-        delete inf;
+    qDeleteAll(d->forecast);
     d->forecast.clear();
 
     // The first item in the list represents current weather.
