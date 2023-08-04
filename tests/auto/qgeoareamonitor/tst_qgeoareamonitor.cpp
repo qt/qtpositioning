@@ -25,6 +25,8 @@
 #include "logfilepositionsource.h"
 #include "positionconsumerthread.h"
 
+#include <algorithm>
+
 QT_USE_NAMESPACE
 #define UPDATE_INTERVAL 50
 
@@ -455,32 +457,19 @@ private slots:
         mon3.setArea(r_above);
         QVERIFY(obj->startMonitoring(mon3));
 
-        QList<QGeoAreaMonitorInfo> results = obj->activeMonitors();
-        QCOMPARE(results.size(), 3);
-        foreach (const QGeoAreaMonitorInfo& info, results) {
-            QVERIFY(info == mon || info == mon2 || info == mon3);
-        }
+#define CHECK(o, args, ...) do { \
+            const QList<QGeoAreaMonitorInfo> results = o ->activeMonitors args; \
+            const std::initializer_list<QGeoAreaMonitorInfo> expected = __VA_ARGS__ ; \
+            QCOMPARE(results.size(), int(expected.size())); \
+            QVERIFY(std::is_permutation(results.begin(), results.end(), \
+                                        expected.begin(), expected.end())); \
+        } while (false)
 
-        results = obj->activeMonitors(QGeoShape());
-        QCOMPARE(results.size(), 0);
-
-        results = obj->activeMonitors(QGeoRectangle(QGeoCoordinate(1,1),0.2, 0.2));
-        QCOMPARE(results.size(), 2);
-        foreach (const QGeoAreaMonitorInfo& info, results) {
-            QVERIFY(info == mon || info == mon2);
-        }
-
-        results = obj->activeMonitors(QGeoCircle(QGeoCoordinate(1,1),1000));
-        QCOMPARE(results.size(), 2);
-        foreach (const QGeoAreaMonitorInfo& info, results) {
-            QVERIFY(info == mon || info == mon2);
-        }
-
-        results = obj->activeMonitors(QGeoCircle(QGeoCoordinate(2,1),1000));
-        QCOMPARE(results.size(), 1);
-        foreach (const QGeoAreaMonitorInfo& info, results) {
-            QVERIFY(info == mon3);
-        }
+        CHECK(obj, (), {mon, mon2, mon3});
+        CHECK(obj, (QGeoShape{}), {});
+        CHECK(obj, (QGeoRectangle{QGeoCoordinate{1, 1}, 0.2, 0.2}), {mon, mon2});
+        CHECK(obj, (QGeoCircle{QGeoCoordinate{1, 1}, 1000}), {mon, mon2});
+        CHECK(obj, (QGeoCircle{QGeoCoordinate{2, 1},1000}), {mon3});
 
         //same as above except that we use a different monitor source object instance
         //all monitor objects of same type share same active monitors
@@ -489,32 +478,13 @@ private slots:
         QVERIFY(secondObj != nullptr);
         QCOMPARE(secondObj->sourceName(), QStringLiteral("positionpoll"));
 
-        results = secondObj->activeMonitors();
-        QCOMPARE(results.size(), 3);
-        foreach (const QGeoAreaMonitorInfo& info, results) {
-            QVERIFY(info == mon || info == mon2 || info == mon3);
-        }
+        CHECK(secondObj, (), {mon, mon2, mon3});
+        CHECK(secondObj, (QGeoShape{}), {});
+        CHECK(secondObj, (QGeoRectangle{QGeoCoordinate{1, 1}, 0.2, 0.2}), {mon, mon2});
+        CHECK(secondObj, (QGeoCircle{QGeoCoordinate{1, 1}, 1000}), {mon, mon2});
+        CHECK(secondObj, (QGeoCircle{QGeoCoordinate{2, 1}, 1000}), {mon3});
 
-        results = secondObj->activeMonitors(QGeoShape());
-        QCOMPARE(results.size(), 0);
-
-        results = secondObj->activeMonitors(QGeoRectangle(QGeoCoordinate(1,1),0.2, 0.2));
-        QCOMPARE(results.size(), 2);
-        foreach (const QGeoAreaMonitorInfo& info, results) {
-            QVERIFY(info == mon || info == mon2);
-        }
-
-        results = secondObj->activeMonitors(QGeoCircle(QGeoCoordinate(1,1),1000));
-        QCOMPARE(results.size(), 2);
-        foreach (const QGeoAreaMonitorInfo& info, results) {
-            QVERIFY(info == mon || info == mon2);
-        }
-
-        results = secondObj->activeMonitors(QGeoCircle(QGeoCoordinate(2,1),1000));
-        QCOMPARE(results.size(), 1);
-        foreach (const QGeoAreaMonitorInfo& info, results) {
-            QVERIFY(info == mon3);
-        }
+#undef CHECK
     }
 
     void tst_testExpiryTimeout()
