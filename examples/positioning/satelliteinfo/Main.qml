@@ -84,8 +84,16 @@ Window {
         }
     //! [1]
         onSourceErrorChanged: {
-            if (sourceError != SatelliteSource.NoError)
-                positionAndStatus.statusString = qsTr("SatelliteSource Error: %1").arg(sourceError)
+            if (sourceError != SatelliteSource.NoError) {
+                // If the positionSource is in simulation mode, switch the
+                // whole app into this mode. Otherwise show an error.
+                if (positionSource.name !== "nmea") {
+                    positionAndStatus.statusString = qsTr("SatelliteSource Error: %1").arg(sourceError)
+                } else {
+                    root.simulation = true
+                    active = true
+                }
+            }
         }
     //! [2]
     }
@@ -108,8 +116,16 @@ Window {
         }
     // ![4]
         onSourceErrorChanged: {
-            if (sourceError != PositionSource.NoError)
-                positionAndStatus.statusString = qsTr("PositionSource Error: %1").arg(sourceError)
+            if (sourceError != PositionSource.NoError) {
+                // If the satelliteSource is in simulation mode, switch the
+                // whole app into this mode. Otherwise show an error.
+                if (satelliteSource.name !== "nmea") {
+                    positionAndStatus.statusString = qsTr("PositionSource Error: %1").arg(sourceError)
+                } else {
+                    root.simulation = true
+                    active = true
+                }
+            }
         }
     //! [5]
     }
@@ -211,12 +227,5 @@ Window {
                 }
             }
         ]
-    }
-
-    Component.onCompleted: {
-        if (!satelliteSource.valid || !positionSource.valid) {
-            root.simulation = true
-            root.updateActive(true)
-        }
     }
 }
