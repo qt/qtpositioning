@@ -4,6 +4,7 @@
 pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Shapes
+import SatelliteInformation
 
 Rectangle {
     id: root
@@ -20,8 +21,7 @@ Rectangle {
         font.weight: Theme.fontLightWeight
     }
 
-    property var satellitesModel
-
+    required property SatelliteModel satellitesModel
     required property color inViewColor
     required property color inUseColor
 

@@ -1,17 +1,22 @@
 // Copyright (C) 2023 The Qt Company Ltd.
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR BSD-3-Clause
 
+pragma ComponentBehavior: Bound
 import QtCore
 import QtQuick
 import QtQuick.Window
+import SatelliteInformation
 
 Window {
+    id: root
+
+    required property SatelliteModel satellitesModel
+
     width: 360
     height: 640
     visible: true
     title: qsTr("Satellite Info")
 
-    id: root
 
     LocationPermission {
         id: permission
@@ -29,6 +34,7 @@ Window {
     Component {
         id: applicationComponent
         ApplicationScreen {
+            satellitesModel: root.satellitesModel
         }
     }
 

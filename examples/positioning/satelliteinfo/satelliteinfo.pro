@@ -6,7 +6,15 @@ TARGET = satelliteinfo
 
 QT += quick positioning positioningquick
 
-SOURCES += main.cpp
+CONFIG += qmltypes
+QML_IMPORT_NAME = SatelliteInformation
+QML_IMPORT_MAJOR_VERSION = 1
+
+SOURCES += main.cpp \
+    satellitemodel.cpp
+
+HEADERS += \
+    satellitemodel.h
 
 qml_resources.files = \
     qmldir \
