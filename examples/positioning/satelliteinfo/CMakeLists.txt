@@ -68,6 +68,8 @@ set_source_files_properties(Theme.qml PROPERTIES
 qt_add_qml_module(satelliteinfo
     URI SatelliteInformation
     VERSION 1.0
+    SOURCES
+        satellitemodel.cpp satellitemodel.h
     QML_FILES
         ApplicationScreen.qml
         Button.qml

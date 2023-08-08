@@ -6,36 +6,18 @@ import QtQuick
 import QtQuick.Controls.Basic as QC
 import QtQuick.Layouts
 
+import SatelliteInformation
+
 Rectangle {
     id: root
 
+    required property SatelliteModel satellitesModel
     property color inUseColor: Theme.inUseColor
     property color inViewColor: Theme.inViewColor
 
     property bool simulation: false
 
-    // The model structure is:
-    // { "id": 1, "rssi": 10, "azimuth": 150, "elevation": 25, "inUse": false }
-    property var satellitesModel: []
-    property var inUseIds: new Set()
-
     color: Theme.darkBackgroundColor
-
-    function updateModel() {
-        let intermediateModel = []
-        intermediateModel.length = satelliteSource.satellitesInView.length
-        for (var i = 0; i < satelliteSource.satellitesInView.length; ++i) {
-            let sat = satelliteSource.satellitesInView[i]
-            intermediateModel[i] = {
-                "id": sat.satelliteIdentifier,
-                "rssi": sat.signalStrength,
-                "azimuth": sat.attribute(GeoSatelliteInfo.Azimuth),
-                "elevation": sat.attribute(GeoSatelliteInfo.Elevation),
-                "inUse": inUseIds.has(sat.satelliteIdentifier)
-            }
-        }
-        satellitesModel = intermediateModel
-    }
 
     function toggleState() {
         switch (statesItem.state) {
@@ -72,14 +54,8 @@ Rectangle {
             value: "qrc:///nmealog.txt"
         }
     //! [1]
-        onSatellitesInViewChanged: root.updateModel()
-        onSatellitesInUseChanged: {
-            root.inUseIds.clear()
-            for (var i = 0; i < satellitesInUse.length; ++i)
-                root.inUseIds.add(satellitesInUse[i].satelliteIdentifier)
-
-            root.updateModel()
-        }
+        onSatellitesInViewChanged: root.satellitesModel.updateSatellitesInView(satellitesInView)
+        onSatellitesInUseChanged: root.satellitesModel.updateSatellitesInUse(satellitesInUse)
     //! [1]
         onSourceErrorChanged: {
             if (sourceError !== SatelliteSource.NoError) {

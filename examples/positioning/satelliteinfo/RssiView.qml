@@ -6,11 +6,12 @@ import QtQuick
 import QtQuick.Layouts
 import QtQuick.Shapes
 
+import SatelliteInformation
+
 Rectangle {
     id: root
 
-    property var satellitesModel
-
+    required property SatelliteModel satellitesModel
     required property color inViewColor
     required property color inUseColor
 
@@ -431,7 +432,7 @@ Rectangle {
                     leftMargin: axis.offset + view.spacing
                 }
 
-                property int rows: repeater.model.length
+                property int rows: repeater.model.size
                 property int singleWidth: view.width / rows - spacing
 
                 spacing: Theme.defaultSpacing
