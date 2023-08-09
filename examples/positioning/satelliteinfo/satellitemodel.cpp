@@ -1,6 +1,7 @@
 // Copyright (C) 2023 The Qt Company Ltd.
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR BSD-3-Clause
 
+#include "roles.h"
 #include "satellitemodel.h"
 
 using namespace Qt::StringLiterals;
@@ -46,18 +47,23 @@ QVariant SatelliteModel::data(const QModelIndex &index, int role) const
 
     const QGeoSatelliteInfo &info = m_satellites.at(index.row());
     switch (role) {
-    case IdRole:
+    case Roles::IdRole:
         return info.satelliteIdentifier();
-    case RssiRole:
+    case Roles::RssiRole:
         return info.signalStrength();
-    case AzimuthRole:
+    case Roles::AzimuthRole:
         return info.attribute(QGeoSatelliteInfo::Azimuth);
-    case ElevationRole:
+    case Roles::ElevationRole:
         return info.attribute(QGeoSatelliteInfo::Elevation);
-    case SystemRole:
+    case Roles::SystemRole:
         return systemString(info.satelliteSystem());
-    case InUseRole:
+    case Roles::SystemIdRole:
+        return info.satelliteSystem();
+    case Roles::InUseRole:
         return m_inUseIds.contains(info.satelliteIdentifier());
+    case Roles::VisibleNameRole:
+        return u"%1-%2"_s.arg(systemString(info.satelliteSystem()),
+                              QString::number(info.satelliteIdentifier()));
     }
 
     return QVariant();
@@ -66,12 +72,14 @@ QVariant SatelliteModel::data(const QModelIndex &index, int role) const
 QHash<int, QByteArray> SatelliteModel::roleNames() const
 {
     return {
-        {IdRole, "id"},
-        {RssiRole, "rssi"},
-        {AzimuthRole, "azimuth"},
-        {ElevationRole, "elevation"},
-        {SystemRole, "system"},
-        {InUseRole, "inUse"}
+        {Roles::IdRole, "id"},
+        {Roles::RssiRole, "rssi"},
+        {Roles::AzimuthRole, "azimuth"},
+        {Roles::ElevationRole, "elevation"},
+        {Roles::SystemRole, "system"},
+        {Roles::SystemIdRole, "systemId"},
+        {Roles::InUseRole, "inUse"},
+        {Roles::VisibleNameRole, "name"}
     };
 }
 
@@ -118,7 +126,7 @@ void SatelliteModel::updateSatellitesInView(const QList<QGeoSatelliteInfo> &inVi
         } else {
             m_satellites[idx] = inViewCopy.at(idx);
             emit dataChanged(index(idx), index(idx),
-                             {RssiRole, AzimuthRole, ElevationRole});
+                             {Roles::RssiRole, Roles::AzimuthRole, Roles::ElevationRole});
         }
     }
     m_allIds = idsInUpdate;
@@ -131,5 +139,5 @@ void SatelliteModel::updateSatellitesInUse(const QList<QGeoSatelliteInfo> &inUse
     m_inUseIds.clear();
     for (const QGeoSatelliteInfo &info : inUse)
         m_inUseIds.insert(info.satelliteIdentifier());
-    emit dataChanged(index(0), index(m_satellites.size() - 1), {InUseRole});
+    emit dataChanged(index(0), index(m_satellites.size() - 1), {Roles::InUseRole});
 }

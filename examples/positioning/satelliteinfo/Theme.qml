@@ -65,6 +65,18 @@ QtObject {
                                                     root.grayColor.g,
                                                     root.grayColor.b,
                                                     0.3)
+    readonly property color tableSeparatorColor: root.darkMode
+                                                 ? Qt.rgba(root.lightGrayColor.r,
+                                                           root.lightGrayColor.g,
+                                                           root.lightGrayColor.b,
+                                                           0.2)
+                                                 : Qt.rgba(root.darkGrayColor.r,
+                                                           root.darkGrayColor.g,
+                                                           root.darkGrayColor.b,
+                                                           0.2)
+
+    readonly property color searchBorderColor: root.darkMode ? root.lightGrayColor
+                                                             : root.grayColor
 
     // font
     readonly property int largeFontSize: 18

@@ -11,6 +11,7 @@ Window {
     id: root
 
     required property SatelliteModel satellitesModel
+    required property SortFilterModel sortFilterModel
 
     width: 360
     height: 640
@@ -35,6 +36,7 @@ Window {
         id: applicationComponent
         ApplicationScreen {
             satellitesModel: root.satellitesModel
+            sortFilterModel: root.sortFilterModel
         }
     }
 

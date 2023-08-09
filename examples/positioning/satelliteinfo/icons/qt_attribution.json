@@ -10,6 +10,6 @@
         "License": "Apache License Version 2.0",
         "LicenseId": "Apache-2.0",
         "Copyright": "© Google",
-        "Files": "darkmode.svg help.svg lightmode.svg rssiview.svg settings.svg skyview.svg tableview.svg"
+        "Files": "checkbox.svg checkbox_blank.svg darkmode.svg filter.svg help.svg lightmode.svg rssiview.svg search.svg settings.svg skyview.svg sort.svg tableview.svg"
     }
 ]
