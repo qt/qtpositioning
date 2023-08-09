@@ -16,15 +16,6 @@ class SatelliteModel : public QAbstractListModel
 public:
     explicit SatelliteModel(QObject *parent = nullptr);
 
-    enum Roles {
-        IdRole = Qt::UserRole + 1,
-        RssiRole,
-        AzimuthRole,
-        ElevationRole,
-        SystemRole,
-        InUseRole
-    };
-
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
     QHash<int, QByteArray> roleNames() const override;

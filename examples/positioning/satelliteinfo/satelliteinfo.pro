@@ -11,10 +11,13 @@ QML_IMPORT_NAME = SatelliteInformation
 QML_IMPORT_MAJOR_VERSION = 1
 
 SOURCES += main.cpp \
-    satellitemodel.cpp
+    satellitemodel.cpp \
+    sortfiltermodel.cpp
 
 HEADERS += \
-    satellitemodel.h
+    roles.h \
+    satellitemodel.h \
+    sortfiltermodel.h
 
 qml_resources.files = \
     qmldir \
@@ -39,7 +42,10 @@ qml_resources.prefix = /qt/qml/SatelliteInformation
 RESOURCES += qml_resources
 
 icon_resources.files = \
+    icons/checkbox.svg \
+    icons/checkbox_blank.svg \
     icons/darkmode.svg \
+    icons/filter.svg \
     icons/help.svg \
     icons/lightmode.svg \
     icons/place.svg \
@@ -47,8 +53,12 @@ icon_resources.files = \
     icons/qtlogo_white.png \
     icons/rssiview.svg \
     icons/satellite_small.png \
+    icons/satellite1.png \
+    icons/satellite2.png \
+    icons/search.svg \
     icons/settings.svg \
     icons/skyview.svg \
+    icons/sort.svg \
     icons/tableview.svg
 
 icon_resources.prefix = /qt/qml/SatelliteInformation

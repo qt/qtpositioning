@@ -69,7 +69,9 @@ qt_add_qml_module(satelliteinfo
     URI SatelliteInformation
     VERSION 1.0
     SOURCES
+        roles.h
         satellitemodel.cpp satellitemodel.h
+        sortfiltermodel.cpp sortfiltermodel.h
     QML_FILES
         ApplicationScreen.qml
         Button.qml
@@ -87,7 +89,10 @@ qt_add_qml_module(satelliteinfo
         Theme.qml
         ViewSwitch.qml
     RESOURCES
+        icons/checkbox.svg
+        icons/checkbox_blank.svg
         icons/darkmode.svg
+        icons/filter.svg
         icons/help.svg
         icons/lightmode.svg
         icons/place.svg
@@ -95,8 +100,12 @@ qt_add_qml_module(satelliteinfo
         icons/qtlogo_white.png
         icons/rssiview.svg
         icons/satellite_small.png
+        icons/satellite1.png
+        icons/satellite2.png
+        icons/search.svg
         icons/settings.svg
         icons/skyview.svg
+        icons/sort.svg
         icons/tableview.svg
 )
 

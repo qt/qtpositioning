@@ -12,6 +12,7 @@ Rectangle {
     id: root
 
     required property SatelliteModel satellitesModel
+    required property SortFilterModel sortFilterModel
     property color inUseColor: Theme.inUseColor
     property color inViewColor: Theme.inViewColor
 
@@ -131,6 +132,9 @@ Rectangle {
             inUseColor: root.inUseColor
         }
         SatelliteView {
+            sortFilterModel: root.sortFilterModel
+            inViewColor: root.inViewColor
+            inUseColor: root.inUseColor
         }
         RssiView {
             satellitesModel: root.satellitesModel
@@ -144,6 +148,7 @@ Rectangle {
         width: parent.width
         anchors.bottom: modeButton.top
         visible: viewsLayout.currentIndex !== navigationTab.tableViewIndex
+        height: visible ? implicitHeight : 0
     }
 
     Button {
