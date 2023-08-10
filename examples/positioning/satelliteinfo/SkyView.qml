@@ -8,6 +8,9 @@ import QtQuick.Shapes
 Rectangle {
     id: root
 
+    // Multisample this item to get rid of aliasing in our custom shapes.
+    layer.enabled: true
+    layer.samples: 4
     // Sample text to calculate sky view size properly
     Text {
         id: sampleText
