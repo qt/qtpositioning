@@ -3,12 +3,12 @@
 
 /*!
     \example satelliteinfo
-    \title SatelliteInfo (QML)
+    \title SatelliteInfo (C++/QML)
+    \examplecategory {Application Examples}
     \examplecategory {Positioning & Location}
 
     \brief The SatelliteInfo example shows the available satellites
-    using Sky View or RSSI View and the user's current position. The satellites
-    currently contributing to the GPS fix are marked as pink.
+    using Sky View, Table View, or RSSI View and the user's current position.
 
     \ingroup qtpositioning-examples
 
@@ -20,30 +20,42 @@
         \li \l {SatelliteSource}
     \endlist
 
-    The example shows satellite information in two different tabs.
+    The example also shows how to use a custom \c {C++} model together with a
+    custom proxy model from \c {QML}.
+
+    \section1 UI Overview
+
+    The example shows satellite information in three different tabs.
     The data is taken from the \l {SatelliteSource::satellitesInView} and
     \l {SatelliteSource::satellitesInUse} properties.
 
-    \image ../images/example-skyview.png
+    \image ../images/skyview_tableview.webp
 
     The \e {Sky View} tab shows the relative satellite positions using the
-    \c {Azimuth} and \c {Elevation}
-    \l {geoSatelliteInfo::attribute}{attributes}.
+    \c {Azimuth} and \c {Elevation} \l {geoSatelliteInfo::attribute}
+    {attributes}. Clicking on an individual satellite object opens a popup
+    with the \l {geoSatelliteInfo::satelliteIdentifier} {satellite identifier},
+    its azimuth and elevation.
 
-    \image ../images/example-rssiview.png
+    The \e {Table View} tab shows the list of all detected satellites, and
+    allows to apply sorting and filtering to the list.
 
-    The RSSI View tab shows the signal strength of satellites in view using the
-    \l {geoSatelliteInfo::}{signalStrength} property.
+    \image ../images/rssiview_settings.webp
 
-    In both cases, the displayed numbers are the individual
-    \l{geoSatelliteInfo::satelliteIdentifier}{satellite identifiers}. The
-    satellites that are currently used to calculate the GPS fix are marked pink.
+    The \e {RSSI View} tab shows the signal strength of satellites in view using
+    the \l {geoSatelliteInfo::}{signalStrength} property. The numbers below the
+    bars represent the individual \l {geoSatelliteInfo::satelliteIdentifier}
+    {satellite identifiers}.
 
-    The \e {Current Position} block below the satellite information uses
-    \l {PositionSource::position} property to show the current latitude and
-    longitude.
+    The \e {Sky View} and \e {RSSI View} tabs also show the current latitude and
+    longitude. They use \l {PositionSource::position} property to extract this
+    information.
 
-    The \e {Status} block shows the current mode or the last error.
+    The \e {Status} block on top of the tabs shows the current mode or the last
+    error.
+
+    The \e {Settings} menu allows to switch the application color mode and show
+    the help information.
 
     The application operates in three different modes:
 
@@ -94,13 +106,78 @@
     Similarly to the position, the current satellite information is retrieved
     from the \l SatelliteSource QML object. The \c {onSatellitesInViewChanged}
     and \c {onSatellitesInUseChanged} handlers are used to get the updated
-    satellites in view and satellites in use respectively. The data is then
-    combined into a single model, which is passed to both \e {Sky View} and
-    \e {RSSI View} tabs.
+    satellites in view and satellites in use respectively. In this example, the
+    data is then forwarded to the \c {C++} model, which is later used in all
+    views.
 
     \snippet satelliteinfo/ApplicationScreen.qml 0
     \snippet satelliteinfo/ApplicationScreen.qml 1
     \snippet satelliteinfo/ApplicationScreen.qml 2
+
+    \note The example shows both the QML Positioning API, and the integration
+    of C++ model to QML. That is the reason why the satellite information is
+    first retrieved in \c {QML}, then forwarded to \c {C++}, and then back to
+    \c {QML} to be used in the model. In practice, if the application is
+    supposed to use complex \c {C++} models, consider directly using the
+    \l QGeoSatelliteInfoSource class from \c {C++}.
+
+    \section1 Using Custom C++ Models
+
+    The example makes use of two custom models - \c {SatelliteModel} and
+    \c {SortFilterModel}.
+
+    \section2 Satellite Model
+
+    The \c {SatelliteModel} class is derived from \l QAbstractListModel and
+    reimplements the \l {QAbstractListModel::}{rowCount()},
+    \l {QAbstractListModel::}{data()}, and
+    \l {QAbstractListModel::}{roleNames()} methods to represent the
+    satellite information. Using \l QAbstractListModel as a base class allows
+    to easily use the model with the \c {QML} \l ListView and \l Repeater types.
+    A custom \c {size} property is used only in the \e {RSSI View} tab to
+    dynamically calculate the width of the tab bars.
+
+    \snippet satelliteinfo/satellitemodel.h 0
+    \snippet satelliteinfo/satellitemodel.h 1
+
+    The \c {roleNames()} method is used to map the model's roles to the
+    property names which can be used to access the model data from \c {QML}.
+    For example, the \c {id} name is used to extract the satellite identifier,
+    and the \c {rssi} name is used to get the signal strength.
+
+    \snippet satelliteinfo/satellitemodel.cpp 0
+
+    On the \c {QML} side, we can use these names to get the actual values.
+    For example, the implementation of \e {RSSI View} uses the \c {rssi},
+    \c {inUse}, and \c {id} role names to draw the bars that represent
+    individual satellites:
+
+    \snippet satelliteinfo/RssiView.qml 0
+
+    \section2 Proxy Model
+
+    The \c {SortFilterModel} class is used to provide custom sorting and
+    filtering of the satellite objects shown in the \e {Table View} tab.
+
+    The model is derived from \l QSortFilterProxyModel and reimplements the
+    \l {QSortFilterProxyModel::}{filterAcceptsRow()} and
+    \l {QSortFilterProxyModel::}{lessThan()} methods to provide filtering and
+    sorting. The model also exposes several \c {slots} to tune the filtering
+    and sorting behavior.
+
+    \snippet satelliteinfo/sortfiltermodel.h 0
+    \snippet satelliteinfo/sortfiltermodel.h 1
+
+    These slots can be called from both \c {C++} and \c {QML}. For example, the
+    \e {Satellite Identifier} delegate uses the \c {updateSelectedSystems()}
+    slot to show or hide the information about satellites belonging to certain
+    satellite systems. Likewise, the \e {Satellite Status} delegates use the
+    \c {updateShowInView()} and \c {updateShowInUse()} slots to filter the
+    satellites with a specific status.
+
+    \snippet satelliteinfo/SatelliteView.qml 0
+    \dots
+    \snippet satelliteinfo/SatelliteView.qml 1
 
     \section1 QML Module Registration
 
@@ -119,6 +196,8 @@
     following way:
 
     \quotefromfile satelliteinfo/satelliteinfo.pro
+    \skipto CONFIG += qmltypes
+    \printuntil QML_IMPORT_MAJOR_VERSION = 1
     \skipto qml_resources.files
-    \printuntil RESOURCES += qml_resources
+    \printuntil RESOURCES += icon_resources
 */

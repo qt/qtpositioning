@@ -69,6 +69,7 @@ QVariant SatelliteModel::data(const QModelIndex &index, int role) const
     return QVariant();
 }
 
+//! [0]
 QHash<int, QByteArray> SatelliteModel::roleNames() const
 {
     return {
@@ -82,6 +83,7 @@ QHash<int, QByteArray> SatelliteModel::roleNames() const
         {Roles::VisibleNameRole, "name"}
     };
 }
+//! [0]
 
 void SatelliteModel::updateSatellitesInView(const QList<QGeoSatelliteInfo> &inView)
 {
