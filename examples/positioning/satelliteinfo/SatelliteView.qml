@@ -391,6 +391,7 @@ Rectangle {
                 font.weight: Theme.fontDefaultWeight
                 Layout.alignment: Qt.AlignRight
             }
+            //! [0]
             Repeater {
                 model: root.satelliteSystemModel
                 delegate: CheckElement {
@@ -402,6 +403,7 @@ Rectangle {
                     }
                 }
             }
+            //! [0]
             Text {
                 text: qsTr("Satellite Status")
                 color: Theme.textMainColor
@@ -409,6 +411,7 @@ Rectangle {
                 font.weight: Theme.fontDefaultWeight
                 Layout.alignment: Qt.AlignRight
             }
+            //! [1]
             CheckElement {
                 text: qsTr("In View")
                 Layout.alignment: Qt.AlignRight
@@ -419,6 +422,7 @@ Rectangle {
                 Layout.alignment: Qt.AlignRight
                 onCheckedChanged: root.sortFilterModel.updateShowInUse(checked)
             }
+            //! [1]
         }
     }
 }

@@ -437,6 +437,7 @@ Rectangle {
 
                 spacing: Theme.defaultSpacing
 
+                //! [0]
                 Repeater {
                     id: repeater
                     model: root.satellitesModel
@@ -464,6 +465,7 @@ Rectangle {
                         }
                     }
                 }
+                //! [0]
             }
         }
     }

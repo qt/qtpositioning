@@ -8,6 +8,7 @@
 #include <QGeoSatelliteInfo>
 #include <QtQml/qqmlregistration.h>
 
+//! [0]
 class SatelliteModel : public QAbstractListModel
 {
     Q_OBJECT
@@ -26,11 +27,14 @@ public slots:
 
 signals:
     void sizeChanged();
+//! [0]
 
 private:
     QList<QGeoSatelliteInfo> m_satellites;
     QSet<int> m_inUseIds;
     QSet<int> m_allIds;
+//! [1]
 };
+//! [1]
 
 #endif // SATELLITEMODEL_H

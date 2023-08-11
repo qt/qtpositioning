@@ -9,6 +9,7 @@
 #include <QSortFilterProxyModel>
 #include <QQmlEngine>
 
+//! [0]
 class SortFilterModel : public QSortFilterProxyModel
 {
     Q_OBJECT
@@ -26,6 +27,7 @@ public slots:
 protected:
     bool filterAcceptsRow(int row, const QModelIndex &parent) const override;
     bool lessThan(const QModelIndex &left, const QModelIndex &right) const override;
+//! [0]
 
 private:
     QString m_filterString;
@@ -39,6 +41,8 @@ private:
     bool m_showInView = true;
     bool m_showInUse = true;
     QSet<int> m_sortRoles;
+//! [1]
 };
+//! [1]
 
 #endif // SORTFILTERMODEL_H
