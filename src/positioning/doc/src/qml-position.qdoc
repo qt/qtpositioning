@@ -5,7 +5,7 @@
 \page location-positioning-qml.html
 
 \title Positioning (QML)
-
+\ingroup explanations-positioning
 \brief The Location Positioning API enables location positioning by means of
 GPS or an NMEA data source.
 
