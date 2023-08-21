@@ -29,8 +29,6 @@ qt_internal_add_qml_module(PositioningQuick
         qpositioningquickglobal.h
         qpositioningquickglobal_p.h
         qpositioningquickmodule_p.h qpositioningquickmodule.cpp
-    DEFINES
-        QT_NO_CONTEXTLESS_CONNECT
     LIBRARIES
         Qt::PositioningPrivate
         Qt::QuickPrivate

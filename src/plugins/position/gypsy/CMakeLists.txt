@@ -14,8 +14,6 @@ qt_internal_add_plugin(QGeoPositionInfoSourceFactoryGypsyPlugin
     SOURCES
         qgeopositioninfosourcefactory_gypsy.cpp qgeopositioninfosourcefactory_gypsy.h
         qgeosatelliteinfosource_gypsy.cpp qgeosatelliteinfosource_gypsy_p.h
-    DEFINES
-        QT_NO_CONTEXTLESS_CONNECT
 # special case begin
     LIBRARIES
         Gypsy::Gypsy

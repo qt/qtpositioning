@@ -15,8 +15,6 @@ qt_internal_add_plugin(QGeoPositionInfoSourceFactoryGeoclue2Plugin
         geocluetypes.cpp geocluetypes.h
         qgeopositioninfosource_geoclue2.cpp qgeopositioninfosource_geoclue2_p.h
         qgeopositioninfosourcefactory_geoclue2.cpp qgeopositioninfosourcefactory_geoclue2.h
-    DEFINES
-        QT_NO_CONTEXTLESS_CONNECT
     DBUS_INTERFACE_SOURCES
         org.freedesktop.GeoClue2.Client.xml
         org.freedesktop.GeoClue2.Location.xml

@@ -359,9 +359,8 @@ void tst_QNmeaPositionInfoSource::startUpdates_waitForValidDateTime()
             factory.createPositionInfoSourceProxy(&source));
 
     QSignalSpy spy(proxy->source(), SIGNAL(positionUpdated(QGeoPositionInfo)));
-    QObject::connect(proxy->source(), &QNmeaPositionInfoSource::positionUpdated, [](const QGeoPositionInfo &info) {
-                                                                            qDebug() << info.timestamp();
-                                                                        });
+    QObject::connect(proxy->source(), &QNmeaPositionInfoSource::positionUpdated, this,
+                     [](const QGeoPositionInfo &info) { qDebug() << info.timestamp(); });
 
     proxy->source()->startUpdates();
     proxy->feedBytes(bytes);
