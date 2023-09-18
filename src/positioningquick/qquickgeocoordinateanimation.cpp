@@ -233,7 +233,7 @@ void QQuickGeoCoordinateAnimation::setDirection(QQuickGeoCoordinateAnimation::Di
 {
     Q_D( QQuickGeoCoordinateAnimation);
     d->m_direction.removeBindingUnlessInWrapper();
-    if (d->m_direction.value() == direction)
+    if (d->m_direction.valueBypassingBindings() == direction)
         return;
 
     d->m_direction.setValueBypassingBindings(direction);
