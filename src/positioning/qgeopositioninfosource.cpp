@@ -281,17 +281,17 @@ void QGeoPositionInfoSource::setPreferredPositioningMethods(PositioningMethods m
     // method, so we can't have a simple check like:
     // if (currentMethods == methods) return;
     // Instead we need to save the current value and compare it afterwards
-    const auto prevMethods = d->methods.value();
+    const auto prevMethods = d->methods.valueBypassingBindings();
 
     if (supportedPositioningMethods() != QGeoPositionInfoSource::NoPositioningMethods) {
         d->methods.setValueBypassingBindings(methods & supportedPositioningMethods());
-        if (d->methods.value() == 0) {
+        if (d->methods.valueBypassingBindings() == 0) {
             d->methods.setValueBypassingBindings(supportedPositioningMethods());
         }
     } else { // avoid that turned of Location service blocks any changes to d->methods
         d->methods.setValueBypassingBindings(methods);
     }
-    if (prevMethods != d->methods.value())
+    if (prevMethods != d->methods.valueBypassingBindings())
         d->methods.notify();
 }
 
