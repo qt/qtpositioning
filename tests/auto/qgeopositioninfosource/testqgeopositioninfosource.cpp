@@ -761,8 +761,12 @@ void TestQGeoPositionInfoSource::updateIntervalBinding()
     QGeoPositionInfoSource *source = QGeoPositionInfoSource::createDefaultSource(parent.get());
     QVERIFY(source != nullptr);
 
-    QTestPrivate::testReadWritePropertyBasics<QGeoPositionInfoSource, int>(*source, 1000, 2000,
-                                                                           "updateInterval");
+    QTestPrivate::testReadWritePropertyBasics<QGeoPositionInfoSource, int>(
+            *source, 1000, 2000, "updateInterval",
+            []() {
+                return std::unique_ptr<QGeoPositionInfoSource>(
+                        QGeoPositionInfoSource::createDefaultSource(nullptr));
+            });
 }
 
 void TestQGeoPositionInfoSource::preferredMethodsBinding()
@@ -776,7 +780,11 @@ void TestQGeoPositionInfoSource::preferredMethodsBinding()
     QTestPrivate::testReadWritePropertyBasics<QGeoPositionInfoSource,
                                               QGeoPositionInfoSource::PositioningMethods>(
             *source, QGeoPositionInfoSource::SatellitePositioningMethods,
-            QGeoPositionInfoSource::AllPositioningMethods, "preferredPositioningMethods");
+            QGeoPositionInfoSource::AllPositioningMethods, "preferredPositioningMethods",
+            []() {
+                return std::unique_ptr<QGeoPositionInfoSource>(
+                        QGeoPositionInfoSource::createSource("test.source", nullptr));
+            });
 }
 
 #include "testqgeopositioninfosource.moc"
