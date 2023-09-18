@@ -189,7 +189,7 @@ void QDeclarativePositionSource::setName(const QString &newName)
     if (newName.isEmpty() && m_defaultSourceUsed)
         return; // previously attached to a default source, now requesting the same.
 
-    const QString previousName = name();
+    const QString previousName = m_sourceName.valueBypassingBindings();
 
     if (!m_componentComplete || !m_parametersInitialized) {
         if (previousName != newName) {
