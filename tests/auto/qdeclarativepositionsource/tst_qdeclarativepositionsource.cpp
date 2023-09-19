@@ -19,6 +19,7 @@ private slots:
     void validBinding();
     void positionBinding();
     void activeBinding();
+    void activeBindingAutomated();
     void startBreaksActiveBinding();
     void activeBindingBreak();
 
@@ -153,9 +154,6 @@ void tst_DeclarativePositionSource::positionBinding()
 
 void tst_DeclarativePositionSource::activeBinding()
 {
-    // we can't use a common templated method to test active property, because
-    // setActive() uses QTimer::singleShot() to actually update the property
-    // state.
     m_positionSource->setName("test.source");
 
     QProperty<bool> activeObserver;
@@ -223,6 +221,11 @@ void tst_DeclarativePositionSource::activeBinding()
     QCOMPARE(m_positionSource->isActive(), false);
     QCOMPARE(activeObserver.value(), false);
     QCOMPARE(activeLambdaObserver.value(), false);
+}
+
+void tst_DeclarativePositionSource::activeBindingAutomated()
+{
+    QTestPrivate::testReadWritePropertyBasics(*m_positionSource.get(), true, false, "active");
 }
 
 void tst_DeclarativePositionSource::startBreaksActiveBinding()
