@@ -734,8 +734,12 @@ void TestQGeoSatelliteInfoSource::bindings()
 {
     CHECK_SOURCE_VALID;
 
-    QTestPrivate::testReadWritePropertyBasics<QGeoSatelliteInfoSource, int>(*m_source, 1000, 2000,
-                                                                            "updateInterval");
+    QTestPrivate::testReadWritePropertyBasics<QGeoSatelliteInfoSource, int>(
+            *m_source, 1000, 2000, "updateInterval",
+            []() {
+                return std::unique_ptr<QGeoSatelliteInfoSource>(
+                        QGeoSatelliteInfoSource::createDefaultSource(nullptr));
+            });
 }
 
 #include "testqgeosatelliteinfosource.moc"
