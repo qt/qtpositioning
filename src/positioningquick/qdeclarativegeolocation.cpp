@@ -52,17 +52,31 @@ QDeclarativeGeoLocation::QDeclarativeGeoLocation(QObject *parent)
 :   QObject(parent)
 
 {
-    setLocation(QGeoLocation());
+    setLocationInternal(QGeoLocation());
 }
 
 QDeclarativeGeoLocation::QDeclarativeGeoLocation(const QGeoLocation &src, QObject *parent)
 :   QObject(parent)
 {
-    setLocation(src);
+    setLocationInternal(src);
 }
 
 QDeclarativeGeoLocation::~QDeclarativeGeoLocation()
 {
+}
+
+/*!
+    \internal
+
+    This method is supposed to be used in the constructors, when we know that
+    the properties have no bindings, and we do not want to introduce any.
+*/
+void QDeclarativeGeoLocation::setLocationInternal(const QGeoLocation &src)
+{
+    m_address.setValueBypassingBindings(new QDeclarativeGeoAddress(src.address(), this));
+    m_coordinate.setValueBypassingBindings(src.coordinate());
+    m_boundingShape.setValueBypassingBindings(src.boundingShape());
+    m_extendedAttributes.setValueBypassingBindings(src.extendedAttributes());
 }
 
 /*!
@@ -106,19 +120,18 @@ QGeoLocation QDeclarativeGeoLocation::location() const
 void QDeclarativeGeoLocation::setAddress(QDeclarativeGeoAddress *address)
 {
     m_address.removeBindingUnlessInWrapper();
-    if (m_address == address)
+
+    const QDeclarativeGeoAddress *oldAddress = m_address.valueBypassingBindings();
+    if (oldAddress == address)
         return;
 
     // implicitly deleting m_address.value() will force the QML bindings to
     // be reevaluated by the QML engine. So we defer the deletion of the old
     // address until a new value is assigned to the m_address.
-    QDeclarativeGeoAddress *oldAddress = nullptr;
-    if (m_address && m_address->parent() == this)
-        oldAddress = m_address.value();
-
     m_address.setValueBypassingBindings(address);
     m_address.notify();
-    delete oldAddress;
+    if (oldAddress && (oldAddress->parent() == this))
+        delete oldAddress;
 }
 
 QBindable<QDeclarativeGeoAddress *> QDeclarativeGeoLocation::bindableAddress()
