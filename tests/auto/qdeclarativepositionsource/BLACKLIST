@@ -47,3 +47,6 @@ qnx
 #QTBUG-101345
 [activeBinding]
 qnx
+#QTBUG-101345
+[activeBindingAutomated]
+qnx
