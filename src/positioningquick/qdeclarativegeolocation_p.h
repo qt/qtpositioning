@@ -66,6 +66,8 @@ public:
     QBindable<QVariantMap> bindableExtendedAttributes();
 
 private:
+    void setLocationInternal(const QGeoLocation &src);
+
     Q_OBJECT_COMPAT_PROPERTY_WITH_ARGS(QDeclarativeGeoLocation, QDeclarativeGeoAddress *, m_address,
                                        &QDeclarativeGeoLocation::setAddress, nullptr)
     Q_OBJECT_BINDABLE_PROPERTY(QDeclarativeGeoLocation, QGeoShape, m_boundingShape)
