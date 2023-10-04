@@ -5,8 +5,6 @@ project           = QtPositioning
 description    = Qt Positioning Reference Documentation
 version          = $QT_VERSION
 
-
-
 qhp.projects            = QtPositioning
 
 qhp.QtPositioning.file                = qtpositioning.qhp
@@ -60,3 +58,6 @@ navigation.cppclassespage = "Qt Positioning C++ Classes"
 navigation.qmltypespage = "Qt Positioning QML Types"
 
 manifestmeta.thumbnail.names += "QtPositioning/Log File*"
+manifestmeta.highlighted.names = \
+    "QtPositioning/SatelliteInfo (C++/QML)" \
+    "QtPositioning/Weather Info (C++/QML)"
