@@ -555,7 +555,7 @@ static void positionUpdated(JNIEnv *env, jobject thiz, QtJniTypes::Location loca
 {
     Q_UNUSED(env);
     Q_UNUSED(thiz);
-    QGeoPositionInfo info = AndroidPositioning::positionInfoFromJavaLocation(location);
+    QGeoPositionInfo info = AndroidPositioning::positionInfoFromJavaLocation(location.object());
 
     QGeoPositionInfoSourceAndroid *source = AndroidPositioning::idToPosSource()->value(androidClassKey);
     if (!source) {
@@ -640,7 +640,7 @@ static void satelliteGnssUpdated(JNIEnv *env, jobject thiz, QtJniTypes::GnssStat
 
     QList<QGeoSatelliteInfo> inUse;
     QList<QGeoSatelliteInfo> sats =
-            AndroidPositioning::satelliteInfoFromJavaGnssStatus(gnssStatus, &inUse);
+            AndroidPositioning::satelliteInfoFromJavaGnssStatus(gnssStatus.object(), &inUse);
 
     notifySatelliteInfoUpdated(sats, inUse, androidClassKey, isSingleUpdate);
 }
