@@ -8,6 +8,8 @@
 #include <QGeoSatelliteInfo>
 #include <QtQml/qqmlregistration.h>
 
+#include <utility>
+
 //! [0]
 class SatelliteModel : public QAbstractListModel
 {
@@ -31,8 +33,13 @@ signals:
 
 private:
     QList<QGeoSatelliteInfo> m_satellites;
-    QSet<int> m_inUseIds;
-    QSet<int> m_allIds;
+
+    using SatelliteId = int;
+    using SystemId = int;
+    using UniqueId = std::pair<SystemId, SatelliteId>;
+    static UniqueId getUid(const QGeoSatelliteInfo &info);
+    QSet<UniqueId> m_inUseIds;
+    QSet<UniqueId> m_allIds;
 //! [1]
 };
 //! [1]
