@@ -253,8 +253,8 @@ Rectangle {
         id: satelliteItemView
         anchors.fill: parent
 
-        property int selectedId: -1
-        property var selectedData: ({"id": -1, "azimuth": 0, "elevation": 0})
+        property string selectedName: ""
+        property var selectedData: ({"name": "", "azimuth": 0, "elevation": 0})
         // selected{X,Y} holds the center of the selected circle
         property int selectedX: -1
         property int selectedY: -1
@@ -265,7 +265,7 @@ Rectangle {
                 id: satItem
 
                 required property var modelData
-                property bool selected: satelliteItemView.selectedId === modelData.id
+                property bool selected: satelliteItemView.selectedName === modelData.name
 
                 readonly property color normalColor: modelData.inUse ? root.inUseColor
                                                                      : root.inViewColor
@@ -309,7 +309,7 @@ Rectangle {
                         margins: -20 // so that it's easier to select the item
                     }
                     onClicked: {
-                        satelliteItemView.selectedId = satItem.modelData.id
+                        satelliteItemView.selectedName = satItem.modelData.name
                         satelliteItemView.selectedData = satItem.modelData
                         satelliteItemView.selectedX = satItem.x + satItem.width / 2
                         satelliteItemView.selectedY = satItem.y + satItem.height / 2
@@ -339,16 +339,16 @@ Rectangle {
             id: blurRect
             anchors.fill: parent
             color: Theme.backgroundBlurColor
-            visible: satelliteItemView.selectedId !== -1
+            visible: satelliteItemView.selectedName !== ""
             MouseArea {
                 anchors.fill: parent
-                onClicked: satelliteItemView.selectedId = -1
+                onClicked: satelliteItemView.selectedName = ""
             }
         }
 
         Rectangle {
             id: satInfoRect
-            visible: satelliteItemView.selectedId !== -1
+            visible: satelliteItemView.selectedName !== ""
             implicitWidth: Math.max(satName.width, satAzimuth.width, satElevation.width)
                            + satInfoCol.anchors.leftMargin + satInfoCol.anchors.rightMargin
             implicitHeight: satName.height + satAzimuth.height + satElevation.height
@@ -390,7 +390,7 @@ Rectangle {
                 spacing: 0
                 Text {
                     id: satName
-                    text: qsTr("Sat #") + satelliteItemView.selectedData.id
+                    text: qsTr("Sat ") + satelliteItemView.selectedData.name
                     font.pixelSize: Theme.smallFontSize
                     font.weight: Theme.fontDefaultWeight
                     color: Theme.darkGrayColor
@@ -416,7 +416,7 @@ Rectangle {
 
         Shape {
             id: connectionLine
-            visible: satelliteItemView.selectedId !== -1
+            visible: satelliteItemView.selectedName !== ""
             ShapePath {
                 strokeColor: Theme.whiteColor
                 strokeWidth: 1

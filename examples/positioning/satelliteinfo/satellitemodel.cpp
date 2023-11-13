@@ -60,7 +60,7 @@ QVariant SatelliteModel::data(const QModelIndex &index, int role) const
     case Roles::SystemIdRole:
         return info.satelliteSystem();
     case Roles::InUseRole:
-        return m_inUseIds.contains(info.satelliteIdentifier());
+        return m_inUseIds.contains(getUid(info));
     case Roles::VisibleNameRole:
         return u"%1-%2"_s.arg(systemString(info.satelliteSystem()),
                               QString::number(info.satelliteIdentifier()));
@@ -89,17 +89,17 @@ void SatelliteModel::updateSatellitesInView(const QList<QGeoSatelliteInfo> &inVi
 {
     const bool emitSizeChanged = inView.size() != m_satellites.size();
 
-    QSet<int> idsInUpdate;
+    QSet<UniqueId> idsInUpdate;
     for (const QGeoSatelliteInfo &info : inView)
-        idsInUpdate.insert(info.satelliteIdentifier());
+        idsInUpdate.insert(getUid(info));
 
     // 1. Get the ids of all satellites to be removed.
     const auto toBeRemoved = m_allIds - idsInUpdate;
     // 2. Remove them and call {begin,end}RemoveRows() for each of them
     qsizetype idx = 0;
     while (idx < m_satellites.size()) {
-        const int satId = m_satellites.at(idx).satelliteIdentifier();
-        if (toBeRemoved.contains(satId)) {
+        const auto &sat = m_satellites.at(idx);
+        if (toBeRemoved.contains(getUid(sat))) {
             beginRemoveRows(QModelIndex(), idx, idx);
             m_satellites.removeAt(idx);
             endRemoveRows();
@@ -114,14 +114,16 @@ void SatelliteModel::updateSatellitesInView(const QList<QGeoSatelliteInfo> &inVi
     auto inViewCopy = inView;
     std::sort(inViewCopy.begin(), inViewCopy.end(),
               [](const auto &lhs, const auto &rhs) {
+                  if (lhs.satelliteIdentifier() == rhs.satelliteIdentifier())
+                      return lhs.satelliteSystem() < rhs.satelliteSystem();
                   return lhs.satelliteIdentifier() < rhs.satelliteIdentifier();
               });
     // 5. Iterate through the list:
     //    * if the id of the satellite is new, use {begin,end}InsertRows()
     //    * otherwise use dataChanged()
     for (idx = 0; idx < inViewCopy.size(); ++idx) {
-        const int satId = inViewCopy.at(idx).satelliteIdentifier();
-        if (toBeAdded.contains(satId)) {
+        const auto &sat = inViewCopy.at(idx);
+        if (toBeAdded.contains(getUid(sat))) {
             beginInsertRows(QModelIndex(), idx, idx);
             m_satellites.insert(idx, inViewCopy.at(idx));
             endInsertRows();
@@ -140,6 +142,11 @@ void SatelliteModel::updateSatellitesInUse(const QList<QGeoSatelliteInfo> &inUse
 {
     m_inUseIds.clear();
     for (const QGeoSatelliteInfo &info : inUse)
-        m_inUseIds.insert(info.satelliteIdentifier());
+        m_inUseIds.insert(getUid(info));
     emit dataChanged(index(0), index(m_satellites.size() - 1), {Roles::InUseRole});
+}
+
+SatelliteModel::UniqueId SatelliteModel::getUid(const QGeoSatelliteInfo &info)
+{
+    return std::make_pair(static_cast<int>(info.satelliteSystem()), info.satelliteIdentifier());
 }
