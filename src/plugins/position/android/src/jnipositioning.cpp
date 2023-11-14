@@ -14,6 +14,7 @@
 #include <QtCore/QPermission>
 #include <QtCore/QCoreApplication>
 #include <QtCore/QTimeZone>
+#include <QtCore/QSet>
 #include <android/log.h>
 
 Q_DECLARE_JNI_CLASS(QtPositioning, "org/qtproject/qt/android/positioning/QtPositioning")
@@ -291,10 +292,18 @@ namespace AndroidPositioning {
         return info;
     }
 
+    using UniqueId = std::pair<int, int>;
+    static UniqueId getUid(const QGeoSatelliteInfo &info)
+    {
+        return std::make_pair(static_cast<int>(info.satelliteSystem()),
+                              info.satelliteIdentifier());
+    }
+
     QList<QGeoSatelliteInfo> satelliteInfoFromJavaLocation(JNIEnv *jniEnv,
                                                            jobjectArray satellites,
                                                            QList<QGeoSatelliteInfo>* usedInFix)
     {
+        QSet<UniqueId> uids;
         QList<QGeoSatelliteInfo> sats;
         jsize length = jniEnv->GetArrayLength(satellites);
         for (int i = 0; i<length; i++) {
@@ -345,7 +354,12 @@ namespace AndroidPositioning {
             // determining the position.
             const jboolean inFix = jniObj.callMethod<jboolean>("usedInFix");
 
+            const UniqueId id = getUid(info);
+            if (uids.contains(id))
+                continue;
+
             sats.append(info);
+            uids.insert(id);
 
             if (inFix)
                 usedInFix->append(info);
@@ -359,6 +373,7 @@ namespace AndroidPositioning {
     {
         QJniObject jniStatus(gnssStatus);
         QList<QGeoSatelliteInfo> sats;
+        QSet<UniqueId> uids;
 
         const int satellitesCount = jniStatus.callMethod<jint>("getSatelliteCount");
         for (int i = 0; i < satellitesCount; ++i) {
@@ -391,7 +406,12 @@ namespace AndroidPositioning {
             // determining the position.
             const jboolean inFix = jniStatus.callMethod<jboolean>("usedInFix", i);
 
+            const UniqueId id = getUid(info);
+            if (uids.contains(id))
+                continue;
+
             sats.append(info);
+            uids.insert(id);
 
             if (inFix)
                 usedInFix->append(info);
