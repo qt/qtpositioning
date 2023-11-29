@@ -45,7 +45,6 @@ qt_internal_add_module(Positioning
         Qt::Core
     PRIVATE_MODULE_INTERFACE
         Qt::CorePrivate
-    GENERATE_CPP_EXPORTS
     DEFINES
         QT_NO_CONTEXTLESS_CONNECT
 )
