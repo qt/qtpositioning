@@ -154,37 +154,34 @@ void QGeoSatelliteInfoSourceAndroid::requestUpdate(int timeout)
     }
 }
 
-void QGeoSatelliteInfoSourceAndroid::processSatelliteUpdateInView(const QList<QGeoSatelliteInfo> &satsInView, bool isSingleUpdate)
+void
+QGeoSatelliteInfoSourceAndroid::processSatelliteUpdate(const QList<QGeoSatelliteInfo> &satsInView,
+                                                       const QList<QGeoSatelliteInfo> &satsInUse,
+                                                       bool isSingleUpdate)
 {
     if (!isSingleUpdate) {
-        //if requested while regular updates were running
+        //if single update is requested while regular updates are running
         if (requestTimer.isActive())
             requestTimer.stop();
         emit QGeoSatelliteInfoSource::satellitesInViewUpdated(satsInView);
-        return;
-    }
-
-    m_satsInView = satsInView;
-}
-
-void QGeoSatelliteInfoSourceAndroid::processSatelliteUpdateInUse(const QList<QGeoSatelliteInfo> &satsInUse, bool isSingleUpdate)
-{
-    if (!isSingleUpdate) {
-        //if requested while regular updates were running
-        if (requestTimer.isActive())
-            requestTimer.stop();
         emit QGeoSatelliteInfoSource::satellitesInUseUpdated(satsInUse);
         return;
     }
 
+    m_satsInView = satsInView;
     m_satsInUse = satsInUse;
+
+    if (!m_satsInView.isEmpty() || !m_satsInUse.isEmpty()) {
+        requestTimer.stop();
+        requestTimeout();
+    }
 }
 
 void QGeoSatelliteInfoSourceAndroid::requestTimeout()
 {
     AndroidPositioning::stopUpdates(androidClassKeyForSingleRequest);
 
-    if (m_satsInView.isEmpty()) {
+    if (m_satsInView.isEmpty() && m_satsInUse.isEmpty()) {
         setError(QGeoSatelliteInfoSource::UpdateTimeoutError);
         return;
     }

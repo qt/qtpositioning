@@ -90,11 +90,6 @@ Rectangle {
         y: 3; height: 32; width: parent.width - 10
 //! [locatebutton-clicked]
         onClicked: {
-            if (positionSource.supportedPositioningMethods ===
-                    PositionSource.NoPositioningMethods) {
-                positionSource.nmeaSource = "nmealog.txt";
-                sourceText.text = "(filesource): " + printableMethod(positionSource.supportedPositioningMethods);
-            }
             positionSource.update();
         }
     }
@@ -102,20 +97,27 @@ Rectangle {
 //! [possrc]
     PositionSource {
         id: positionSource
-        onPositionChanged: { planet.source = "images/sun.png"; }
+
+        // used with nmea plugin only
+        PluginParameter { name: "nmea.source"; value: "qrc:///flickrmobile/nmealog.txt" }
+
+        onPositionChanged: {
+            planet.source = "images/sun.png";
+            sourceText.text = ((name === "nmea") ? "(filesource): " : "Source: ") +
+                    printableMethod(supportedPositioningMethods)
+        }
 
         onSourceErrorChanged: {
-            if (sourceError == PositionSource.UpdateTimeoutError) {
-                activityText.fadeOut = true
-                return
-            }
-
             if (sourceError == PositionSource.NoError)
                 return
 
-            console.log("Source error: " + sourceError)
+            console.log("Source error: " + printableError(sourceError))
             activityText.fadeOut = true
-            stop()
+
+            if (supportedPositioningMethods === PositionSource.NoPositioningMethods) {
+                name = "nmea";
+                update();
+            }
         }
     }
 //! [possrc]
@@ -129,6 +131,21 @@ Rectangle {
         else if (method === PositionSource.AllPositioningMethods)
             return "Multiple"
         return "source error";
+    }
+    function printableError(error) {
+        switch (error) {
+        case PositionSource.AccessError:
+            return qsTr("Not enough privileges")
+        case PositionSource.ClosedError:
+            return qsTr("Connection closed")
+        case PositionSource.UnknownSourceError:
+            return qsTr("Unknown error")
+        case PositionSource.NoError:
+            return qsTr("No error")
+        case PositionSource.UpdateTimeoutError:
+            return qsTr("Timeout occurred!")
+        }
+        return qsTr("Unknown error")
     }
 
     Grid {
@@ -167,7 +184,7 @@ Rectangle {
 
         text: {
             if (fadeOut)
-                return qsTr("Timeout occurred!");
+                return printableError(positionSource.sourceError)
             else if (positionSource.active)
                 return qsTr("Retrieving update...")
             else

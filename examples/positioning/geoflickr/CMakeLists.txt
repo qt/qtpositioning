@@ -15,12 +15,8 @@ endif()
 
 set(INSTALL_EXAMPLEDIR "${INSTALL_EXAMPLESDIR}/positioning/geoflickr")
 
-find_package(Qt6 COMPONENTS Core)
-find_package(Qt6 COMPONENTS Gui)
-find_package(Qt6 COMPONENTS Qml)
-find_package(Qt6 COMPONENTS Quick)
-find_package(Qt6 COMPONENTS Network)
-find_package(Qt6 COMPONENTS Positioning)
+find_package(Qt6 REQUIRED COMPONENTS Core Gui Network Positioning Qml Quick)
+find_package(Qt6 OPTIONAL_COMPONENTS SerialPort)
 
 qt_add_executable(geoflickr
     qmllocationflickr.cpp
@@ -38,6 +34,23 @@ target_link_libraries(geoflickr PRIVATE
     Qt::Quick
 )
 
+# For mobile platforms we need to explicitly link with Qt::SerialPort
+# to use NMEA plugin. The reason for such behavior is that, at least on Android,
+# the plugin dependencies were not explicitly added to the list of deployment
+# targets until Qt 6.5.
+if(ANROID)
+    if (TARGET Qt::SerialPort)
+        target_link_libraries(geoflickr PRIVATE Qt::SerialPort)
+    endif()
+endif()
+
+if (IOS)
+    # Using absolute path for shared plist files is a Ninja bug workaround
+    get_filename_component(SHARED_PLIST_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../shared ABSOLUTE)
+    set_target_properties(geoflickr PROPERTIES
+       MACOSX_BUNDLE_INFO_PLIST "${SHARED_PLIST_DIR}/Info.cmake.ios.plist"
+    )
+endif()
 
 # Resources:
 set(flickr_resource_files
