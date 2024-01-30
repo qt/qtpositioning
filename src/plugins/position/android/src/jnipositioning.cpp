@@ -240,6 +240,16 @@ namespace AndroidPositioning {
             if (!qFuzzyIsNull(value))
                 coordinate.setAltitude(value);
         }
+        // MSL altitude, available in API Level 34+.
+        // It will be available only if we requested it when starting updates.
+        if (QNativeInterface::QAndroidApplication::sdkVersion() >= 34) {
+            attributeExists = jniObject.callMethod<jboolean>("hasMslAltitude");
+            if (attributeExists) {
+                const jdouble value = jniObject.callMethod<jdouble>("getMslAltitudeMeters");
+                if (!qFuzzyIsNull(value))
+                    coordinate.setAltitude(value);
+            }
+        }
 
         info.setCoordinate(coordinate);
 
@@ -420,7 +430,8 @@ namespace AndroidPositioning {
         return sats;
     }
 
-    QGeoPositionInfo lastKnownPosition(bool fromSatellitePositioningMethodsOnly)
+    QGeoPositionInfo lastKnownPosition(bool fromSatellitePositioningMethodsOnly,
+                                       bool useAltitudeConverter)
     {
         QJniEnvironment env;
         if (!env.jniEnv())
@@ -430,7 +441,8 @@ namespace AndroidPositioning {
             return {};
 
         QJniObject locationObj = QJniObject::callStaticMethod<jobject>(
-                positioningClass(), lastKnownPositionMethodId, fromSatellitePositioningMethodsOnly);
+                positioningClass(), lastKnownPositionMethodId, fromSatellitePositioningMethodsOnly,
+                useAltitudeConverter);
         jobject location = locationObj.object();
         if (location == nullptr)
             return QGeoPositionInfo();
@@ -466,7 +478,7 @@ namespace AndroidPositioning {
             int errorCode = QJniObject::callStaticMethod<jint>(
                     positioningClass(), startUpdatesMethodId, androidClassKey,
                     positioningMethodToInt(source->preferredPositioningMethods()),
-                    source->updateInterval());
+                    source->updateInterval(), source->useAltitudeConverter());
             switch (errorCode) {
             case 0:
             case 1:
@@ -503,7 +515,7 @@ namespace AndroidPositioning {
             int errorCode = QJniObject::callStaticMethod<jint>(
                     positioningClass(), requestUpdateMethodId, androidClassKey,
                     positioningMethodToInt(source->preferredPositioningMethods()),
-                    timeout);
+                    timeout, source->useAltitudeConverter());
             switch (errorCode) {
             case 0:
             case 1:
@@ -700,10 +712,12 @@ static bool registerNatives()
 
     GET_AND_CHECK_STATIC_METHOD(providerListMethodId, "providerList", jintArray);
     GET_AND_CHECK_STATIC_METHOD(lastKnownPositionMethodId, "lastKnownPosition",
-                                QtJniTypes::Location, bool);
-    GET_AND_CHECK_STATIC_METHOD(startUpdatesMethodId, "startUpdates", jint, jint, jint, jint);
+                                QtJniTypes::Location, bool, bool);
+    GET_AND_CHECK_STATIC_METHOD(startUpdatesMethodId, "startUpdates", jint, jint, jint, jint,
+                                bool);
     GET_AND_CHECK_STATIC_METHOD(stopUpdatesMethodId, "stopUpdates", void, jint);
-    GET_AND_CHECK_STATIC_METHOD(requestUpdateMethodId, "requestUpdate", jint, jint, jint, jint);
+    GET_AND_CHECK_STATIC_METHOD(requestUpdateMethodId, "requestUpdate", jint, jint, jint, jint,
+                                bool);
     GET_AND_CHECK_STATIC_METHOD(startSatelliteUpdatesMethodId, "startSatelliteUpdates",
                                 jint, jint, jint, bool);
 

@@ -4,6 +4,7 @@
 package org.qtproject.qt.android.positioning;
 
 import android.content.Context;
+import android.location.altitude.AltitudeConverter;
 import android.location.GpsSatellite;
 import android.location.GpsStatus;
 import android.location.Location;
@@ -63,14 +64,20 @@ public class QtPositioning implements LocationListener
     private Location lastNetwork = null;
     /* If true this class acts as satellite signal monitor rather than location monitor */
     private boolean isSatelliteUpdate = false;
+    /* Try to convert the altitude to MSL or not */
+    private boolean useAltitudeConverter = false;
 
     private PositioningLooperBase looperThread;
 
     private boolean isLocationProvidersDisabledInvoked = false;
 
+    private static Context appContext = null;
+    private static AltitudeConverter altitudeConverter = null;
+
     static public void setContext(Context context)
     {
         try {
+            appContext = context;
             locationManager = (LocationManager)context.getSystemService(Context.LOCATION_SERVICE);
         } catch(Exception e) {
             e.printStackTrace();
@@ -102,14 +109,33 @@ public class QtPositioning implements LocationListener
         return retList;
     }
 
-    static public Location lastKnownPosition(boolean fromSatelliteOnly)
+    static private void addMslAltitude(Location location)
+    {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            if (altitudeConverter == null)
+                altitudeConverter = new AltitudeConverter();
+            try {
+                altitudeConverter.addMslAltitudeToLocation(appContext, location);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    static public Location lastKnownPosition(boolean fromSatelliteOnly,
+                                             boolean useAltitudeConverter)
     {
         Location gps = null;
         Location network = null;
         try {
             gps = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-            if (!fromSatelliteOnly)
+            if (useAltitudeConverter)
+                addMslAltitude(gps);
+            if (!fromSatelliteOnly) {
                 network = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+                if (useAltitudeConverter)
+                    addMslAltitude(network);
+            }
         } catch(Exception e) {
             e.printStackTrace();
             gps = network = null;
@@ -188,7 +214,8 @@ public class QtPositioning implements LocationListener
     }
 
 
-    static public int startUpdates(int androidClassKey, int locationProvider, int updateInterval)
+    static public int startUpdates(int androidClassKey, int locationProvider, int updateInterval,
+                                   boolean useAltitudeConverter)
     {
         synchronized (m_syncObject) {
             try {
@@ -197,6 +224,7 @@ public class QtPositioning implements LocationListener
                 positioningListener.nativeClassReference = androidClassKey;
                 positioningListener.expectedProviders = locationProvider;
                 positioningListener.isSatelliteUpdate = false;
+                positioningListener.useAltitudeConverter = useAltitudeConverter;
 
                 if (updateInterval == 0)
                     updateInterval = 50; //don't update more often than once per 50ms
@@ -257,7 +285,8 @@ public class QtPositioning implements LocationListener
         }
     }
 
-    static public int requestUpdate(int androidClassKey, int locationProvider, int timeout)
+    static public int requestUpdate(int androidClassKey, int locationProvider, int timeout,
+                                    boolean useAltitudeConverter)
     {
         synchronized (m_syncObject) {
             try {
@@ -267,6 +296,7 @@ public class QtPositioning implements LocationListener
                 positioningListener.isSingleUpdate = true;
                 positioningListener.expectedProviders = locationProvider;
                 positioningListener.isSatelliteUpdate = false;
+                positioningListener.useAltitudeConverter = useAltitudeConverter;
 
                 if ((locationProvider & QT_GPS_PROVIDER) > 0) {
                     Log.d(TAG, "Single update using GPS");
@@ -543,6 +573,9 @@ public class QtPositioning implements LocationListener
         //Log.d(TAG, "**** Position Update ****: " +  location.toString() + " " + isSingleUpdate);
         if (location == null)
             return;
+
+        if (useAltitudeConverter)
+            addMslAltitude(location);
 
         if (isSatelliteUpdate) //we are a QGeoSatelliteInfoSource -> ignore
             return;
