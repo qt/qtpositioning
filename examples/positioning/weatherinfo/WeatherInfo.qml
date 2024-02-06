@@ -99,7 +99,7 @@ Window {
             }
 
             Item {
-                height: cityButton.height
+                Layout.preferredHeight: cityButton.height
                 Layout.fillWidth: true
 
                 Rectangle {
