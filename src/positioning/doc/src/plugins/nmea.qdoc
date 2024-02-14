@@ -178,7 +178,7 @@ parameters["nmea.source"] = "socket://localhost:22222";
 QGeoSatelliteInfoSource *socketSource = QGeoSatelliteInfoSource::createSource("nmea", parameters, this);
 \endcode
 
-\section2 Settings Custom Simulation Speed
+\section2 Settings custom simulation speed
 
 If you want to use \l QGeoSatelliteInfoSource to read file with NMEA stream, you
 can also use additional parameter \c "nmea.satellite_info_simulation_interval".
