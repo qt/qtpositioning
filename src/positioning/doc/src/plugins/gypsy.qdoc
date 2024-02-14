@@ -67,7 +67,7 @@ To specify a value for a key in the GConf configuration system, use
 gconftool-2 -t string -s /apps/geoclue/master/org.freedesktop.Geoclue.GPSDevice /dev/ttyUSB0
 \endcode
 
-\section1 Usage example
+\section1 Examples
 
 The following examples show how to create a \b gypsy satellite info source
 from C++.
