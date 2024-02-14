@@ -37,7 +37,7 @@ plugin.
         provided by \l QCoreApplication::applicationName() is used.
 \endtable
 
-\section1 Usage example
+\section1 Examples
 
 The following examples show how to create a \b geoclue2 PositionSource from
 C++ and QML.
