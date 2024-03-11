@@ -356,8 +356,8 @@ void QGeoPositionInfoSourceWinRT::requestUpdate(int timeout)
     if (timeout == 0)
         timeout = 2*60*1000; // Maximum time for cold start (see Android)
 
-    startHandler();
-    d->singleUpdateTimer.start(timeout);
+    if (startHandler())
+        d->singleUpdateTimer.start(timeout);
 }
 
 void QGeoPositionInfoSourceWinRT::virtualPositionUpdate()
