@@ -216,7 +216,7 @@ void QGeoPositionInfoSourceWinRT::setUpdateInterval(int msec)
     // minimumUpdateInterval is initialized to the lowest possible update interval in init().
     // Passing 0 will cause an error on Windows 10.
     // See https://docs.microsoft.com/en-us/uwp/api/windows.devices.geolocation.geolocator.reportinterval
-    if (msec != 0 && msec < minimumUpdateInterval())
+    if (msec < minimumUpdateInterval())
         msec = minimumUpdateInterval();
 
     const bool needsRestart = d->positionToken.value != 0 || d->statusToken.value != 0;
