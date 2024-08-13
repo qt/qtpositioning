@@ -733,6 +733,9 @@ Q_DECL_EXPORT jint JNICALL JNI_OnLoad(JavaVM * /*vm*/, void * /*reserved*/)
 
     __android_log_print(ANDROID_LOG_INFO, logTag, "Positioning start");
 
+    const auto context = QNativeInterface::QAndroidApplication::context();
+    QtJniTypes::QtPositioning::callStaticMethod<void>("setContext", context);
+
     if (!registerNatives()) {
         __android_log_print(ANDROID_LOG_FATAL, logTag, "registerNatives() failed");
         return -1;
