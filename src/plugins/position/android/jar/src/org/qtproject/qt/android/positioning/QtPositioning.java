@@ -513,7 +513,7 @@ class QtPositioning implements LocationListener
 
                     ArrayList<GpsSatellite> list = new ArrayList<GpsSatellite>();
                     while (it.hasNext()) {
-                        GpsSatellite sat = (GpsSatellite) it.next();
+                        GpsSatellite sat = it.next();
                         list.add(sat);
                     }
                     GpsSatellite[] sats = list.toArray(new GpsSatellite[list.size()]);
