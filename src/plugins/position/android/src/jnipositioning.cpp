@@ -437,7 +437,11 @@ namespace AndroidPositioning {
         if (!env.jniEnv())
             return QGeoPositionInfo();
 
-        if (!hasPositioningPermissions())
+        const auto accuracy = fromSatellitePositioningMethodsOnly
+                ? AccuracyType::Precise
+                : AccuracyType::Any;
+
+        if (!hasPositioningPermissions(accuracy))
             return {};
 
         QJniObject locationObj = QJniObject::callStaticMethod<jobject>(
@@ -463,6 +467,17 @@ namespace AndroidPositioning {
         return providerSelection;
     }
 
+    static AccuracyTypes
+    accuracyFromPositioningMethods(QGeoPositionInfoSource::PositioningMethods m)
+    {
+        AccuracyTypes types = AccuracyType::None;
+        if (m & QGeoPositionInfoSource::NonSatellitePositioningMethods)
+            types |= AccuracyType::Approximate;
+        if (m & QGeoPositionInfoSource::SatellitePositioningMethods)
+            types |= AccuracyType::Precise;
+        return types;
+    }
+
     QGeoPositionInfoSource::Error startUpdates(int androidClassKey)
     {
         QJniEnvironment env;
@@ -472,12 +487,14 @@ namespace AndroidPositioning {
         QGeoPositionInfoSourceAndroid *source = AndroidPositioning::idToPosSource()->value(androidClassKey);
 
         if (source) {
-            if (!hasPositioningPermissions())
+            const auto preferredMethods = source->preferredPositioningMethods();
+            const auto accuracy = accuracyFromPositioningMethods(preferredMethods);
+            if (!hasPositioningPermissions(accuracy))
                 return QGeoPositionInfoSource::AccessError;
 
             int errorCode = QJniObject::callStaticMethod<jint>(
                     positioningClass(), startUpdatesMethodId, androidClassKey,
-                    positioningMethodToInt(source->preferredPositioningMethods()),
+                    positioningMethodToInt(preferredMethods),
                     source->updateInterval(), source->useAltitudeConverter());
             switch (errorCode) {
             case 0:
@@ -509,12 +526,14 @@ namespace AndroidPositioning {
         QGeoPositionInfoSourceAndroid *source = AndroidPositioning::idToPosSource()->value(androidClassKey);
 
         if (source) {
-            if (!hasPositioningPermissions())
+            const auto preferredMethods = source->preferredPositioningMethods();
+            const auto accuracy = accuracyFromPositioningMethods(preferredMethods);
+            if (!hasPositioningPermissions(accuracy))
                 return QGeoPositionInfoSource::AccessError;
 
             int errorCode = QJniObject::callStaticMethod<jint>(
                     positioningClass(), requestUpdateMethodId, androidClassKey,
-                    positioningMethodToInt(source->preferredPositioningMethods()),
+                    positioningMethodToInt(preferredMethods),
                     timeout, source->useAltitudeConverter());
             switch (errorCode) {
             case 0:
@@ -538,7 +557,9 @@ namespace AndroidPositioning {
         QGeoSatelliteInfoSourceAndroid *source = AndroidPositioning::idToSatSource()->value(androidClassKey);
 
         if (source) {
-            if (!hasPositioningPermissions())
+            // Satellite Info request does not make sense with Approximate
+            // location permissions, so always check for Precise
+            if (!hasPositioningPermissions(AccuracyType::Precise))
                 return QGeoSatelliteInfoSource::AccessError;
 
             int interval = source->updateInterval();
@@ -564,16 +585,23 @@ namespace AndroidPositioning {
     }
 
 
-    bool hasPositioningPermissions()
+    bool hasPositioningPermissions(AccuracyTypes accuracy)
     {
         QLocationPermission permission;
-        permission.setAccuracy(QLocationPermission::Precise); // fine location (+ coarse on >= 31)
 
         // The needed permission depends on whether we run as a service or as an activity
         if (!QNativeInterface::QAndroidApplication::isActivityContext())
             permission.setAvailability(QLocationPermission::Always); // background location
 
-        const bool permitted = qApp->checkPermission(permission) == Qt::PermissionStatus::Granted;
+        bool permitted = false;
+        if (accuracy & AccuracyType::Precise) {
+            permission.setAccuracy(QLocationPermission::Precise);
+            permitted = qApp->checkPermission(permission) == Qt::PermissionStatus::Granted;
+        }
+        if (accuracy & AccuracyType::Approximate) {
+            permission.setAccuracy(QLocationPermission::Approximate);
+            permitted |= qApp->checkPermission(permission) == Qt::PermissionStatus::Granted;
+        }
 
         if (!permitted)
             qCWarning(lcPositioning) << "Position data not available due to missing permission";
