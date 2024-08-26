@@ -131,14 +131,22 @@ class QtPositioning implements LocationListener
             gps = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
             if (useAltitudeConverter)
                 addMslAltitude(gps);
-            if (!fromSatelliteOnly) {
+        } catch (Exception e) {
+            // This can throw if we only use ACCESS_COARSE_LOCATION. However,
+            // if we didn't set fromSatelliteOnly to true, that is not an error.
+            if (fromSatelliteOnly)
+                e.printStackTrace();
+            gps = null;
+        }
+        if (!fromSatelliteOnly) {
+            try {
                 network = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
                 if (useAltitudeConverter)
                     addMslAltitude(network);
+            } catch(Exception e) {
+                e.printStackTrace();
+                network = null;
             }
-        } catch(Exception e) {
-            e.printStackTrace();
-            gps = network = null;
         }
 
         if (gps != null && network != null) {
@@ -219,7 +227,8 @@ class QtPositioning implements LocationListener
     {
         synchronized (m_syncObject) {
             try {
-                boolean exceptionOccurred = false;
+                boolean providerStarted = false;
+                SecurityException lastException = null;
                 QtPositioning positioningListener = new QtPositioning();
                 positioningListener.nativeClassReference = androidClassKey;
                 positioningListener.expectedProviders = locationProvider;
@@ -236,9 +245,9 @@ class QtPositioning implements LocationListener
                         addActiveListener(positioningListener,
                                           LocationManager.GPS_PROVIDER,
                                           updateInterval, 0);
+                        providerStarted = true;
                     } catch (SecurityException se) {
-                        se.printStackTrace();
-                        exceptionOccurred = true;
+                        lastException = se;
                     }
                 }
 
@@ -248,12 +257,16 @@ class QtPositioning implements LocationListener
                         addActiveListener(positioningListener,
                                           LocationManager.NETWORK_PROVIDER,
                                           updateInterval, 0);
-                   } catch (SecurityException se) {
-                       se.printStackTrace();
-                       exceptionOccurred = true;
-                   }
+                        providerStarted = true;
+                    } catch (SecurityException se) {
+                        lastException = se;
+                    }
                 }
-                if (exceptionOccurred) {
+                // The preferred positioning methods and the granted permissions
+                // might not match, so raise an error only if none of the
+                // requested providers could be started.
+                if (!providerStarted && lastException != null) {
+                    lastException.printStackTrace();
                     removeActiveListener(positioningListener);
                     return QT_ACCESS_ERROR;
                 }
@@ -290,7 +303,8 @@ class QtPositioning implements LocationListener
     {
         synchronized (m_syncObject) {
             try {
-                boolean exceptionOccurred = false;
+                boolean providerStarted = false;
+                SecurityException lastException = null;
                 QtPositioning positioningListener = new QtPositioning();
                 positioningListener.nativeClassReference = androidClassKey;
                 positioningListener.isSingleUpdate = true;
@@ -303,9 +317,9 @@ class QtPositioning implements LocationListener
                     try {
                         addActiveListener(positioningListener, LocationManager.GPS_PROVIDER,
                                           timeout, 0);
+                        providerStarted = true;
                     } catch (SecurityException se) {
-                        se.printStackTrace();
-                        exceptionOccurred = true;
+                        lastException = se;
                     }
                 }
 
@@ -314,12 +328,16 @@ class QtPositioning implements LocationListener
                     try {
                         addActiveListener(positioningListener, LocationManager.NETWORK_PROVIDER,
                                           timeout, 0);
+                        providerStarted = true;
                     } catch (SecurityException se) {
-                         se.printStackTrace();
-                         exceptionOccurred = true;
+                        lastException = se;
                     }
                 }
-                if (exceptionOccurred) {
+                // The preferred positioning methods and the granted permissions
+                // might not match, so raise an error only if none of the
+                // requested providers could be started.
+                if (!providerStarted && lastException != null) {
+                    lastException.printStackTrace();
                     removeActiveListener(positioningListener);
                     return QT_ACCESS_ERROR;
                 }
