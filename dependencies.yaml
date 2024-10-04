@@ -3,8 +3,8 @@ dependencies:
     ref: 017d80e12fa50c50fa6751a039d3a7c9e799f34c
     required: true
   ../tqtc-qtdeclarative:
-    ref: b078003a3c81f1438dcaf932371d564003c99395
+    ref: 9886ff37350f661aad5b8bfaf2776e8429f208a7
     required: false
   ../tqtc-qtserialport:
-    ref: 02a687f636e417316a4eafdc73611c1994b768ac
+    ref: dd641bb8516666e437ba7751ec0b5bb7b6ab3c10
     required: false
