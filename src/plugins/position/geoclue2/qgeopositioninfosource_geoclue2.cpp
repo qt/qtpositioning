@@ -20,6 +20,8 @@ Q_DECLARE_LOGGING_CATEGORY(lcPositioningGeoclue2)
 
 QT_BEGIN_NAMESPACE
 
+using namespace QtPositioningPrivate;
+
 namespace {
 
 // NOTE: Copied from the /usr/include/libgeoclue-2.0/gclue-client.h
