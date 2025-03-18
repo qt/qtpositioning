@@ -751,7 +751,7 @@ QDataStream &QGeoCoordinate::dataStreamIn(QDataStream &stream, QGeoCoordinate &c
 */
 size_t qHash(const QGeoCoordinate &coordinate, size_t seed)
 {
-    QtPrivate::QHashCombine hash;
+    QtPrivate::QHashCombine hash(seed);
     // north and south pole are geographically equivalent (no matter the longitude)
     if (coordinate.latitude() != 90.0 && coordinate.latitude() != -90.0)
         seed = hash(seed, coordinate.longitude());
