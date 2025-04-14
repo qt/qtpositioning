@@ -247,9 +247,7 @@ void QGeoSatelliteInfo::setAttribute(Attribute attribute, qreal value)
 */
 qreal QGeoSatelliteInfo::attribute(Attribute attribute) const
 {
-    if (d->doubleAttribs.contains(attribute))
-        return d->doubleAttribs[attribute];
-    return -1;
+    return d->doubleAttribs.value(attribute, -1);
 }
 
 /*!
