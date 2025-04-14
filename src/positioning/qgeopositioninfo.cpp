@@ -237,8 +237,11 @@ qreal QGeoPositionInfo::attribute(Attribute attribute) const
 */
 void QGeoPositionInfo::removeAttribute(Attribute attribute)
 {
-    d.detach();
-    d->doubleAttribs.remove(attribute);
+    const auto it = d->doubleAttribs.constFind(attribute);
+    if (it != d->doubleAttribs.cend()) {
+        d.detach();
+        d->doubleAttribs.erase(it);
+    }
 }
 
 /*!
