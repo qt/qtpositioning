@@ -918,6 +918,26 @@ private slots:
         QCOMPARE(obj->backendProperty(DummyMonitorSource::kTestProperty), 10);
         QCOMPARE(obj->backendProperty(invalidProperty), QVariant());
     }
+
+    void randomSignalName()
+    {
+        auto src = std::unique_ptr<QGeoAreaMonitorSource>(
+                QGeoAreaMonitorSource::createSource(QStringLiteral("positionpoll"), nullptr));
+        QVERIFY(src);
+
+        QGeoAreaMonitorInfo infoCircle("Circle");
+        infoCircle.setArea(QGeoCircle(QGeoCoordinate(-27.70, 153.093), 10000));
+        QVERIFY(infoCircle.isValid());
+
+        // empty signal -> invalid
+        QVERIFY(!src->requestUpdate(infoCircle, ""));
+
+        // non-existent single-char signal -> invalid
+        QVERIFY(!src->requestUpdate(infoCircle, "a"));
+
+        // non-existent multi-char signal -> invalid
+        QVERIFY(!src->requestUpdate(infoCircle, "abcd"));
+    }
 };
 
 
