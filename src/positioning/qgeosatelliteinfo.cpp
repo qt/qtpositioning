@@ -255,8 +255,11 @@ qreal QGeoSatelliteInfo::attribute(Attribute attribute) const
 */
 void QGeoSatelliteInfo::removeAttribute(Attribute attribute)
 {
-    d.detach();
-    d->doubleAttribs.remove(attribute);
+    const auto it = d->doubleAttribs.constFind(attribute);
+    if (it != d->doubleAttribs.cend()) {
+        d.detach();
+        d->doubleAttribs.erase(it);
+    }
 }
 
 /*!
