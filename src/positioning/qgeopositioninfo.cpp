@@ -229,9 +229,7 @@ void QGeoPositionInfo::setAttribute(Attribute attribute, qreal value)
 */
 qreal QGeoPositionInfo::attribute(Attribute attribute) const
 {
-    if (d->doubleAttribs.contains(attribute))
-        return d->doubleAttribs[attribute];
-    return qQNaN();
+    return d->doubleAttribs.value(attribute, qQNaN());
 }
 
 /*!
