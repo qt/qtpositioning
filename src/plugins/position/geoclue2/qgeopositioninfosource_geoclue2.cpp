@@ -216,13 +216,12 @@ void QGeoPositionInfoSourceGeoclue2::createClient()
     const auto watcher = new QDBusPendingCallWatcher(reply, this);
     connect(watcher, &QDBusPendingCallWatcher::finished,
             [this](QDBusPendingCallWatcher *watcher) {
-        const QScopedPointer<QDBusPendingCallWatcher, QScopedPointerDeleteLater>
-                scopedWatcher(watcher);
-        const QDBusPendingReply<QDBusObjectPath> reply = *scopedWatcher;
+        watcher->deleteLater();
+        const QDBusPendingReply<QDBusObjectPath> reply = *watcher;
         if (reply.isError()) {
             const auto error = reply.error();
-            qCWarning(lcPositioningGeoclue2) << "Unable to obtain the client patch:"
-                                             << error.name() + error.message();
+            qCWarning(lcPositioningGeoclue2) << "Unable to obtain the client:"
+                                             << error.name() << error.message();
             setError(AccessError);
         } else {
             const QString clientPath = reply.value().path();
@@ -238,8 +237,8 @@ void QGeoPositionInfoSourceGeoclue2::createClient()
                 const auto error = m_client->lastError();
                 qCCritical(lcPositioningGeoclue2) << "Unable to create the client object:"
                                                   << error.name() << error.message();
-                setError(AccessError);
                 delete m_client;
+                setError(AccessError);
             } else {
                 connect(m_client.data(), &OrgFreedesktopGeoClue2ClientInterface::LocationUpdated,
                         this, &QGeoPositionInfoSourceGeoclue2::handleNewLocation);
@@ -266,14 +265,13 @@ void QGeoPositionInfoSourceGeoclue2::startClient()
     const auto watcher = new QDBusPendingCallWatcher(reply, this);
     connect(watcher, &QDBusPendingCallWatcher::finished,
             [this](QDBusPendingCallWatcher *watcher) {
-        QScopedPointer<QDBusPendingCallWatcher, QScopedPointerDeleteLater> scopedWatcher(watcher);
-        const QDBusPendingReply<> reply = *scopedWatcher;
+        watcher->deleteLater();
+        const QDBusPendingReply<> reply = *watcher;
         if (reply.isError()) {
             const auto error = reply.error();
             qCCritical(lcPositioningGeoclue2) << "Unable to start the client:"
                                               << error.name() << error.message();
             delete m_client;
-            scopedWatcher.reset();
             // This can potentially lead to calling ~QGeoPositionInfoSourceGeoclue2(),
             // so do all the cleanup before.
             setError(AccessError);
@@ -300,9 +298,8 @@ void QGeoPositionInfoSourceGeoclue2::stopClient()
     const auto watcher = new QDBusPendingCallWatcher(reply, this);
     connect(watcher, &QDBusPendingCallWatcher::finished,
             [this](QDBusPendingCallWatcher *watcher) {
-        const QScopedPointer<QDBusPendingCallWatcher, QScopedPointerDeleteLater>
-                scopedWatcher(watcher);
-        const QDBusPendingReply<> reply = *scopedWatcher;
+        watcher->deleteLater();
+        const QDBusPendingReply<> reply = *watcher;
         if (reply.isError()) {
             const auto error = reply.error();
             qCCritical(lcPositioningGeoclue2) << "Unable to stop the client:"
