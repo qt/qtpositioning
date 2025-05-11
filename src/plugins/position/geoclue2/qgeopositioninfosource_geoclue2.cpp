@@ -322,7 +322,7 @@ bool QGeoPositionInfoSourceGeoclue2::configureClient()
     if (m_desktopId.isEmpty()) {
         qCCritical(lcPositioningGeoclue2)
                 << "Unable to configure the client due to the desktop id is not set via"
-                << desktopIdParameter << "plugin parameter or QCoreApplication::applicationName";
+                << desktopIdParameter << "plugin parameter or QGuiApplication::desktopFileName";
         setError(AccessError);
         return false;
     }
@@ -423,7 +423,16 @@ void QGeoPositionInfoSourceGeoclue2::parseParameters(const QVariantMap &paramete
         m_desktopId = parameters.value(desktopIdParameter).toString();
 
     if (m_desktopId.isEmpty())
+        m_desktopId = qApp->property("desktopFileName").toString();
+
+#if QT_VERSION < QT_VERSION_CHECK(7, 0, 0)
+    if (m_desktopId.isEmpty()) {
+        qCWarning(lcPositioningGeoclue2) << "Neither" << desktopIdParameter
+                                         << "plugin parameter nor QGuiApplication::desktopFileName"
+                                         << "has been set. Please consider setting one of the two.";
         m_desktopId = QCoreApplication::applicationName();
+    }
+#endif
 }
 
 QT_END_NAMESPACE
