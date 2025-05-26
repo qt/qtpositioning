@@ -6,6 +6,11 @@
 
     "Description": "Clip2Tri can be used together with Clipper for robust triangulation.",
     "Homepage": "https://github.com/raptor/clip2tri",
+    "PURL": [
+        "pkg:github/raptor/clip2tri@5a11e66fef454c33ddfc080c17a9b2b03f7b642b"
+    ],
+    "Comment": "No relevant CPE found",
+    "Version": "commit 5a11e66fef454c33ddfc080c17a9b2b03f7b642b",
     "LicenseId": "MIT",
     "License": "MIT License",
     "LicenseFile": "LICENSE",
