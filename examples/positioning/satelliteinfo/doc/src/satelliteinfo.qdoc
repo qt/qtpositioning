@@ -31,7 +31,7 @@
     The data is taken from the \l {SatelliteSource::satellitesInView} and
     \l {SatelliteSource::satellitesInUse} properties.
 
-    \image ../images/skyview_tableview.webp
+    \image ../images/skyview_tableview.webp Satellite view and table UI
 
     The \e {Sky View} tab shows the relative satellite positions using the
     \c {Azimuth} and \c {Elevation} \l {geoSatelliteInfo::attribute}
@@ -42,7 +42,7 @@
     The \e {Table View} tab shows the list of all detected satellites, and
     allows to apply sorting and filtering to the list.
 
-    \image ../images/rssiview_settings.webp
+    \image ../images/rssiview_settings.webp RSSI view with satellite signal bars
 
     The \e {RSSI View} tab shows the signal strength of satellites in view using
     the \l {geoSatelliteInfo::}{signalStrength} property. The numbers below the
