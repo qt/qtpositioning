@@ -56,8 +56,8 @@ if(ANDROID)
     set_property(TARGET Positioning APPEND PROPERTY QT_ANDROID_LIB_DEPENDENCIES
         ${INSTALL_PLUGINSDIR}/position/libplugins_position_qtposition_android.so
     )
-    set_property(TARGET Positioning APPEND PROPERTY QT_ANDROID_PERMISSIONS
-        android.permission.ACCESS_FINE_LOCATION
+    qt_internal_add_android_permission(Positioning
+        NAME android.permission.ACCESS_FINE_LOCATION
     )
 endif()
 
