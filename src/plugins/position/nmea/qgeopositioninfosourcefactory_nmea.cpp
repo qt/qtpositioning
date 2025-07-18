@@ -19,9 +19,9 @@
 #endif
 
 
-Q_LOGGING_CATEGORY(lcNmea, "qt.positioning.nmea")
-
 QT_BEGIN_NAMESPACE
+
+Q_STATIC_LOGGING_CATEGORY(lcNmea, "qt.positioning.nmea")
 
 static const auto sourceParameterName = QStringLiteral("nmea.source");
 static const auto socketScheme = QStringLiteral("socket:");
