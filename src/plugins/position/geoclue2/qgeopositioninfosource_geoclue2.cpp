@@ -422,7 +422,7 @@ void QGeoPositionInfoSourceGeoclue2::parseParameters(const QVariantMap &paramete
     if (parameters.contains(desktopIdParameter))
         m_desktopId = parameters.value(desktopIdParameter).toString();
 
-    if (m_desktopId.isEmpty())
+    if (m_desktopId.isEmpty() && qApp)
         m_desktopId = qApp->property("desktopFileName").toString();
 
 #if QT_VERSION < QT_VERSION_CHECK(7, 0, 0)
