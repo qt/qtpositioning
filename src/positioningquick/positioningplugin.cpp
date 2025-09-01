@@ -77,14 +77,10 @@ QT_BEGIN_NAMESPACE
 
     When integrating with C++, note that any QGeoCoordinate value passed into QML from C++ is
     automatically converted into a \c coordinate value, and vice-versa.
+*/
 
-    \section1 Properties
-
-    \section2 latitude
-
-    \code
-    real latitude
-    \endcode
+/*!
+    \qmlproperty real coordinate::latitude
 
     This property holds the latitude value of the geographical position
     (decimal degrees). A positive latitude indicates the Northern Hemisphere,
@@ -92,12 +88,10 @@ QT_BEGIN_NAMESPACE
     If the property has not been set, its default value is NaN.
 
     For more details see the \l {QGeoCoordinate::latitude} property
+*/
 
-    \section2 longitude
-
-    \code
-    real longitude
-    \endcode
+/*!
+    \qmlproperty real coordinate::longitude
 
     This property holds the longitude value of the geographical position
     (decimal degrees). A positive longitude indicates the Eastern Hemisphere,
@@ -105,23 +99,19 @@ QT_BEGIN_NAMESPACE
     If the property has not been set, its default value is NaN.
 
     For more details see the \l {QGeoCoordinate::longitude} property
+*/
 
-    \section2 altitude
-
-    \code
-    real altitude
-    \endcode
+/*!
+    \qmlproperty real coordinate::altitude
 
     This property holds the altitude value (meters above sea level).
     If the property has not been set, its default value is NaN.
 
     For more details see the \l {QGeoCoordinate::altitude} property
+*/
 
-    \section2 isValid
-
-    \code
-    bool isValid
-    \endcode
+/*!
+    \qmlproperty bool coordinate::isValid
 
     This property holds the current validity of the coordinate. Coordinates
     are considered valid if they have been set with a valid latitude and
@@ -132,37 +122,29 @@ QT_BEGIN_NAMESPACE
     valid.
 
     This is a read-only property.
+*/
 
-    \section1 Methods
-
-    \section2 distanceTo()
-
-    \code
-    real distanceTo(coordinate other)
-    \endcode
+/*!
+    \qmlmethod real coordinate::distanceTo(coordinate other)
 
     Returns the distance (in meters) from this coordinate to the coordinate specified by \a other.
     Altitude is not used in the calculation.
 
     This calculation returns the great-circle distance between the two coordinates, with an
     assumption that the Earth is spherical for the purpose of this calculation.
+*/
 
-    \section2 azimuthTo()
-
-    \code
-    real azimuth(coordinate other)
-    \endcode
+/*!
+    \qmlmethod real coordinate::azimuthTo(coordinate other)
 
     Returns the azimuth (or bearing) in degrees from this coordinate to the coordinate specified by
     \a other.  Altitude is not used in the calculation.
 
     There is an assumption that the Earth is spherical for the purpose of this calculation.
+*/
 
-    \section2 atDistanceAndAzimuth()
-
-    \code
-    coordinate atDistanceAndAzimuth(real distance, real azimuth)
-    \endcode
+/*!
+    \qmlmethod coordinate coordinate::atDistanceAndAzimuth(real distance, real azimuth)
 
     Returns the coordinate that is reached by traveling \a distance metres from this coordinate at
     \a azimuth degrees along a great-circle.
@@ -218,35 +200,27 @@ QT_BEGIN_NAMESPACE
 
     When integrating with C++, note that any QGeoShape value passed into QML from C++ is
     automatically converted into a \c geoshape value, and vice-versa.
+*/
 
-    \section1 Properties
-
-    \section2 isEmpty
-
-    \code
-    bool isEmpty
-    \endcode
+/*!
+    \qmlproperty bool geoshape::isEmpty
 
     Returns whether this geoshape is empty. An empty geoshape is a region which has
     a geometrical area of 0.
+*/
 
-    \section2 isValid
-
-    \code
-    bool isValid
-    \endcode
+/*!
+    \qmlproperty bool geoshape::isValid
 
     Returns whether this geoshape is valid.
 
     A geoshape is considered to be invalid if some of the data that is required to
     unambiguously describe the geoshape has not been set or has been set to an
     unsuitable value.
+*/
 
-    \section2 type
-
-    \code
-    ShapeType type
-    \endcode
+/*!
+    \qmlproperty ShapeType geoshape::type
 
     Returns the current type of the shape.
 
@@ -259,17 +233,13 @@ QT_BEGIN_NAMESPACE
     \endlist
 
     This QML property was introduced by Qt 5.5.
+*/
 
-    \section1 Methods
-
-    \section2 contains()
-
-    \code
-    bool contains(coordinate coord)
-    \endcode
+/*!
+    \qmlmethod bool geoshape::contains(coordinate coord)
 
     Returns true if the \l {QtPositioning::coordinate}{coordinate} specified by \a coord is within
-    this geoshape; Otherwise returns false.
+    this geoshape; otherwise returns false.
 */
 
 /*!
@@ -319,67 +289,51 @@ QT_BEGIN_NAMESPACE
 
     When integrating with C++, note that any QGeoRectangle value passed into QML from C++ is
     automatically converted into a \c georectangle value, and vice-versa.
+*/
 
-    \section1 Properties
-
-    \section2 bottomLeft
-
-    \code
-    coordinate bottomLeft
-    \endcode
+/*!
+    \qmlproperty coodinate georectangle::bottomLeft
 
     This property holds the bottom left coordinate of this georectangle.
+*/
 
-    \section2 bottomRight
-
-    \code
-    coordinate bottomRight
-    \endcode
+/*!
+    \qmlproperty coordinate georectangle::bottomRight
 
     This property holds the bottom right coordinate of this georectangle.
+*/
 
-    \section2 center
-
-    \code
-    coordinate center
-    \endcode
+/*!
+    \qmlproperty coordinate georectangle::center
 
     This property holds the center coordinate of this georectangle. For more details
     see \l {QGeoRectangle::setCenter()}.
+*/
 
-    \section2 height
-
-    \code
-    double height
-    \endcode
+/*!
+    \qmlproperty double georectangle::height
 
     This property holds the height of this georectangle (in degrees). For more details
     see \l {QGeoRectangle::setHeight()}.
 
     \note If the georectangle is invalid, it is not possible to set the height. QtPositioning
     releases prior to Qt 5.5 permitted the setting of the height even on invalid georectangles.
+*/
 
-    \section2 topLeft
-
-    \code
-    coordinate topLeft
-    \endcode
+/*!
+    \qmlproperty coordinate georectangle::topLeft
 
     This property holds the top left coordinate of this georectangle.
+*/
 
-    \section2 topRight
-
-    \code
-    coordinate topRight
-    \endcode
+/*!
+    \qmlproperty coordinate georectangle::topRight
 
     This property holds the top right coordinate of this georectangle.
+*/
 
-    \section2 width
-
-    \code
-    double width
-    \endcode
+/*!
+    \qmlproperty double georectangle::width
 
     This property holds the width of this georectangle (in degrees). For more details
     see \l {QGeoRectangle::setWidth()}.
@@ -417,24 +371,19 @@ QT_BEGIN_NAMESPACE
     }
     \endqml
 
-    When integrating with C++, note that any QGeoCircle value passed into QML from C++ is
-    automatically converted into a \c geocircle value, and vise-versa.
+    When integrating with C++, any QGeoCircle value passed into QML from C++ is
+    automatically converted into a \c geocircle value. Similarly, \c geocircle
+    values are converted to QGeoCircle values when passed from QML to C++.
+*/
 
-    \section1 Properties
-
-    \section2 center
-
-    \code
-    coordinate radius
-    \endcode
+/*!
+    \qmlproperty coordinate geocircle::center
 
     This property holds the coordinate of the center of the geocircle.
+*/
 
-    \section2 radius
-
-    \code
-    real radius
-    \endcode
+/*!
+    \qmlproperty real geocircle::radius
 
     This property holds the radius of the geocircle in meters.
 
@@ -458,17 +407,19 @@ QT_BEGIN_NAMESPACE
 
     When integrating with C++, note that any QGeoPath value passed into QML from C++ is
     automatically converted into a \c geopath value, and vice versa.
+*/
 
-    \section1 Properties
-
-    \section2 path
+/*!
+    \qmlproperty list<coordinate> geopath::path
 
     This property holds the list of coordinates defining the path.
+*/
 
-    \section2 width
+/*!
+    \qmlproperty real geopath::width
 
     This property holds the width of the path in meters. This is currently only used
-    when calling the \l {contains}() method.
+    when calling the \l {geoshape::}{contains()} method.
 
     The default value for the width is 0.
 */
@@ -490,10 +441,10 @@ QT_BEGIN_NAMESPACE
 
    When integrating with C++, note that any QGeoPolygon value passed into QML
    is automatically converted into a \c geopolygon, and vice versa.
+*/
 
-   \section1 Properties
-
-   \section2 path
+/*!
+   \qmlproperty list<coordinate> geopolygon::path
 
    This property holds the list of coordinates defining the polygon.
 */
