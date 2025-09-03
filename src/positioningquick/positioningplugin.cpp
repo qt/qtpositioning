@@ -174,25 +174,14 @@ QT_BEGIN_NAMESPACE
 
     \section1 Example Usage
 
-    To create a shape use one of the methods described below.
-
-    To create a geoShape value, specify it as a "shape()" string:
-
-    \qml
-    import QtPositioning
-
-    Item {
-        property var region: "shape()"
-    }
-    \endqml
-
-    or with the \l {QtPositioning::shape}{QtPositioning.shape()} function:
+    To create a geoShape value, use the
+    \l {QtPositioning::shape}{QtPositioning.shape()} function:
 
     \qml
     import QtPositioning
 
     Item {
-        property var region: QtPositioning.shape()
+        property geoShape region: QtPositioning.shape()
     }
     \endqml
 
@@ -281,7 +270,8 @@ QT_BEGIN_NAMESPACE
     import QtPositioning
 
     Item {
-        property var region: QtPositioning.rectangle(QtPositioning.coordinate(-27.5, 153.1), QtPositioning.coordinate(-27.6, 153.2))
+        property geoRectangle region: QtPositioning.rectangle(QtPositioning.coordinate(-27.5, 153.1),
+                                                              QtPositioning.coordinate(-27.6, 153.2))
     }
     \endqml
 
@@ -365,7 +355,7 @@ QT_BEGIN_NAMESPACE
     import QtPositioning
 
     Item {
-        property var region: QtPositioning.circle(QtPositioning.coordinate(-27.5, 153.1), 1000)
+        property geoCircle region: QtPositioning.circle(QtPositioning.coordinate(-27.5, 153.1), 1000)
     }
     \endqml
 
