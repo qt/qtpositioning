@@ -77,11 +77,11 @@ QGeoCoordinate LocationSingleton::coordinate(double latitude, double longitude, 
 }
 
 /*!
-    \qmlmethod geoshape QtPositioning::shape() const
+    \qmlmethod geoShape QtPositioning::shape() const
 
-    Constructs an invalid geoshape.
+    Constructs an invalid geoShape.
 
-    \sa {geoshape}
+    \sa {geoShape}
 */
 QGeoShape LocationSingleton::shape() const
 {
@@ -278,7 +278,7 @@ QGeoPolygon LocationSingleton::polygon(const QVariantList &perimeter, const QVar
 }
 
 /*!
-    \qmlmethod geoCircle QtPositioning::shapeToCircle(geoshape shape) const
+    \qmlmethod geoCircle QtPositioning::shapeToCircle(geoShape shape) const
 
     Converts \a shape to a geoCircle.
 
@@ -291,7 +291,7 @@ QGeoCircle LocationSingleton::shapeToCircle(const QGeoShape &shape) const
 }
 
 /*!
-    \qmlmethod geoRectangle QtPositioning::shapeToRectangle(geoshape shape) const
+    \qmlmethod geoRectangle QtPositioning::shapeToRectangle(geoShape shape) const
 
     Converts \a shape to a geoRectangle.
 
@@ -304,7 +304,7 @@ QGeoRectangle LocationSingleton::shapeToRectangle(const QGeoShape &shape) const
 }
 
 /*!
-    \qmlmethod geoPath QtPositioning::shapeToPath(geoshape shape) const
+    \qmlmethod geoPath QtPositioning::shapeToPath(geoShape shape) const
 
     Converts \a shape to a geoPath.
 
@@ -317,7 +317,7 @@ QGeoPath LocationSingleton::shapeToPath(const QGeoShape &shape) const
 }
 
 /*!
-    \qmlmethod geoPolygon QtPositioning::shapeToPolygon(geoshape shape) const
+    \qmlmethod geoPolygon QtPositioning::shapeToPolygon(geoShape shape) const
 
     Converts \a shape to a polygon.
 

@@ -167,7 +167,7 @@ QGeoCoordinate QDeclarativeGeoLocation::coordinate() const
 /*!
     \since QtPositioning 6.2
 
-    \qmlproperty geoshape QtPositioning::Location::boundingShape
+    \qmlproperty geoShape QtPositioning::Location::boundingShape
 
     This property holds the recommended region to use when displaying the location.
     For example, a building's location may have a region centered around the building,
@@ -175,12 +175,12 @@ QGeoCoordinate QDeclarativeGeoLocation::coordinate() const
     context.
 
     \note This property was introduced in Qt6 instead of boundingBox property.
-    It returns a \l geoshape instead of a \l geoRectangle.
+    It returns a \l geoShape instead of a \l geoRectangle.
     Use \l QGeoShape::boundingGeoRectangle() to obtain a bounding
     \l geoRectangle for the shape.
 
     If you need to convert the returned shape to a specific type, use the
-    \c type property of \l geoshape together with convenience
+    \c type property of \l geoShape together with convenience
     methods from \l [QML]{QtPositioning} like
     \l {QtPositioning::shapeToRectangle}{QtPositioning.shapeToRectangle()}.
 */
