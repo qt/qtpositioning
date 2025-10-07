@@ -213,11 +213,11 @@ QGeoPath LocationSingleton::path(const QJSValue &value, qreal width) const
 }
 
 /*!
-    \qmlmethod geopolygon QtPositioning::polygon() const
+    \qmlmethod geoPolygon QtPositioning::polygon() const
 
     Constructs an empty polygon.
 
-    \sa {geopolygon}
+    \sa {geoPolygon}
     \since 5.10
 */
 QGeoPolygon LocationSingleton::polygon() const
@@ -226,11 +226,11 @@ QGeoPolygon LocationSingleton::polygon() const
 }
 
 /*!
-    \qmlmethod geopolygon QtPositioning::polygon(list<coordinate> coordinates) const
+    \qmlmethod geoPolygon QtPositioning::polygon(list<coordinate> coordinates) const
 
     Constructs a polygon from coordinates.
 
-    \sa {geopolygon}
+    \sa {geoPolygon}
     \since 5.10
 */
 QGeoPolygon LocationSingleton::polygon(const QVariantList &coordinates) const
@@ -245,11 +245,11 @@ QGeoPolygon LocationSingleton::polygon(const QVariantList &coordinates) const
 }
 
 /*!
-    \qmlmethod geopolygon QtPositioning::polygon(list<coordinate> perimeter, list<list<coordinate>> holes) const
+    \qmlmethod geoPolygon QtPositioning::polygon(list<coordinate> perimeter, list<list<coordinate>> holes) const
 
     Constructs a polygon from coordinates for perimeter and inner holes.
 
-    \sa {geopolygon}
+    \sa {geoPolygon}
     \since 5.12
 */
 QGeoPolygon LocationSingleton::polygon(const QVariantList &perimeter, const QVariantList &holes) const
@@ -317,11 +317,11 @@ QGeoPath LocationSingleton::shapeToPath(const QGeoShape &shape) const
 }
 
 /*!
-    \qmlmethod geopolygon QtPositioning::shapeToPolygon(geoshape shape) const
+    \qmlmethod geoPolygon QtPositioning::shapeToPolygon(geoshape shape) const
 
     Converts \a shape to a polygon.
 
-    \sa {geopolygon}
+    \sa {geoPolygon}
     \since 5.10
 */
 QGeoPolygon LocationSingleton::shapeToPolygon(const QGeoShape &shape) const
