@@ -170,11 +170,11 @@ QGeoCircle LocationSingleton::circle(const QGeoCoordinate &center, qreal radius)
 }
 
 /*!
-    \qmlmethod geopath QtPositioning::path() const
+    \qmlmethod geoPath QtPositioning::path() const
 
-    Constructs an empty geopath.
+    Constructs an empty geoPath.
 
-    \sa {geopath}
+    \sa {geoPath}
     \since 5.9
 */
 QGeoPath LocationSingleton::path() const
@@ -183,11 +183,11 @@ QGeoPath LocationSingleton::path() const
 }
 
 /*!
-    \qmlmethod geopath QtPositioning::path(list<coordinate> coordinates, real width) const
+    \qmlmethod geoPath QtPositioning::path(list<coordinate> coordinates, real width) const
 
-    Constructs a geopath from coordinates and width.
+    Constructs a geoPath from coordinates and width.
 
-    \sa {geopath}
+    \sa {geoPath}
     \since 5.9
 */
 QGeoPath LocationSingleton::path(const QJSValue &value, qreal width) const
@@ -304,11 +304,11 @@ QGeoRectangle LocationSingleton::shapeToRectangle(const QGeoShape &shape) const
 }
 
 /*!
-    \qmlmethod geopath QtPositioning::shapeToPath(geoshape shape) const
+    \qmlmethod geoPath QtPositioning::shapeToPath(geoshape shape) const
 
-    Converts \a shape to a geopath.
+    Converts \a shape to a geoPath.
 
-    \sa {geopath}
+    \sa {geoPath}
     \since 5.9
 */
 QGeoPath LocationSingleton::shapeToPath(const QGeoShape &shape) const
