@@ -148,11 +148,11 @@ QGeoRectangle LocationSingleton::rectangle(const QVariantList &coordinates) cons
 }
 
 /*!
-    \qmlmethod geocircle QtPositioning::circle() const
+    \qmlmethod geoCircle QtPositioning::circle() const
 
-    Constructs an invalid geocircle.
+    Constructs an invalid geoCircle.
 
-    \sa {geocircle}
+    \sa {geoCircle}
 */
 QGeoCircle LocationSingleton::circle() const
 {
@@ -160,9 +160,9 @@ QGeoCircle LocationSingleton::circle() const
 }
 
 /*!
-    \qmlmethod geocircle QtPositioning::circle(coordinate center, real radius) const
+    \qmlmethod geoCircle QtPositioning::circle(coordinate center, real radius) const
 
-    Constructs a geocircle centered at \a center with a radius of \a radius meters.
+    Constructs a geoCircle centered at \a center with a radius of \a radius meters.
 */
 QGeoCircle LocationSingleton::circle(const QGeoCoordinate &center, qreal radius) const
 {
@@ -278,11 +278,11 @@ QGeoPolygon LocationSingleton::polygon(const QVariantList &perimeter, const QVar
 }
 
 /*!
-    \qmlmethod geocircle QtPositioning::shapeToCircle(geoshape shape) const
+    \qmlmethod geoCircle QtPositioning::shapeToCircle(geoshape shape) const
 
-    Converts \a shape to a geocircle.
+    Converts \a shape to a geoCircle.
 
-    \sa {geocircle}
+    \sa {geoCircle}
     \since 5.5
 */
 QGeoCircle LocationSingleton::shapeToCircle(const QGeoShape &shape) const
