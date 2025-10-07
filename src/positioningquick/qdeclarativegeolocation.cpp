@@ -181,9 +181,9 @@ QGeoCoordinate QDeclarativeGeoLocation::coordinate() const
     whole object changes, not if only the contents of the object change.
 
     \note This property was introduced in Qt6 instead of boundingBox property.
-    It returns a \l geoshape instead of a \l georectangle.
+    It returns a \l geoshape instead of a \l geoRectangle.
     Use \l QGeoShape::boundingGeoRectangle() to obtain a bounding
-    \l georectangle for the shape.
+    \l geoRectangle for the shape.
 
     If you need to convert the returned shape to a specific type, use the
     \c type property of \l geoshape together with convenience
