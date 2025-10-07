@@ -89,11 +89,11 @@ QGeoShape LocationSingleton::shape() const
 }
 
 /*!
-    \qmlmethod georectangle QtPositioning::rectangle() const
+    \qmlmethod geoRectangle QtPositioning::rectangle() const
 
-    Constructs an invalid georectangle.
+    Constructs an invalid geoRectangle.
 
-    \sa {georectangle}
+    \sa {geoRectangle}
 */
 QGeoRectangle LocationSingleton::rectangle() const
 {
@@ -101,12 +101,12 @@ QGeoRectangle LocationSingleton::rectangle() const
 }
 
 /*!
-    \qmlmethod georectangle QtPositioning::rectangle(coordinate center, real width, real height) const
+    \qmlmethod geoRectangle QtPositioning::rectangle(coordinate center, real width, real height) const
 
-    Constructs a georectangle centered at \a center with a width of \a width degrees and a hight of
+    Constructs a geoRectangle centered at \a center with a width of \a width degrees and a hight of
     \a height degrees.
 
-    \sa {georectangle}
+    \sa {geoRectangle}
 */
 QGeoRectangle LocationSingleton::rectangle(const QGeoCoordinate &center,
                                            double width, double height) const
@@ -115,12 +115,12 @@ QGeoRectangle LocationSingleton::rectangle(const QGeoCoordinate &center,
 }
 
 /*!
-    \qmlmethod georectangle QtPositioning::rectangle(coordinate topLeft, coordinate bottomRight) const
+    \qmlmethod geoRectangle QtPositioning::rectangle(coordinate topLeft, coordinate bottomRight) const
 
-    Constructs a georectangle with its top left corner positioned at \a topLeft and its bottom
+    Constructs a geoRectangle with its top left corner positioned at \a topLeft and its bottom
     right corner positioned at \a {bottomRight}.
 
-    \sa {georectangle}
+    \sa {geoRectangle}
 */
 QGeoRectangle LocationSingleton::rectangle(const QGeoCoordinate &topLeft,
                                            const QGeoCoordinate &bottomRight) const
@@ -129,12 +129,12 @@ QGeoRectangle LocationSingleton::rectangle(const QGeoCoordinate &topLeft,
 }
 
 /*!
-    \qmlmethod georectangle QtPositioning::rectangle(list<coordinate> coordinates) const
+    \qmlmethod geoRectangle QtPositioning::rectangle(list<coordinate> coordinates) const
 
-    Constructs a georectangle from the list of coordinates, the returned list is the smallest possible
+    Constructs a geoRectangle from the list of coordinates, the returned list is the smallest possible
     containing all the coordinates.
 
-    \sa {georectangle}
+    \sa {geoRectangle}
 */
 QGeoRectangle LocationSingleton::rectangle(const QVariantList &coordinates) const
 {
@@ -291,11 +291,11 @@ QGeoCircle LocationSingleton::shapeToCircle(const QGeoShape &shape) const
 }
 
 /*!
-    \qmlmethod georectangle QtPositioning::shapeToRectangle(geoshape shape) const
+    \qmlmethod geoRectangle QtPositioning::shapeToRectangle(geoshape shape) const
 
-    Converts \a shape to a georectangle.
+    Converts \a shape to a geoRectangle.
 
-    \sa {georectangle}
+    \sa {geoRectangle}
     \since 5.5
 */
 QGeoRectangle LocationSingleton::shapeToRectangle(const QGeoShape &shape) const
