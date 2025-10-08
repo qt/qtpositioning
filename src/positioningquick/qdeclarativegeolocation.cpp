@@ -148,9 +148,6 @@ QDeclarativeGeoAddress *QDeclarativeGeoLocation::address() const
     \qmlproperty coordinate QtPositioning::Location::coordinate
 
     This property holds the exact geographical coordinate of the location which can be used to retrieve the latitude, longitude and altitude of the location.
-
-    \note this property's changed() signal is currently emitted only if the
-    whole object changes, not if only the contents of the object change.
 */
 void QDeclarativeGeoLocation::setCoordinate(const QGeoCoordinate coordinate)
 {
@@ -176,9 +173,6 @@ QGeoCoordinate QDeclarativeGeoLocation::coordinate() const
     For example, a building's location may have a region centered around the building,
     but the region is large enough to show it's immediate surrounding geographical
     context.
-
-    \note This property's changed() signal is currently emitted only if the
-    whole object changes, not if only the contents of the object change.
 
     \note This property was introduced in Qt6 instead of boundingBox property.
     It returns a \l geoshape instead of a \l georectangle.
