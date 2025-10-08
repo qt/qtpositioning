@@ -13,40 +13,40 @@ code.
 Qt Positioning utilizes two methods to simplify exchange of position data
 between C++ and QML code.
 
+
 \target Cpp_value_integration_positioning
-\section1 Direct C++ Value Integration in QtPositioning
 
-Starting with Qt 5.5, it has become much easier to integrate non-QObject based
-data types into QML. This is achieved by adding \l Q_GADGET support to \l QtQml.
-The macro converts classes into a light-weight version of a \l QObject without
-the required \l QObject inheritance. At the same time, it retains the reflection
-capabilities of \l QMetaObject. As a result, they can be directly exposed to
-QML.
+\section1 Direct mapping
 
-A significant number of Position related data types were converted to
-\l {Q_GADGET}s. They retain their API and value type character but have become
-introspectable via \l QMetaObject.
+Qt Positioning allow you to pass the following value types from QML to C++, and
+vice versa:
 
-The \l QML_ANONYMOUS macro is used to expose these types to the QML environment.
-See the \l QQmlEngine documentation for more details and the full list of
-available macros.
-
-The classes, however, are not directly extended with this macro, because we do
-not want Qt Positioning to depend on \l QtQml. So a helper class is created for
-each of them, and the \l QML_FOREIGN macro is used:
-
-\code
-struct QGeoCoordinateForeign
-{
-    Q_GADGET
-    QML_FOREIGN(QGeoCoordinate)
-    QML_ANONYMOUS
-    QML_ADDED_IN_VERSION(5, 0)
-};
-\endcode
-
-The above registration of Positioning types is automatically done once by the
-QtPositioning QML plugin.
+ \table
+ \header
+ \li C++ Class
+ \li QML Value Type
+ \row
+ \li \l[C++]QGeoCircle
+ \li \l[QML]geoCircle
+ \row
+ \li \l[C++]QGeoCoordinate
+ \li \l[QML]geoCoordinate
+ \row
+ \li \l[C++]QGeoPath
+ \li \l[QML]geoPath
+ \row
+ \li \l[C++]QGeoPolygon
+ \li \l[QML]geoPolygon
+ \row
+ \li \l[C++]QGeoRectangle
+ \li \l[QML]geoRectangle
+ \row
+ \li \l[C++]QGeoSatelliteInfo
+ \li \l[QML]geoSatelliteInfo
+ \row
+ \li \l[C++]QGeoShape
+ \li \l[QML]geoShape
+\endtable
 
 \section1 QVariant Based integration
 

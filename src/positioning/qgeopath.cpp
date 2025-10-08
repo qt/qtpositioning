@@ -41,8 +41,7 @@ constexpr auto kWarningString = u"The path has more elements than fit into an in
     Similarly, the latitude of the bottom right corner will be the minimum latitude
     in the path point set.
 
-    This class is a \l Q_GADGET.
-    It can be \l{Cpp_value_integration_positioning}{directly used from C++ and QML}.
+    This class is also accessible in QML as \l[QML]{geoPath}.
 
     A QGeoPath is both invalid and empty if it contains no coordinate.
 

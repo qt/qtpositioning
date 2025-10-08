@@ -73,8 +73,7 @@ QGeoMercatorCoordinatePrivate::~QGeoMercatorCoordinatePrivate()
 
     Azimuth in this context is equivalent to a compass bearing based on true north.
 
-    This class is a \l Q_GADGET since Qt 5.5. It can be
-    \l{Cpp_value_integration_positioning}{directly used from C++ and QML}.
+    This class is also accessible in QML as \l[QML]{geoCoordinate}.
 */
 
 /*!
