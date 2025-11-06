@@ -77,3 +77,5 @@ manifestmeta.highlighted.names = \
 
 # Allow zero warnings when testing documentation in CI
 warninglimit = 0
+
+spurious += "Undocumented property .*"

@@ -239,6 +239,12 @@ QGeoRectangle &QGeoRectangle::operator=(const QGeoRectangle &other)
     return *this;
 }
 
+/*!
+    \class QGeoRectanglePrivate
+    \inmodule QtPositioning
+    \internal
+*/
+
 bool QGeoRectanglePrivate::isValid() const
 {
     return topLeft.isValid() && bottomRight.isValid() &&

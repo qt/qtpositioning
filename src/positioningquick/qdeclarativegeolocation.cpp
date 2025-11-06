@@ -40,7 +40,7 @@ QT_BEGIN_NAMESPACE
 */
 
 /*!
-    \qmlproperty VariantMap QDeclarativeGeoLocation::extendedAttributes
+    \qmlproperty VariantMap QtPositioning::Location::extendedAttributes
 
     This property holds the extended attributes for this Location.
     Extended attributes are backend-dependent and can be location-dependent.

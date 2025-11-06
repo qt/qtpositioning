@@ -52,15 +52,14 @@ QT_BEGIN_NAMESPACE
     \l {Qt Positioning on Android}.
 */
 
-/*!
-    Creates a satellite source with the specified \a parent.
-*/
-
 QGeoSatelliteInfoSourcePrivate::~QGeoSatelliteInfoSourcePrivate()
 {
 
 }
 
+/*!
+    Creates a satellite source with the specified \a parent.
+*/
 QGeoSatelliteInfoSource::QGeoSatelliteInfoSource(QObject *parent)
         : QObject(*new QGeoSatelliteInfoSourcePrivate, parent)
 {

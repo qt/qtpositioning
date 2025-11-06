@@ -151,15 +151,12 @@ void QGeoSatelliteInfo::setSatelliteSystem(SatelliteSystem system)
 /*!
     \property QGeoSatelliteInfo::satelliteSystem
     \brief the satellite system in use, such as GPS or GLONASS.
-*/
 
-/*!
     Returns the Satellite System (GPS, GLONASS, ...)
-
-    \note This value can be used together with \l satelliteIdentifier()
+    \note This value can be used together with \l satelliteIdentifier
     to uniquely identify a satellite.
 
-    \sa satelliteIdentifier()
+    \sa satelliteIdentifier
 */
 QGeoSatelliteInfo::SatelliteSystem QGeoSatelliteInfo::satelliteSystem() const
 {

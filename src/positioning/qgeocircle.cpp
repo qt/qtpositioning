@@ -121,7 +121,11 @@ QGeoCircle &QGeoCircle::operator=(const QGeoCircle &other)
     QGeoShape::operator=(other);
     return *this;
 }
-
+/*!
+ * \class QGeoCirclePrivate
+ * \inmodule QtPositioning
+ * \internal
+ */
 bool QGeoCirclePrivate::isValid() const
 {
     return m_center.isValid() && !qIsNaN(m_radius) && m_radius >= -1e-7;

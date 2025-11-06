@@ -308,6 +308,11 @@ QGeoPositionInfoSource::bindablePreferredPositioningMethods()
     return QBindable<PositioningMethods>(&d->methods);
 }
 
+/*!
+    \class QGeoPositionInfoSourcePrivate
+    \inmodule QtPositioning
+    \internal
+*/
 QGeoPositionInfoSource *QGeoPositionInfoSourcePrivate::createSourceReal(const QCborMap &meta, const QVariantMap &parameters, QObject *parent)
 {
     QGeoPositionInfoSource *s = nullptr;
