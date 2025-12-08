@@ -268,41 +268,35 @@ void tst_QGeoPath::valid()
 
 void tst_QGeoPath::contains_data()
 {
-    QTest::addColumn<QGeoCoordinate>("c1");
-    QTest::addColumn<QGeoCoordinate>("c2");
-    QTest::addColumn<QGeoCoordinate>("c3");
+    QTest::addColumn<QList<QGeoCoordinate>>("coordinates");
     QTest::addColumn<qreal>("width");
     QTest::addColumn<QGeoCoordinate>("probe");
     QTest::addColumn<bool>("result");
 
-    QList<QGeoCoordinate> c;
-    c.append(QGeoCoordinate(1,1));
-    c.append(QGeoCoordinate(2,2));
-    c.append(QGeoCoordinate(3,0));
+    const QList<QGeoCoordinate> c {
+        QGeoCoordinate(1, 1),
+        QGeoCoordinate(2, 2),
+        QGeoCoordinate(3, 0)
+    };
 
-    QTest::newRow("One of the points") << c[0] << c[1] << c[2] << 0.0 << QGeoCoordinate(2, 2) << true;
-    QTest::newRow("Not so far away") << c[0] << c[1] << c[2] << 0.0 << QGeoCoordinate(0.8, 0.8) << false;
-    QTest::newRow("Not so far away and large line") << c[0] << c[1] << c[2] << 100000.0 << QGeoCoordinate(0.8, 0.8) << true;
+    QTest::newRow("One of the points") << c << 0.0 << QGeoCoordinate(2, 2) << true;
+    QTest::newRow("Not so far away") << c << 0.0 << QGeoCoordinate(0.8, 0.8) << false;
+    QTest::newRow("Not so far away and thick line")
+            << c << 100000.0 << QGeoCoordinate(0.8, 0.8) << true;
 }
 
 void tst_QGeoPath::contains()
 {
-    QFETCH(QGeoCoordinate, c1);
-    QFETCH(QGeoCoordinate, c2);
-    QFETCH(QGeoCoordinate, c3);
-    QFETCH(qreal, width);
-    QFETCH(QGeoCoordinate, probe);
-    QFETCH(bool, result);
+    QFETCH(const QList<QGeoCoordinate>, coordinates);
+    QFETCH(const qreal, width);
+    QFETCH(const QGeoCoordinate, probe);
+    QFETCH(const bool, result);
 
-    QList<QGeoCoordinate> coords;
-    coords.append(c1);
-    coords.append(c2);
-    coords.append(c3);
-    QGeoPath p(coords, width);
+    const QGeoPath p(coordinates, width);
 
     QCOMPARE(p.contains(probe), result);
 
-    QGeoShape area = p;
+    const QGeoShape area = p;
     QCOMPARE(area.contains(probe), result);
 }
 
