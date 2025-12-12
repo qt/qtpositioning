@@ -324,6 +324,24 @@ void tst_QGeoPath::contains_data()
 
     QTest::newRow("no-wrap-path-wrap-coord-add")
             << notWrappedPathEast << width << QGeoCoordinate(50.5, -179.99) << true;
+
+    const QList<QGeoCoordinate> cycledOverlap {
+        QGeoCoordinate(-70, 171), // i.e. -189
+        QGeoCoordinate(-50, -135), // Each step is + (20, 54)
+        QGeoCoordinate(-30, -81),
+        QGeoCoordinate(-10, -27),
+        QGeoCoordinate(10, 27),
+        QGeoCoordinate(30, 81),
+        QGeoCoordinate(50, 135), // (58, 153) is near this last step
+        QGeoCoordinate(70, -171), // i.e. 189
+    };
+    // Bounding box is -70 <= lat <= 70, 171 <= lon <= -171 = 189 ;^>
+
+    QTest::newRow("cycled-wrap")
+            << cycledOverlap << qreal(23000) << QGeoCoordinate(58, 153) << true;
+    // Witness:
+    // QWebMercator::coordinateInterpolation(QGC(50, 135), QGC(70, -171), 1./3); is QGC(58.094, 153)
+    QCOMPARE_LT(QGeoCoordinate(58, 153).distanceTo(QGeoCoordinate(58.094, 153)), 11000);
 }
 
 void tst_QGeoPath::contains()
@@ -338,6 +356,7 @@ void tst_QGeoPath::contains()
     QEXPECT_FAIL("coord-lon-left-from-path-no-wrap-needed", "See QTBUG-142317", Abort);
     QEXPECT_FAIL("wrap-path-no-wrap-coord", "See QTBUG-142317", Abort);
     QEXPECT_FAIL("no-wrap-path-wrap-coord-subtract", "See QTBUG-142317", Abort);
+    QEXPECT_FAIL("cycled-wrap", "Prompted by QTBUG-142317", Abort);
     QCOMPARE(p.contains(probe), result);
 
     const QGeoShape area = p;
