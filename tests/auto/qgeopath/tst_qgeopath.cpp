@@ -283,6 +283,47 @@ void tst_QGeoPath::contains_data()
     QTest::newRow("Not so far away") << c << 0.0 << QGeoCoordinate(0.8, 0.8) << false;
     QTest::newRow("Not so far away and thick line")
             << c << 100000.0 << QGeoCoordinate(0.8, 0.8) << true;
+
+    // Test case from QTBUG-142317
+    QTest::newRow("coord-lon-left-from-path-no-wrap-needed")
+            << QList{QGeoCoordinate(50, 7), QGeoCoordinate(52, 6.999)} << 10000.0
+            << QGeoCoordinate(51, 6.95) << true;
+
+    // Testing various cases:
+    // - wrapped line, need to wrap the coord
+    // - wrapped line, no need to wrap the coord
+    // - non-wrapped line, need to wrap the coord
+    // - non-wrapped line, no need to wrap the coord
+
+    const qreal width{10000.0};
+    const QList<QGeoCoordinate> wrappedPath {
+        QGeoCoordinate(50, 179.95),
+        QGeoCoordinate(52, -179.95)
+    };
+
+    QTest::newRow("wrap-path-no-wrap-coord")
+            << wrappedPath << width << QGeoCoordinate(50.2, 179.94) << true;
+    QTest::newRow("wrap-path-wrap-coord")
+            << wrappedPath << width << QGeoCoordinate(52, -179.98) << true;
+
+    // As close to the 180/-180 wrap line as possible
+    const QList<QGeoCoordinate> notWrappedPathWest {
+        QGeoCoordinate(50, -179.99),
+        QGeoCoordinate(52, -179.98)
+    };
+
+    QTest::newRow("no-wrap-path-no-wrap-coord")
+            << notWrappedPathWest << width << QGeoCoordinate(50.2, -180.0) << true;
+    QTest::newRow("no-wrap-path-wrap-coord-subtract")
+            << notWrappedPathWest << width << QGeoCoordinate(50.5, 179.99) << true;
+
+    const QList<QGeoCoordinate> notWrappedPathEast {
+        QGeoCoordinate(50, 179.99),
+        QGeoCoordinate(52, 179.98)
+    };
+
+    QTest::newRow("no-wrap-path-wrap-coord-add")
+            << notWrappedPathEast << width << QGeoCoordinate(50.5, -179.99) << true;
 }
 
 void tst_QGeoPath::contains()
@@ -294,6 +335,9 @@ void tst_QGeoPath::contains()
 
     const QGeoPath p(coordinates, width);
 
+    QEXPECT_FAIL("coord-lon-left-from-path-no-wrap-needed", "See QTBUG-142317", Abort);
+    QEXPECT_FAIL("wrap-path-no-wrap-coord", "See QTBUG-142317", Abort);
+    QEXPECT_FAIL("no-wrap-path-wrap-coord-subtract", "See QTBUG-142317", Abort);
     QCOMPARE(p.contains(probe), result);
 
     const QGeoShape area = p;
