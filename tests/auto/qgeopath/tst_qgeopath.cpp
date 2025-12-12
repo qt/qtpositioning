@@ -353,10 +353,6 @@ void tst_QGeoPath::contains()
 
     const QGeoPath p(coordinates, width);
 
-    QEXPECT_FAIL("coord-lon-left-from-path-no-wrap-needed", "See QTBUG-142317", Abort);
-    QEXPECT_FAIL("wrap-path-no-wrap-coord", "See QTBUG-142317", Abort);
-    QEXPECT_FAIL("no-wrap-path-wrap-coord-subtract", "See QTBUG-142317", Abort);
-    QEXPECT_FAIL("cycled-wrap", "Prompted by QTBUG-142317", Abort);
     QCOMPARE(p.contains(probe), result);
 
     const QGeoShape area = p;
