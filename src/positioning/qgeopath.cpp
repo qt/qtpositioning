@@ -432,8 +432,13 @@ bool QGeoPathPrivate::lineContains(const QGeoCoordinate &coordinate) const
             last.setX(last.x() + 1.0);
         else if (here.x() < last.x() - 0.5)
             last.setX(last.x() - 1.0);
-        if (here == last)
+
+        if (here == last) {
+            // The whole line segment is one point, so easy to test.
+            if (m_path[i].distanceTo(coordinate) <= lineRadius)
+                return true;
             continue;
+        }
 
         QDoubleVector2D p = pt;
         {
@@ -479,9 +484,7 @@ bool QGeoPathPrivate::lineContains(const QGeoCoordinate &coordinate) const
         last = here;
     }
 
-    // Last check if the coordinate is on the left of leftBoundMercator, but close enough to
-    // m_path[0]
-    return (m_path[0].distanceTo(coordinate) <= lineRadius);
+    return false;
 }
 
 bool QGeoPathPrivate::contains(const QGeoCoordinate &coordinate) const
