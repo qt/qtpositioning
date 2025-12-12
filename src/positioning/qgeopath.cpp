@@ -437,8 +437,9 @@ bool QGeoPathPrivate::lineContains(const QGeoCoordinate &coordinate) const
         if (b == a)
             continue;
 
-        double u = ((p.x() - a.x()) * (b.x() - a.x()) + (p.y() - a.y()) * (b.y() - a.y()) ) / (b - a).lengthSquared();
-        QDoubleVector2D intersection(a.x() + u * (b.x() - a.x()) , a.y() + u * (b.y() - a.y()) );
+        const QDoubleVector2D pma = p - a, bma = b - a;
+        const double u = (pma.x() * bma.x() + pma.y() * bma.y()) / bma.lengthSquared();
+        const QDoubleVector2D intersection = a + u * bma;
 
         QDoubleVector2D candidate = ( (p-a).length() < (p-b).length() ) ? a : b;
 
@@ -450,9 +451,8 @@ bool QGeoPathPrivate::lineContains(const QGeoCoordinate &coordinate) const
         if (candidate.x() > 1.0)
             candidate.setX(candidate.x() - m_leftBoundWrapped); // wrap X
 
-        QGeoCoordinate closest = QWebMercator::mercatorToCoord(candidate);
-
-        double distanceMeters = coordinate.distanceTo(closest);
+        const QGeoCoordinate closest = QWebMercator::mercatorToCoord(candidate);
+        const double distanceMeters = coordinate.distanceTo(closest);
         if (distanceMeters <= lineRadius)
             return true;
 
