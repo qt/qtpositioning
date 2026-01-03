@@ -5,7 +5,6 @@
 
 #include <QtCore/QLoggingCategory>
 #include <QtCore/QSaveFile>
-#include <QtCore/QScopedPointer>
 #include <QtCore/QTimer>
 #include <QtDBus/QDBusPendingCallWatcher>
 
