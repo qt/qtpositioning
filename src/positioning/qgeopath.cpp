@@ -411,10 +411,6 @@ bool QGeoPathPrivate::lineContains(const QGeoCoordinate &coordinate) const
     // where a different wrap-position for it might work better; when that is
     // possible, try that other wrap-position for it in a second pass.
 
-    // Should be redundant now, unless other functions rely on this one's side-effect:
-    if (m_bboxDirty)
-        const_cast<QGeoPathPrivate &>(*this).computeBoundingBox();
-
     double lineRadius = qMax(width() * 0.5, 0.2); // minimum radius: 20cm
 
     if (m_path.isEmpty())
