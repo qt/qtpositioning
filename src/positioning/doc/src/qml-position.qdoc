@@ -39,16 +39,16 @@ providing the other attributes listed above.
 
 \section2 Coordinates
 
-The \l coordinate is a basic unit of geographical information. The
-\l coordinate type has attributes to hold the \c latitude,
-\c longitude and \c altitude. The \l {QtPositioning::}{Location} contains this
-\l coordinate in addition to a physical address and a bounding box.
+The \l geoCoordinate type provides a coordinate, the basic unit of
+geographical information. It has attributes to hold the \c latitude,
+\c longitude and \c altitude. The \l {QtPositioning::}{Location} contains a
+geoCoordinate in addition to a physical address and a bounding box.
 \b {See also}: \l {Place::location}{retrieving a location}
 
 \section2 Positions
 
-In addition to the \l coordinate type, which holds the three-dimensional
-position of an object, \l Position provides \l {Position::speed}{speed} and a
+In addition to \l geoCoordinate, which holds the three-dimensional position
+of an object, the \l Position type provides \l {Position::speed}{speed} and a
 \l {Position::timestamp}{timestamp} to compute future positions.
 \l Position validates sensible values for these properties, which are
 exposed as the following properties:
@@ -63,8 +63,8 @@ exposed as the following properties:
 
 \section2 PositionSource Type
 
-We have a \l Position type, a \l {coordinate} type but where does the data come
-from? Also it is a good idea to be able to indicate alternative sources.
+We have \l Position and \l geoCoordinate types, but where does the data come
+from? It is also useful to be able to indicate alternative sources.
 Perhaps instead of directly picking up GPS satellites it might be desirable to
 do some testing using a datafile.
 
