@@ -758,7 +758,7 @@ static bool registerNatives()
     return true;
 }
 
-Q_DECL_EXPORT jint JNICALL JNI_OnLoad(JavaVM * /*vm*/, void * /*reserved*/)
+extern "C" Q_DECL_EXPORT jint JNICALL JNI_OnLoad(JavaVM * /*vm*/, void * /*reserved*/)
 {
     static bool initialized = false;
     if (initialized)
@@ -783,4 +783,3 @@ Q_DECL_EXPORT jint JNICALL JNI_OnLoad(JavaVM * /*vm*/, void * /*reserved*/)
 
     return JNI_VERSION_1_6;
 }
-
