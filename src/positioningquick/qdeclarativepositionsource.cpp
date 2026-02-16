@@ -514,7 +514,7 @@ QDeclarativePositionSource::PositioningMethods QDeclarativePositionSource::prefe
 }
 
 /*!
-    \qmlmethod PositionSource::start()
+    \qmlmethod void PositionSource::start()
 
     Requests updates from the location source.
     Uses \l updateInterval if set, default interval otherwise.
@@ -523,7 +523,7 @@ QDeclarativePositionSource::PositioningMethods QDeclarativePositionSource::prefe
     \note Calling this method breaks the bindings of
     \l {PositionSource::}{active} property.
 
-    \sa stop, update, active
+    \sa stop(), update(), active
 */
 
 void QDeclarativePositionSource::start()
@@ -535,7 +535,7 @@ void QDeclarativePositionSource::start()
 }
 
 /*!
-    \qmlmethod PositionSource::update(int timeout)
+    \qmlmethod void PositionSource::update(int timeout)
 
     A convenience method to request single update from the location source.
     If there is no source available, this method has no effect.
@@ -548,7 +548,7 @@ void QDeclarativePositionSource::start()
     (the default value), it defaults to a reasonable timeout period as
     appropriate for the source.
 
-    \sa start, stop, active
+    \sa start(), stop(), active
 */
 
 void QDeclarativePositionSource::update(int timeout)
@@ -570,7 +570,7 @@ void QDeclarativePositionSource::update(int timeout)
 }
 
 /*!
-    \qmlmethod PositionSource::stop()
+    \qmlmethod void PositionSource::stop()
 
     Stops updates from the location source.
     If there is no source available or it is not active,
@@ -579,7 +579,7 @@ void QDeclarativePositionSource::update(int timeout)
     \note Calling this method breaks the bindings of
     \l {PositionSource::}{active} property.
 
-    \sa start, update, active
+    \sa start(), update(), active
 */
 
 void QDeclarativePositionSource::stop()
@@ -796,7 +796,7 @@ void QDeclarativePositionSource::componentComplete()
 }
 
 /*!
-     \qmlmethod bool PositionSource::setBackendProperty(string name, Variant value)
+     \qmlmethod bool PositionSource::setBackendProperty(string name, var value)
 
     Sets the backend-specific property named \a name to \a value.
     Returns true on success, false otherwise, including if called on an uninitialized PositionSource.
@@ -815,7 +815,7 @@ bool QDeclarativePositionSource::setBackendProperty(const QString &name, const Q
 }
 
 /*!
-    \qmlmethod Variant PositionSource::backendProperty(string name)
+    \qmlmethod var PositionSource::backendProperty(string name)
 
     Returns the value of the backend-specific property named \a name, if present.
     Otherwise, including if called on an uninitialized PositionSource, the return value will be invalid.
