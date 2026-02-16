@@ -399,7 +399,7 @@ void QGeoPositionInfoSourceGeoclue2::handleNewLocation(const QDBusObjectPath &ol
 
         const auto accuracy = location.accuracy();
         // We assume that an accuracy as 0.0 means that it comes from a sattelite.
-        m_lastPositionFromSatellite = qFuzzyCompare(accuracy, 0.0);
+        m_lastPositionFromSatellite = qFuzzyIsNull(accuracy);
 
         m_lastPosition.setAttribute(QGeoPositionInfo::HorizontalAccuracy, accuracy);
         const auto speed = location.speed();
