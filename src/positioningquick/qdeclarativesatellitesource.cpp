@@ -292,7 +292,7 @@ QVariant QDeclarativeSatelliteSource::backendProperty(const QString &name) const
 }
 
 /*!
-    \qmlmethod SatelliteSource::update(int timeout = 0)
+    \qmlmethod void SatelliteSource::update(int timeout = 0)
 
     A convenience method to request a single update from the satellite source.
     If there is no source available, this method has no effect.
@@ -305,7 +305,7 @@ QVariant QDeclarativeSatelliteSource::backendProperty(const QString &name) const
     (the default value), it defaults to a reasonable timeout period as
     appropriate for the source.
 
-    \sa start, stop, active
+    \sa start(), stop(), active
 */
 void QDeclarativeSatelliteSource::update(int timeout)
 {
@@ -318,13 +318,13 @@ void QDeclarativeSatelliteSource::update(int timeout)
 }
 
 /*!
-    \qmlmethod SatelliteSource::start()
+    \qmlmethod void SatelliteSource::start()
 
     Requests updates from the satellite source. Uses \l updateInterval if set,
     default interval otherwise. If there is no source available, this method
     has no effect.
 
-    \sa stop, update, active
+    \sa stop(), update(), active
 */
 void QDeclarativeSatelliteSource::start()
 {
@@ -335,12 +335,12 @@ void QDeclarativeSatelliteSource::start()
 }
 
 /*!
-    \qmlmethod SatelliteSource::stop()
+    \qmlmethod void SatelliteSource::stop()
 
     Stops updates from the satellite source. If there is no source available or
     it is not active, this method has no effect.
 
-    \sa start, update, active
+    \sa start(), update(), active
 */
 void QDeclarativeSatelliteSource::stop()
 {
