@@ -829,9 +829,6 @@ private slots:
 
     void multipleThreads()
     {
-#if defined(Q_OS_MACOS) && defined(Q_PROCESSOR_ARM)
-        QSKIP("This test randomly hangs on macOS ARM (QTBUG-110931)");
-#endif
         std::unique_ptr<QGeoAreaMonitorSource> obj(
                 QGeoAreaMonitorSource::createSource(QStringLiteral("positionpoll"), 0));
         QVERIFY(obj != nullptr);
@@ -900,7 +897,9 @@ private slots:
         // This is needed to check that the connection tracking logic in
         // connectNotify()/disconnectNotify() is working properly.
         QCOMPARE(updatesStartedSpy.size(), 1);
-        QCOMPARE(updatesStoppedSpy.size(), 1);
+        // We use QTRY_COMPARE here, because stopUpdates() is now invoked via
+        // Qt::QueuedConnection in the positionpoll backend.
+        QTRY_COMPARE(updatesStoppedSpy.size(), 1);
     }
 
     void backendProperties()

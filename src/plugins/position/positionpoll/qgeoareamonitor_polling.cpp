@@ -163,13 +163,13 @@ public:
 
         if (signalsConnected && !activeMonitorAreas.isEmpty()) {
             if (source)
-                source->startUpdates();
+                QMetaObject::invokeMethod(source, "startUpdates", Qt::QueuedConnection);
             else
                 //translated to InsufficientPositionInfo
                 emit positionError(QGeoPositionInfoSource::ClosedError);
         } else {
             if (source)
-                source->stopUpdates();
+                QMetaObject::invokeMethod(source, "stopUpdates", Qt::QueuedConnection);
         }
     }
 
