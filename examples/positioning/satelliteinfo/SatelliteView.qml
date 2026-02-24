@@ -26,7 +26,9 @@ Rectangle {
         {"name": "GLONASS", "id": GeoSatelliteInfo.GLONASS},
         {"name": "GALILEO", "id": GeoSatelliteInfo.GALILEO},
         {"name": "BEIDOU", "id": GeoSatelliteInfo.BEIDOU},
-        {"name": "QZSS", "id": GeoSatelliteInfo.QZSS}
+        {"name": "QZSS", "id": GeoSatelliteInfo.QZSS},
+        {"name": "IRNSS", "id": GeoSatelliteInfo.IRNSS},
+        {"name": "SBAS", "id": GeoSatelliteInfo.SBAS}
     ]
 
     component RssiElement : Rectangle {

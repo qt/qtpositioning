@@ -21,6 +21,10 @@ static QString systemString(QGeoSatelliteInfo::SatelliteSystem system)
         return u"BEIDOU"_s;
     case QGeoSatelliteInfo::QZSS:
         return u"QZSS"_s;
+    case QGeoSatelliteInfo::IRNSS:
+        return u"IRNSS"_s;
+    case QGeoSatelliteInfo::SBAS:
+        return u"SBAS"_s;
     case QGeoSatelliteInfo::Multiple:
         return u"Multiple"_s;
     case QGeoSatelliteInfo::CustomType:

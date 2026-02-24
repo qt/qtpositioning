@@ -142,6 +142,8 @@ static QGeoSatelliteInfo::SatelliteSystem idToSystem(int prn)
 {
     if (prn >= 1 && prn <= 32)
         return QGeoSatelliteInfo::GPS;
+    if (prn >= 33 && prn <= 64)
+        return QGeoSatelliteInfo::SBAS;
     else if (prn >= 65 && prn <= 96)
         return QGeoSatelliteInfo::GLONASS;
     else if (prn >= 193 && prn <= 200)

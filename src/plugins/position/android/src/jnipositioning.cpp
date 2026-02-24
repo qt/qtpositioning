@@ -85,7 +85,15 @@ public:
     static bool init()
     {
         m_gnssStatusObject = QJniEnvironment().findClass<QtJniTypes::GnssStatus>();
-        return m_gnssStatusObject != nullptr;
+        if (!m_gnssStatusObject)
+            return false;
+
+        const auto sdkVersion = QNativeInterface::QAndroidApplication::sdkVersion();
+        if (sdkVersion >= 29) {
+            m_irnssTypeId = QJniObject::getStaticField<jint>(m_gnssStatusObject,
+                                                             "CONSTELLATION_IRNSS");
+        }
+        return true;
     }
 
     static QGeoSatelliteInfo::SatelliteSystem toSatelliteSystem(int constellationType)
@@ -103,6 +111,8 @@ public:
                 QJniObject::getStaticField<jint>(m_gnssStatusObject, "CONSTELLATION_BEIDOU");
         static const int qzss =
                 QJniObject::getStaticField<jint>(m_gnssStatusObject, "CONSTELLATION_QZSS");
+        static const int sbas =
+                QJniObject::getStaticField<jint>(m_gnssStatusObject, "CONSTELLATION_SBAS");
 
         if (constellationType == gps) {
             return QGeoSatelliteInfo::GPS;
@@ -114,6 +124,10 @@ public:
             return QGeoSatelliteInfo::BEIDOU;
         } else if (constellationType == qzss){
             return QGeoSatelliteInfo::QZSS;
+        } else if (constellationType == sbas) {
+            return QGeoSatelliteInfo::SBAS;
+        } else if (m_irnssTypeId > 0 && constellationType == m_irnssTypeId) {
+            return QGeoSatelliteInfo::IRNSS;
         } else {
             qCWarning(lcPositioning) << "Unknown satellite system" << constellationType;
             return QGeoSatelliteInfo::Undefined;
@@ -122,9 +136,11 @@ public:
 
 private:
     static jclass m_gnssStatusObject;
+    static int m_irnssTypeId; // API level >= 29!
 };
 
 jclass ConstellationMapper::m_gnssStatusObject = nullptr;
+int ConstellationMapper::m_irnssTypeId = 0;
 
 } // anonymous namespace
 

@@ -294,6 +294,12 @@ QGeoSatelliteInfo::SatelliteSystem QLocationUtils::getSatelliteSystem(QByteArray
     if (key.startsWith("GQ") || key.startsWith("PQ") || key.startsWith("QZ"))
         return QGeoSatelliteInfo::QZSS;
 
+    // IRNSS: GI
+    if (key.startsWith("GI"))
+        return QGeoSatelliteInfo::IRNSS;
+
+    // SBAS: no talker id, should use satellite id range
+
     // Multiple: GN
     if (key.startsWith("GN"))
         return QGeoSatelliteInfo::Multiple;
@@ -305,6 +311,9 @@ QGeoSatelliteInfo::SatelliteSystem QLocationUtils::getSatelliteSystemBySatellite
 {
     if (satId >= 1 && satId <= 32)
         return QGeoSatelliteInfo::GPS;
+
+    if (satId >= 33 && satId <= 64)
+        return QGeoSatelliteInfo::SBAS;
 
     if (satId >= 65 && satId <= 96) // including future extensions
         return QGeoSatelliteInfo::GLONASS;
@@ -433,6 +442,13 @@ QLocationUtils::getSatInfoFromNmea(QByteArrayView bv, QList<QGeoSatelliteInfo> &
             if (prn <= 64)
                 prn += 64;
         }
+
+        // If the system is unknown, try to determine it based on prn.
+        // Note that the new value can vary among the satellites, so *do not*
+        // update the out-variable 'system'.
+        if (ok && system == QGeoSatelliteInfo::Undefined)
+            info.setSatelliteSystem(getSatelliteSystemBySatelliteId(prn));
+
         info.setSatelliteIdentifier((ok) ? prn : 0);
         const int elevation = parts.at(field++).toInt(&ok);
         info.setAttribute(QGeoSatelliteInfo::Elevation, (ok) ? elevation : 0);

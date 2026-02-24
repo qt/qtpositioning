@@ -46,6 +46,8 @@ public:
         GALILEO = 0x03,
         BEIDOU = 0x04,
         QZSS = 0x05,
+        IRNSS = 0x06,
+        SBAS = 0x07,
         Multiple = 0xFF,
         CustomType = 0x100
     };

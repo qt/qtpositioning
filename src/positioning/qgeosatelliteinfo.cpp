@@ -39,6 +39,8 @@ QT_IMPL_METATYPE_EXTERN(QGeoSatelliteInfo)
     \value GALILEO Global navigation satellite system (EU).
     \value BEIDOU BeiDou navigation satellite system (China).
     \value QZSS Quasi-Zenith Satellite System (Japan).
+    \value [since 6.12] IRNSS Indian Regional Navigation Satellite System.
+    \value [since 6.12] SBAS Satellite-based augmentation system.
     \value Multiple This type normally indicates that the information is
            received from a device that supports multiple satellite systems, and
            the satellite system is not explicitly specified. Depending on the
