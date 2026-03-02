@@ -263,13 +263,11 @@ namespace AndroidPositioning {
         }
 
         // vertical accuracy (available in API Level 26+)
-        if (QNativeInterface::QAndroidApplication::sdkVersion() > 25) {
-            attributeExists = jniObject.callMethod<jboolean>("hasVerticalAccuracy");
-            if (attributeExists) {
-                const jfloat accuracy = jniObject.callMethod<jfloat>("getVerticalAccuracyMeters");
-                if (!qFuzzyIsNull(accuracy))
-                    info.setAttribute(QGeoPositionInfo::VerticalAccuracy, qreal(accuracy));
-            }
+        attributeExists = jniObject.callMethod<jboolean>("hasVerticalAccuracy");
+        if (attributeExists) {
+            const jfloat accuracy = jniObject.callMethod<jfloat>("getVerticalAccuracyMeters");
+            if (!qFuzzyIsNull(accuracy))
+                info.setAttribute(QGeoPositionInfo::VerticalAccuracy, qreal(accuracy));
         }
 
         // ground speed
@@ -288,12 +286,10 @@ namespace AndroidPositioning {
                 info.setAttribute(QGeoPositionInfo::Direction, qreal(bearing));
 
             // bearingAccuracy is available in API Level 26+
-            if (QNativeInterface::QAndroidApplication::sdkVersion() > 25) {
-                const jfloat bearingAccuracy =
-                        jniObject.callMethod<jfloat>("getBearingAccuracyDegrees");
-                if (!qFuzzyIsNull(bearingAccuracy))
-                    info.setAttribute(QGeoPositionInfo::DirectionAccuracy, qreal(bearingAccuracy));
-            }
+            const jfloat bearingAccuracy =
+                    jniObject.callMethod<jfloat>("getBearingAccuracyDegrees");
+            if (!qFuzzyIsNull(bearingAccuracy))
+                info.setAttribute(QGeoPositionInfo::DirectionAccuracy, qreal(bearingAccuracy));
         }
 
         return info;
