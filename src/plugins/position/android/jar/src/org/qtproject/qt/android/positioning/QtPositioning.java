@@ -636,6 +636,9 @@ class QtPositioning implements LocationListener
         }
     }
 
+    // This method is deprecated starting from API Level 29, but for older
+    // versions it should still be implemented!
+    @SuppressWarnings("deprecation")
     @Override
     public void onStatusChanged(String provider, int status, Bundle extras) {}
 
