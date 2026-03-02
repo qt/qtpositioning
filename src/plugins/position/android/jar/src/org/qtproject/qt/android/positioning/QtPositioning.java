@@ -569,7 +569,7 @@ class QtPositioning implements LocationListener
         protected void addSatelliteInfoListener()
         {
             try {
-                locationManager.registerGnssStatusCallback(gnssListener);
+                locationManager.registerGnssStatusCallback(gnssListener, null);
             } catch(Exception e) {
                 e.printStackTrace();
             }
