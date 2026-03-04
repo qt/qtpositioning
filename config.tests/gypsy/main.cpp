@@ -1,5 +1,6 @@
 // Copyright (C) 2016 The Qt Company Ltd.
 // SPDX-License-Identifier: BSD-3-Clause
+// Qt-Security score:significant reason:default
 
 #include <gypsy/gypsy-satellite.h>
 #include <gypsy/gypsy-control.h>
