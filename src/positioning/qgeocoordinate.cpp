@@ -539,13 +539,12 @@ QString QGeoCoordinate::toString(CoordinateFormat format) const
 
     double absLat = qAbs(d->lat);
     double absLng = qAbs(d->lng);
-    QChar symbol(0x00B0);   // degrees symbol
 
     switch (format) {
         case Degrees:
         case DegreesWithHemisphere: {
-            latStr = QString::number(absLat, 'f', 5) + symbol;
-            longStr = QString::number(absLng, 'f', 5) + symbol;
+            latStr = QString::asprintf("%.5f°", absLat);
+            longStr = QString::asprintf("%.5f°", absLng);
             break;
         }
         case DegreesMinutes:
@@ -567,14 +566,8 @@ QString QGeoCoordinate::toString(CoordinateFormat format) const
                 lngMin = 0.0f;
             }
 
-            latStr = QString::fromLatin1("%1%2 %3'")
-                     .arg(QString::number(int(absLat)))
-                     .arg(symbol)
-                     .arg(QString::number(latMin, 'f', 3));
-            longStr = QString::fromLatin1("%1%2 %3'")
-                      .arg(QString::number(int(absLng)))
-                      .arg(symbol)
-                      .arg(QString::number(lngMin, 'f', 3));
+            latStr = QString::asprintf("%d° %.3f'", int(absLat), latMin);
+            longStr = QString::asprintf("%d° %.3f'", int(absLng), lngMin);
             break;
         }
         case DegreesMinutesSeconds:
@@ -609,16 +602,8 @@ QString QGeoCoordinate::toString(CoordinateFormat format) const
                 }
             }
 
-            latStr = QString::fromLatin1("%1%2 %3' %4\"")
-                     .arg(QString::number(int(absLat)))
-                     .arg(symbol)
-                     .arg(QString::number(int(latMin)))
-                     .arg(QString::number(latSec, 'f', 1));
-            longStr = QString::fromLatin1("%1%2 %3' %4\"")
-                      .arg(QString::number(int(absLng)))
-                      .arg(symbol)
-                      .arg(QString::number(int(lngMin)))
-                      .arg(QString::number(lngSec, 'f', 1));
+            latStr = QString::asprintf("%d° %d' %.1f\"", int(absLat), int(latMin), latSec);
+            longStr = QString::asprintf("%d° %d' %.1f\"", int(absLng), int(lngMin), lngSec);
             break;
         }
     }
