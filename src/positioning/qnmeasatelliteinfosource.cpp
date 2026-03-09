@@ -709,7 +709,7 @@ void QNmeaSatelliteInfoUpdate::setSatellitesInView(QGeoSatelliteInfo::SatelliteS
         bool corrupt = false;
         for (const auto id : info.inUseIds) {
             bool found = false;
-            for (const auto &s : info.satellitesInView) {
+            for (const auto &s : std::as_const(info.satellitesInView)) {
                 if (s.satelliteIdentifier() == id) {
                     info.satellitesInUse.append(s);
                     found = true;
@@ -753,7 +753,7 @@ bool QNmeaSatelliteInfoUpdate::setSatellitesInUse(QGeoSatelliteInfo::SatelliteSy
 
     for (const auto id : inUse) {
         bool found = false;
-        for (const auto &s : info.satellitesInView) {
+        for (const auto &s : std::as_const(info.satellitesInView)) {
             if (s.satelliteIdentifier() == id) {
                 info.satellitesInUse.append(s);
                 found = true;
