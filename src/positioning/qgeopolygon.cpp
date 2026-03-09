@@ -572,7 +572,7 @@ void QGeoPolygonPrivate::updateClipperPath()
     m_clipperDirty = false;
 
     QList<QDoubleVector2D> preservedPath;
-    for (const QGeoCoordinate &c : m_path) {
+    for (const QGeoCoordinate &c : std::as_const(m_path)) {
         QDoubleVector2D crd = QWebMercator::coordToMercator(c);
         if (crd.x() < m_leftBoundWrapped)
             crd.setX(crd.x() + 1.0);
