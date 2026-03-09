@@ -707,7 +707,8 @@ void QNmeaSatelliteInfoUpdate::setSatellitesInView(QGeoSatelliteInfo::SatelliteS
         info.satellitesInUse.clear();
         info.validInUse = false;
         bool corrupt = false;
-        for (const auto id : info.inUseIds) {
+        const auto inUseIds = std::exchange(info.inUseIds, {});
+        for (const auto id : inUseIds) {
             bool found = false;
             for (const auto &s : std::as_const(info.satellitesInView)) {
                 if (s.satelliteIdentifier() == id) {
@@ -725,7 +726,6 @@ void QNmeaSatelliteInfoUpdate::setSatellitesInView(QGeoSatelliteInfo::SatelliteS
             }
         }
         info.validInUse = !corrupt;
-        info.inUseIds.clear();
     }
 
     m_validInUse = calculateValidInUse();
