@@ -490,14 +490,11 @@ void QGeoPolygonPrivate::translate(double degreesLatitude, double degreesLongitu
 
 bool QGeoPolygonPrivate::operator==(const QGeoShapePrivate &other) const
 {
-    if (!QGeoShapePrivate::operator==(other)) // checks type
+    if (!QGeoPathPrivateBase::operator==(other)) // checks type
         return false;
 
-    const QGeoPolygonPrivate &otherPath = static_cast<const QGeoPolygonPrivate &>(other);
-    if (m_path.size() != otherPath.m_path.size()
-            || m_holesList.size() != otherPath.m_holesList.size())
-        return false;
-    return  m_path == otherPath.m_path && m_holesList == otherPath.m_holesList;
+    const QGeoPolygonPrivate &otherPolygon = static_cast<const QGeoPolygonPrivate &>(other);
+    return  m_holesList == otherPolygon.m_holesList;
 }
 
 size_t QGeoPolygonPrivate::hash(size_t seed) const
