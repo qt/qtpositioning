@@ -3,7 +3,7 @@ dependencies:
     ref: bb45735d39c500fbdcb770bcb697f3d9ce549703
     required: true
   ../qtdeclarative:
-    ref: a44f3721849970e3929ab6656488c299cf68c28f
+    ref: 6738cc98fff88a5ea114bac1e2c16a7b9e467b1d
     required: false
   ../qtserialport:
     ref: 517a15f9cb7212c32e9685a9a9b65fc4bddb31e1
