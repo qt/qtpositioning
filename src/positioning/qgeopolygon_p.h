@@ -21,7 +21,7 @@
 
 QT_BEGIN_NAMESPACE
 
-class Q_POSITIONING_EXPORT QGeoPolygonPrivate : public QGeoPathPrivate
+class Q_POSITIONING_EXPORT QGeoPolygonPrivate : public QGeoPathPrivateBase
 {
 public:
     QGeoPolygonPrivate();
@@ -36,7 +36,7 @@ public:
     virtual bool operator==(const QGeoShapePrivate &other) const override;
     size_t hash(size_t seed) const override;
 
-// QGeoPath API
+// QGeoPathPrivateBase API
     virtual void markDirty() override;
 
 // QGeoPolygonPrivate API
