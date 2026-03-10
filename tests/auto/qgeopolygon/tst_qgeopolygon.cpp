@@ -1,10 +1,12 @@
 // Copyright (C) 2016 The Qt Company Ltd.
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only
 
-#include <QtTest/QtTest>
-#include <QtPositioning/QGeoCoordinate>
-#include <QtPositioning/QGeoRectangle>
-#include <QtPositioning/QGeoPolygon>
+#include <QtPositioning/qgeocoordinate.h>
+#include <QtPositioning/qgeopath.h>
+#include <QtPositioning/qgeopolygon.h>
+#include <QtPositioning/qgeorectangle.h>
+
+#include <QtTest/qtest.h>
 
 QT_USE_NAMESPACE
 
@@ -134,6 +136,16 @@ void tst_QGeoPolygon::comparison()
     QVERIFY(!(c1 == b1));
     QVERIFY(c1 != b1);
 
+    // Create a QGeoPolygon with the same vertices as the rectangle
+    QGeoPolygon sameAsB1({ b1.topLeft(), b1.topRight(),
+                           b1.bottomRight(), b1.bottomLeft() });
+    // It still should not be equal to b1, because the types are different
+    QCOMPARE_NE(sameAsB1, b1);
+
+    // Now construct from b1
+    QGeoPolygon fromB1(b1);
+    QCOMPARE_EQ(fromB1, sameAsB1);
+
     QGeoShape *c2Ptr = &c2;
     QVERIFY(c1 == *c2Ptr);
     QVERIFY(!(c1 != *c2Ptr));
@@ -141,6 +153,11 @@ void tst_QGeoPolygon::comparison()
     QGeoShape *c3Ptr = &c3;
     QVERIFY(!(c1 == *c3Ptr));
     QVERIFY(c1 != *c3Ptr);
+
+    // Check comparison with QGeoPath with the same coordinates.
+    // Objects should not match, because the types are different.
+    QGeoPath path(coords, 1.0f);
+    QCOMPARE_NE(path, c1);
 }
 
 void tst_QGeoPolygon::type()
