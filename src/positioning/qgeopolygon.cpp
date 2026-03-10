@@ -421,13 +421,13 @@ qsizetype QGeoPolygon::holesCount() const
 *******************************************************************************/
 
 QGeoPolygonPrivate::QGeoPolygonPrivate()
-:   QGeoPathPrivate()
+:   QGeoPathPrivateBase()
 {
     type = QGeoShape::PolygonType;
 }
 
 QGeoPolygonPrivate::QGeoPolygonPrivate(const QList<QGeoCoordinate> &path)
-:   QGeoPathPrivate(path)
+:   QGeoPathPrivateBase(path)
 {
     type = QGeoShape::PolygonType;
 }
