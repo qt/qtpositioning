@@ -44,9 +44,9 @@ public:
     bool polygonContains(const QGeoCoordinate &coordinate) const;
     const QList<QGeoCoordinate> holePath(qsizetype index) const;
 
-    virtual void addHole(const QList<QGeoCoordinate> &holePath);
-    virtual void removeHole(qsizetype index);
-    virtual void updateClipperPath();
+    void addHole(const QList<QGeoCoordinate> &holePath);
+    void removeHole(qsizetype index);
+    void updateClipperPath();
 
 // data members
     bool m_clipperDirty = true;
