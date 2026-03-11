@@ -145,11 +145,11 @@ public:
     ~QGeoPathPrivateBase() override;
 
 // QGeoShape API
-    virtual bool isValid() const override;
-    virtual bool isEmpty() const override;
-    virtual QGeoCoordinate center() const override;
-    virtual bool operator==(const QGeoShapePrivate &other) const override;
-    virtual QGeoRectangle boundingGeoRectangle() const override;
+    bool isValid() const override;
+    bool isEmpty() const override;
+    QGeoCoordinate center() const override;
+    bool operator==(const QGeoShapePrivate &other) const override;
+    QGeoRectangle boundingGeoRectangle() const override;
     size_t hash(size_t seed) const override;
 
 // QGeoPathPrivateBase API
@@ -185,9 +185,9 @@ public:
     ~QGeoPathPrivate();
 
 // QGeoShape API
-    virtual QGeoShapePrivate *clone() const override;
-    virtual bool operator==(const QGeoShapePrivate &other) const override;
-    virtual bool contains(const QGeoCoordinate &coordinate) const override;
+    QGeoShapePrivate *clone() const override;
+    bool operator==(const QGeoShapePrivate &other) const override;
+    bool contains(const QGeoCoordinate &coordinate) const override;
     size_t hash(size_t seed) const override;
 
 // QGeoPathPrivateBase API: nothing to override
@@ -209,13 +209,13 @@ public:
     ~QGeoPathPrivateEager();
 
 // QGeoShapePrivate API
-    virtual QGeoShapePrivate *clone() const override;
+    QGeoShapePrivate *clone() const override;
 
 // QGeoPathPrivateBase API
-    virtual void translate(double degreesLatitude, double degreesLongitude) override;
-    virtual void markDirty() override;
-    virtual void addCoordinate(const QGeoCoordinate &coordinate) override;
-    virtual void computeBoundingBox() override;
+    void translate(double degreesLatitude, double degreesLongitude) override;
+    void markDirty() override;
+    void addCoordinate(const QGeoCoordinate &coordinate) override;
+    void computeBoundingBox() override;
 
 // *Eager API
     void updateBoundingBox();

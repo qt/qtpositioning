@@ -29,15 +29,15 @@ public:
     ~QGeoPolygonPrivate();
 
 // QGeoShape API
-    virtual QGeoShapePrivate *clone() const override;
-    virtual bool isValid() const override;
-    virtual bool contains(const QGeoCoordinate &coordinate) const override;
-    virtual void translate(double degreesLatitude, double degreesLongitude) override;
-    virtual bool operator==(const QGeoShapePrivate &other) const override;
+    QGeoShapePrivate *clone() const override;
+    bool isValid() const override;
+    bool contains(const QGeoCoordinate &coordinate) const override;
+    void translate(double degreesLatitude, double degreesLongitude) override;
+    bool operator==(const QGeoShapePrivate &other) const override;
     size_t hash(size_t seed) const override;
 
 // QGeoPathPrivateBase API
-    virtual void markDirty() override;
+    void markDirty() override;
 
 // QGeoPolygonPrivate API
     qsizetype holesCount() const;
@@ -62,13 +62,13 @@ public:
     ~QGeoPolygonPrivateEager();
 
 // QGeoShape API
-    virtual QGeoShapePrivate *clone() const override;
-    virtual void translate(double degreesLatitude, double degreesLongitude) override;
+    QGeoShapePrivate *clone() const override;
+    void translate(double degreesLatitude, double degreesLongitude) override;
 
 // QGeoPath API
-    virtual void markDirty() override;
-    virtual void addCoordinate(const QGeoCoordinate &coordinate) override;
-    virtual void computeBoundingBox() override;
+    void markDirty() override;
+    void addCoordinate(const QGeoCoordinate &coordinate) override;
+    void computeBoundingBox() override;
 
 // QGeoPolygonPrivate API
 
