@@ -596,7 +596,7 @@ QGeoPolygonPrivateEager::~QGeoPolygonPrivateEager()
 
 QGeoShapePrivate *QGeoPolygonPrivateEager::clone() const
 {
-    return new QGeoPolygonPrivate(*this);
+    return new QGeoPolygonPrivateEager(*this);
 }
 
 void QGeoPolygonPrivateEager::translate(double degreesLatitude, double degreesLongitude)
