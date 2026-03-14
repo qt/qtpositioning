@@ -6,10 +6,10 @@ qt_internal_add_plugin(QGeoSatelliteInfoSourceTestPlugin
     CLASS_NAME QGeoSatelliteInfoSourceTest
     PLUGIN_TYPE position
     DEFAULT_IF FALSE
+    TEST_PLUGIN
     SOURCES
         plugin.cpp
     LIBRARIES
         Qt::Core
         Qt::Positioning
 )
-

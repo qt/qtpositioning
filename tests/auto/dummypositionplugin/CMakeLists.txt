@@ -12,6 +12,7 @@ qt_internal_add_plugin(DummyPluginForTestsFactoryPlugin
     CLASS_NAME DummyPluginForTestsFactory
     PLUGIN_TYPE position
     DEFAULT_IF FALSE
+    TEST_PLUGIN
     SOURCES
         plugin.cpp
     LIBRARIES
