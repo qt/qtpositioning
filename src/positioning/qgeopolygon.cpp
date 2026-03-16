@@ -611,7 +611,9 @@ void QGeoPolygonPrivateEager::translate(double degreesLatitude, double degreesLo
 void QGeoPolygonPrivateEager::markDirty()
 {
     m_clipperDirty = true;
-    computeBoundingBox();
+    // do the calculations directly
+    computeBBox(m_path, m_deltaXs, m_minX, m_maxX, m_minLati, m_maxLati, m_bbox);
+    m_leftBoundWrapped = QWebMercator::coordToMercator(m_bbox.topLeft()).x();
 }
 
 void QGeoPolygonPrivateEager::addCoordinate(const QGeoCoordinate &coordinate)
@@ -625,8 +627,7 @@ void QGeoPolygonPrivateEager::addCoordinate(const QGeoCoordinate &coordinate)
 
 void QGeoPolygonPrivateEager::computeBoundingBox()
 {
-    computeBBox(m_path, m_deltaXs, m_minX, m_maxX, m_minLati, m_maxLati, m_bbox);
-    m_leftBoundWrapped = QWebMercator::coordToMercator(m_bbox.topLeft()).x();
+    Q_UNREACHABLE();
 }
 
 void QGeoPolygonPrivateEager::updateBoundingBox()
