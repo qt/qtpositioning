@@ -692,7 +692,9 @@ QGeoShapePrivate *QGeoPathPrivateEager::clone() const
 
 void QGeoPathPrivateEager::markDirty()
 {
-    computeBoundingBox();
+    // do the calculations directly
+    computeBBox(m_path, m_deltaXs, m_minX, m_maxX, m_minLati, m_maxLati, m_bbox);
+    m_leftBoundWrapped = QWebMercator::coordToMercator(m_bbox.topLeft()).x();
 }
 
 void QGeoPathPrivateEager::translate(double degreesLatitude, double degreesLongitude)
@@ -722,8 +724,7 @@ void QGeoPathPrivateEager::addCoordinate(const QGeoCoordinate &coordinate)
 
 void QGeoPathPrivateEager::QGeoPathPrivateEager::computeBoundingBox()
 {
-    computeBBox(m_path, m_deltaXs, m_minX, m_maxX, m_minLati, m_maxLati, m_bbox);
-    m_leftBoundWrapped = QWebMercator::coordToMercator(m_bbox.topLeft()).x();
+    Q_UNREACHABLE();
 }
 
 void QGeoPathPrivateEager::QGeoPathPrivateEager::updateBoundingBox()
