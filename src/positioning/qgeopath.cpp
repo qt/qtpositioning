@@ -13,6 +13,11 @@
 
 #include "qdoublevector2d_p.h"
 #include "qdoublevector3d_p.h"
+
+#include <QtCore/qmutex.h>
+
+#include <mutex>
+
 QT_BEGIN_NAMESPACE
 
 QT_IMPL_METATYPE_EXTERN(QGeoPath)
@@ -341,6 +346,8 @@ QString QGeoPath::toString() const
  *
 *******************************************************************************/
 
+Q_CONSTINIT static QBasicMutex globalPathMutex;
+
 QGeoPathPrivateBase::QGeoPathPrivateBase()
     : QGeoShapePrivate(QGeoShape::PathType)
 {
@@ -350,6 +357,15 @@ QGeoPathPrivateBase::QGeoPathPrivateBase(const QList<QGeoCoordinate> &path)
     : QGeoPathPrivateBase()
 {
     setPath(path);
+}
+
+QGeoPathPrivateBase::QGeoPathPrivateBase(const QGeoPathPrivateBase &other)
+    : QGeoShapePrivate(other),
+      m_path(other.m_path)
+{
+    // Do not copy cached members: they would need mutex locked!
+    // m_dirty is set to true by default, so that it'll properly trigger
+    // re-evaluation when needed.
 }
 
 QGeoPathPrivateBase::~QGeoPathPrivateBase()
@@ -382,8 +398,7 @@ bool QGeoPathPrivateBase::operator==(const QGeoShapePrivate &other) const
 
 QGeoRectangle QGeoPathPrivateBase::boundingGeoRectangle() const
 {
-    if (m_bboxDirty)
-        const_cast<QGeoPathPrivateBase *>(this)->computeBoundingBox();
+    ensureBoundingBoxUpdated();
     return m_bbox;
 }
 
@@ -438,7 +453,6 @@ void QGeoPathPrivateBase::translate(double degreesLatitude, double degreesLongit
     // Need min/maxLati, so update bbox
     QList<double> deltaXs;
     double minX, maxX, minLati, maxLati;
-    m_bboxDirty = false;
     computeBBox(m_path, deltaXs, minX, maxX, minLati, maxLati, m_bbox);
 
     if (degreesLatitude > 0.0)
@@ -450,6 +464,8 @@ void QGeoPathPrivateBase::translate(double degreesLatitude, double degreesLongit
         p.setLongitude(QLocationUtils::wrapLong(p.longitude() + degreesLongitude));
     }
     m_bbox.translate(degreesLatitude, degreesLongitude);
+
+    m_bboxDirty.store(false, std::memory_order_release);
 }
 
 void QGeoPathPrivateBase::setPath(const QList<QGeoCoordinate> &path)
@@ -506,19 +522,28 @@ void QGeoPathPrivateBase::removeCoordinate(qsizetype index)
     markDirty();
 }
 
-void QGeoPathPrivateBase::computeBoundingBox()
+void QGeoPathPrivateBase::computeBoundingBox() const
 {
     QList<double> deltaXs;
     double minX, maxX, minLati, maxLati;
-    m_bboxDirty = false;
     computeBBox(m_path, deltaXs, minX, maxX, minLati, maxLati, m_bbox);
 }
 
 void QGeoPathPrivateBase::markDirty()
 {
-    m_bboxDirty = true;
+    m_bboxDirty.store(true, std::memory_order_release);
 }
 
+void QGeoPathPrivateBase::ensureBoundingBoxUpdated() const
+{
+    if (m_bboxDirty.load(std::memory_order_acquire)) {
+        const std::scoped_lock lock(globalPathMutex);
+        if (m_bboxDirty.load(std::memory_order_acquire)) {
+            computeBoundingBox();
+            m_bboxDirty.store(false, std::memory_order_release);
+        }
+    }
+}
 
 
 QGeoPathPrivate::QGeoPathPrivate()
@@ -665,13 +690,20 @@ size_t QGeoPathPrivate::hash(size_t seed) const
 QGeoPathPrivateEager::QGeoPathPrivateEager()
 :   QGeoPathPrivate()
 {
-    m_bboxDirty = false; // never dirty on the eager version
+    m_bboxDirty.store(false, std::memory_order_relaxed); // never dirty on the eager version
 }
 
 QGeoPathPrivateEager::QGeoPathPrivateEager(const QList<QGeoCoordinate> &path, const qreal width)
 :   QGeoPathPrivate(path, width)
 {
-    m_bboxDirty = false; // never dirty on the eager version
+    m_bboxDirty.store(false, std::memory_order_relaxed); // never dirty on the eager version
+    markDirty(); // calculate the cached values
+}
+
+QGeoPathPrivateEager::QGeoPathPrivateEager(const QGeoPathPrivateEager &other)
+    : QGeoPathPrivate(other)
+{
+    m_bboxDirty.store(false, std::memory_order_relaxed); // never dirty on the eager version
     markDirty(); // calculate the cached values
 }
 
@@ -715,7 +747,7 @@ void QGeoPathPrivateEager::addCoordinate(const QGeoCoordinate &coordinate)
     updateBoundingBox();
 }
 
-void QGeoPathPrivateEager::QGeoPathPrivateEager::computeBoundingBox()
+void QGeoPathPrivateEager::QGeoPathPrivateEager::computeBoundingBox() const
 {
     Q_UNREACHABLE();
 }

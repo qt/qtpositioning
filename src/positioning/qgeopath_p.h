@@ -143,6 +143,7 @@ class Q_POSITIONING_EXPORT QGeoPathPrivateBase : public QGeoShapePrivate
 public:
     QGeoPathPrivateBase();
     QGeoPathPrivateBase(const QList<QGeoCoordinate> &path);
+    QGeoPathPrivateBase(const QGeoPathPrivateBase &other);
     ~QGeoPathPrivateBase() override;
 
 // QGeoShape API
@@ -167,13 +168,15 @@ public:
     virtual void replaceCoordinate(qsizetype index, const QGeoCoordinate &coordinate);
     virtual void removeCoordinate(const QGeoCoordinate &coordinate);
     virtual void removeCoordinate(qsizetype index);
-    virtual void computeBoundingBox();
+    virtual void computeBoundingBox() const;
     virtual void markDirty();
+
+    void ensureBoundingBoxUpdated() const;
 
 // data members
     QList<QGeoCoordinate> m_path;
-    QGeoRectangle m_bbox; // cached
-    bool m_bboxDirty = false;
+    mutable QGeoRectangle m_bbox; // cached
+    mutable std::atomic<bool> m_bboxDirty = true; // default is dirty!
 };
 
 // Lazy by default. Eager, within the module, used only in MapItems/MapObjectsQSG
@@ -206,6 +209,7 @@ class Q_POSITIONING_EXPORT QGeoPathPrivateEager final : public QGeoPathPrivate
 public:
     QGeoPathPrivateEager();
     QGeoPathPrivateEager(const QList<QGeoCoordinate> &path, const qreal width = 0.0);
+    QGeoPathPrivateEager(const QGeoPathPrivateEager &other);
     ~QGeoPathPrivateEager();
 
 // QGeoShapePrivate API
@@ -215,7 +219,7 @@ public:
     void translate(double degreesLatitude, double degreesLongitude) override;
     void markDirty() override;
     void addCoordinate(const QGeoCoordinate &coordinate) override;
-    void computeBoundingBox() override;
+    void computeBoundingBox() const override;
 
 // *Eager API
     void updateBoundingBox();
