@@ -172,7 +172,6 @@ public:
 // data members
     QList<QGeoCoordinate> m_path;
     QGeoRectangle m_bbox; // cached
-    double m_leftBoundWrapped; // cached
     bool m_bboxDirty = false;
 };
 

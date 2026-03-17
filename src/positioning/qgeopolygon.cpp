@@ -484,7 +484,6 @@ void QGeoPolygonPrivate::translate(double degreesLatitude, double degreesLongitu
     m_bboxDirty = false; // Updated in translatePoly
     computeBBox(m_path, m_deltaXs, m_minX, m_maxX, m_minLati, m_maxLati, m_bbox);
     translatePoly(m_path, m_holesList, m_bbox, degreesLatitude, degreesLongitude, m_maxLati, m_minLati);
-    m_leftBoundWrapped = QWebMercator::coordToMercator(m_bbox.topLeft()).x();
     m_clipperDirty = true;
 }
 
@@ -567,6 +566,7 @@ void QGeoPolygonPrivate::updateClipperPath()
     if (m_bboxDirty)
         computeBoundingBox();
     m_clipperDirty = false;
+    m_leftBoundWrapped = QWebMercator::coordToMercator(m_bbox.topLeft()).x();
 
     QList<QDoubleVector2D> preservedPath;
     preservedPath.reserve(m_path.size());
@@ -603,7 +603,6 @@ QGeoShapePrivate *QGeoPolygonPrivateEager::clone() const
 void QGeoPolygonPrivateEager::translate(double degreesLatitude, double degreesLongitude)
 {
     translatePoly(m_path, m_holesList, m_bbox, degreesLatitude, degreesLongitude, m_maxLati, m_minLati);
-    m_leftBoundWrapped = QWebMercator::coordToMercator(m_bbox.topLeft()).x();
     m_clipperDirty = true;
 }
 
@@ -612,7 +611,6 @@ void QGeoPolygonPrivateEager::markDirty()
     m_clipperDirty = true;
     // do the calculations directly
     computeBBox(m_path, m_deltaXs, m_minX, m_maxX, m_minLati, m_maxLati, m_bbox);
-    m_leftBoundWrapped = QWebMercator::coordToMercator(m_bbox.topLeft()).x();
 }
 
 void QGeoPolygonPrivateEager::addCoordinate(const QGeoCoordinate &coordinate)

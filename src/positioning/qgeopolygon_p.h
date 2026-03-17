@@ -49,9 +49,10 @@ public:
     void updateClipperPath();
 
 // data members
-    bool m_clipperDirty = true;
     QList<QList<QGeoCoordinate>> m_holesList;
-    QClipperUtils m_clipperWrapper;
+    QClipperUtils m_clipperWrapper; // cached
+    double m_leftBoundWrapped = 0.0; // cached
+    bool m_clipperDirty = true;
 };
 
 class Q_POSITIONING_EXPORT QGeoPolygonPrivateEager final : public QGeoPolygonPrivate
