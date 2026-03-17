@@ -26,6 +26,7 @@ class Q_POSITIONING_EXPORT QGeoPolygonPrivate : public QGeoPathPrivateBase
 public:
     QGeoPolygonPrivate();
     QGeoPolygonPrivate(const QList<QGeoCoordinate> &path);
+    QGeoPolygonPrivate(const QGeoPolygonPrivate &other);
     ~QGeoPolygonPrivate();
 
 // QGeoShape API
@@ -46,13 +47,13 @@ public:
 
     void addHole(const QList<QGeoCoordinate> &holePath);
     void removeHole(qsizetype index);
-    void updateClipperPath();
+    void ensureClipperPathUpdated() const;
 
 // data members
     QList<QList<QGeoCoordinate>> m_holesList;
-    QClipperUtils m_clipperWrapper; // cached
-    double m_leftBoundWrapped = 0.0; // cached
-    bool m_clipperDirty = true;
+    mutable QClipperUtils m_clipperWrapper; // cached
+    mutable double m_leftBoundWrapped = 0.0; // cached
+    mutable std::atomic<bool> m_clipperDirty = true;
 };
 
 class Q_POSITIONING_EXPORT QGeoPolygonPrivateEager final : public QGeoPolygonPrivate
@@ -60,6 +61,7 @@ class Q_POSITIONING_EXPORT QGeoPolygonPrivateEager final : public QGeoPolygonPri
 public:
     QGeoPolygonPrivateEager();
     QGeoPolygonPrivateEager(const QList<QGeoCoordinate> &path);
+    QGeoPolygonPrivateEager(const QGeoPolygonPrivateEager &other);
     ~QGeoPolygonPrivateEager();
 
 // QGeoShape API
@@ -69,7 +71,7 @@ public:
 // QGeoPath API
     void markDirty() override;
     void addCoordinate(const QGeoCoordinate &coordinate) override;
-    void computeBoundingBox() override;
+    void computeBoundingBox() const override;
 
 // QGeoPolygonPrivate API
 
