@@ -1,10 +1,13 @@
 // Copyright (C) 2016 The Qt Company Ltd.
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only
 
-#include <QtTest/QtTest>
-#include <QtPositioning/QGeoCoordinate>
-#include <QtPositioning/QGeoRectangle>
-#include <QtPositioning/QGeoPath>
+#include <QtPositioning/qgeocoordinate.h>
+#include <QtPositioning/qgeopath.h>
+#include <QtPositioning/qgeorectangle.h>
+
+#include <QtPositioning/private/qgeopath_p.h>
+
+#include <QtTest/qtest.h>
 
 QT_USE_NAMESPACE
 
@@ -12,7 +15,16 @@ class tst_QGeoPath : public QObject
 {
     Q_OBJECT
 
+private:
+    enum class Type : quint8 {
+        Lazy,
+        Eager,
+    };
+
+    QGeoPath constructPath(const QList<QGeoCoordinate> &coords, qreal width = 0.0);
+
 private slots:
+    void initTestCase_data();
     void defaultConstructor();
     void listConstructor();
     void assignment();
@@ -39,6 +51,25 @@ private slots:
     void hashing();
 };
 
+QGeoPath tst_QGeoPath::constructPath(const QList<QGeoCoordinate> &coords, qreal width)
+{
+    QFETCH_GLOBAL(const Type, type);
+
+    switch (type) {
+    case Type::Lazy:
+        return QGeoPath(coords, width);
+    case Type::Eager:
+        return QGeoPathEager(coords, width);
+    }
+}
+
+void tst_QGeoPath::initTestCase_data()
+{
+    QTest::addColumn<Type>("type");
+    QTest::newRow("Lazy") << Type::Lazy;
+    QTest::newRow("Eager") << Type::Eager;
+}
+
 void tst_QGeoPath::defaultConstructor()
 {
     QGeoPath p;
@@ -54,7 +85,7 @@ void tst_QGeoPath::listConstructor()
     coords.append(QGeoCoordinate(2,2));
     coords.append(QGeoCoordinate(3,0));
 
-    QGeoPath p(coords, 1.0);
+    QGeoPath p = constructPath(coords, 1.0);
     QCOMPARE(p.width(), qreal(1.0));
     QCOMPARE(p.path().size(), 3);
 
@@ -70,7 +101,7 @@ void tst_QGeoPath::assignment()
     coords.append(QGeoCoordinate(1,1));
     coords.append(QGeoCoordinate(2,2));
     coords.append(QGeoCoordinate(3,0));
-    QGeoPath p2(coords, 1.0);
+    QGeoPath p2 = constructPath(coords, 1.0);
 
     QVERIFY(p1 != p2);
 
@@ -105,10 +136,10 @@ void tst_QGeoPath::comparison()
     coords2.append(QGeoCoordinate(3,1));
     coords2.append(QGeoCoordinate(4,2));
     coords2.append(QGeoCoordinate(3,0));
-    QGeoPath c1(coords, qreal(50.0));
-    QGeoPath c2(coords, qreal(50.0));
-    QGeoPath c3(coords, qreal(35.0));
-    QGeoPath c4(coords2, qreal(50.0));
+    QGeoPath c1 = constructPath(coords, qreal(50.0));
+    QGeoPath c2 = constructPath(coords, qreal(50.0));
+    QGeoPath c3 = constructPath(coords, qreal(35.0));
+    QGeoPath c4 = constructPath(coords2, qreal(50.0));
 
     QVERIFY(c1 == c2);
     QVERIFY(!(c1 != c2));
@@ -172,19 +203,19 @@ void tst_QGeoPath::size()
 {
     QList<QGeoCoordinate> coords;
 
-    QGeoPath p1(coords, 3);
+    QGeoPath p1 = constructPath(coords, 3);
     QCOMPARE(p1.size(), coords.size());
 
     coords.append(QGeoCoordinate(1,1));
-    QGeoPath p2(coords, 3);
+    QGeoPath p2 = constructPath(coords, 3);
     QCOMPARE(p2.size(), coords.size());
 
     coords.append(QGeoCoordinate(2,2));
-    QGeoPath p3(coords, 3);
+    QGeoPath p3 = constructPath(coords, 3);
     QCOMPARE(p3.size(), coords.size());
 
     coords.append(QGeoCoordinate(3,0));
-    QGeoPath p4(coords, 3);
+    QGeoPath p4 = constructPath(coords, 3);
     QCOMPARE(p4.size(), coords.size());
 
     p4.removeCoordinate(2);
@@ -220,7 +251,7 @@ void tst_QGeoPath::translate()
     coords.append(c1);
     coords.append(c2);
     coords.append(c3);
-    QGeoPath p(coords);
+    QGeoPath p = constructPath(coords);
 
     p.translate(lat, lon);
 
@@ -258,7 +289,7 @@ void tst_QGeoPath::valid()
     coords.append(c1);
     coords.append(c2);
     coords.append(c3);
-    QGeoPath p(coords, width);
+    QGeoPath p = constructPath(coords, width);
 
     QCOMPARE(p.isValid(), valid);
 
@@ -351,7 +382,7 @@ void tst_QGeoPath::contains()
     QFETCH(const QGeoCoordinate, probe);
     QFETCH(const bool, result);
 
-    const QGeoPath p(coordinates, width);
+    const QGeoPath p = constructPath(coordinates, width);
 
     QCOMPARE(p.contains(probe), result);
 
@@ -392,7 +423,7 @@ void tst_QGeoPath::boundingGeoRectangle()
     coords.append(c1);
     coords.append(c2);
     coords.append(c3);
-    QGeoPath p(coords, width);
+    QGeoPath p = constructPath(coords, width);
 
     QGeoRectangle box = p.boundingGeoRectangle();
     QCOMPARE(box.contains(probe), result);
@@ -400,7 +431,10 @@ void tst_QGeoPath::boundingGeoRectangle()
 
 void tst_QGeoPath::hashing()
 {
-    const QGeoPath path({ QGeoCoordinate(1, 1), QGeoCoordinate(1, 2), QGeoCoordinate(2, 5) }, 1.0);
+    const QGeoPath path = constructPath({ QGeoCoordinate(1, 1),
+                                          QGeoCoordinate(1, 2),
+                                          QGeoCoordinate(2, 5) },
+                                        1.0);
     const size_t pathHash = qHash(path);
 
     QGeoPath otherCoordsPath = path;
@@ -412,7 +446,10 @@ void tst_QGeoPath::hashing()
     QVERIFY(qHash(otherWidthPath) != pathHash);
 
     // Do not assign, so that they do not share same d_ptr
-    QGeoPath similarPath({ QGeoCoordinate(1, 1), QGeoCoordinate(1, 2), QGeoCoordinate(2, 5) }, 1.0);
+    QGeoPath similarPath = constructPath({ QGeoCoordinate(1, 1),
+                                           QGeoCoordinate(1, 2),
+                                           QGeoCoordinate(2, 5) },
+                                         1.0);
     QCOMPARE(qHash(similarPath), pathHash);
 }
 

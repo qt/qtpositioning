@@ -12,7 +12,7 @@ qt_internal_add_test(tst_qgeopath
         tst_qgeopath.cpp
     LIBRARIES
         Qt::Core
-        Qt::Positioning
+        Qt::PositioningPrivate
 )
 
 #### Keys ignored in scope 1:.:.:qgeopath.pro:<TRUE>:

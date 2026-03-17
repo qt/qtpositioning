@@ -588,6 +588,7 @@ QGeoPolygonPrivateEager::QGeoPolygonPrivateEager() : QGeoPolygonPrivate()
 QGeoPolygonPrivateEager::QGeoPolygonPrivateEager(const QList<QGeoCoordinate> &path) : QGeoPolygonPrivate(path)
 {
     m_bboxDirty = false; // never dirty on the eager version
+    markDirty(); // calculate the cached values
 }
 
 QGeoPolygonPrivateEager::~QGeoPolygonPrivateEager()
