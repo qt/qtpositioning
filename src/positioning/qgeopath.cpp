@@ -450,7 +450,6 @@ void QGeoPathPrivateBase::translate(double degreesLatitude, double degreesLongit
         p.setLongitude(QLocationUtils::wrapLong(p.longitude() + degreesLongitude));
     }
     m_bbox.translate(degreesLatitude, degreesLongitude);
-    m_leftBoundWrapped = QWebMercator::coordToMercator(m_bbox.topLeft()).x();
 }
 
 void QGeoPathPrivateBase::setPath(const QList<QGeoCoordinate> &path)
@@ -513,7 +512,6 @@ void QGeoPathPrivateBase::computeBoundingBox()
     double minX, maxX, minLati, maxLati;
     m_bboxDirty = false;
     computeBBox(m_path, deltaXs, minX, maxX, minLati, maxLati, m_bbox);
-    m_leftBoundWrapped = QWebMercator::coordToMercator(m_bbox.topLeft()).x();
 }
 
 void QGeoPathPrivateBase::markDirty()
@@ -691,7 +689,6 @@ void QGeoPathPrivateEager::markDirty()
 {
     // do the calculations directly
     computeBBox(m_path, m_deltaXs, m_minX, m_maxX, m_minLati, m_maxLati, m_bbox);
-    m_leftBoundWrapped = QWebMercator::coordToMercator(m_bbox.topLeft()).x();
 }
 
 void QGeoPathPrivateEager::translate(double degreesLatitude, double degreesLongitude)
@@ -707,7 +704,6 @@ void QGeoPathPrivateEager::translate(double degreesLatitude, double degreesLongi
     m_bbox.translate(degreesLatitude, degreesLongitude);
     m_minLati += degreesLatitude;
     m_maxLati += degreesLatitude;
-    m_leftBoundWrapped = QWebMercator::coordToMercator(m_bbox.topLeft()).x();
 }
 
 void QGeoPathPrivateEager::addCoordinate(const QGeoCoordinate &coordinate)
@@ -727,7 +723,6 @@ void QGeoPathPrivateEager::QGeoPathPrivateEager::computeBoundingBox()
 void QGeoPathPrivateEager::QGeoPathPrivateEager::updateBoundingBox()
 {
     updateBBox(m_path, m_deltaXs, m_minX, m_maxX, m_minLati, m_maxLati, m_bbox);
-    m_leftBoundWrapped = QWebMercator::coordToMercator(m_bbox.topLeft()).x();
 }
 
 QGeoPathEager::QGeoPathEager() : QGeoPath()
