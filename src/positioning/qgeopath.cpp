@@ -677,6 +677,7 @@ QGeoPathPrivateEager::QGeoPathPrivateEager(const QList<QGeoCoordinate> &path, co
 :   QGeoPathPrivate(path, width)
 {
     m_bboxDirty = false; // never dirty on the eager version
+    markDirty(); // calculate the cached values
 }
 
 QGeoPathPrivateEager::~QGeoPathPrivateEager()

@@ -12,7 +12,7 @@ qt_internal_add_test(tst_qgeopolygon
         tst_qgeopolygon.cpp
     LIBRARIES
         Qt::Core
-        Qt::Positioning
+        Qt::PositioningPrivate
 )
 
 #### Keys ignored in scope 1:.:.:qgeopolygon.pro:<TRUE>:
