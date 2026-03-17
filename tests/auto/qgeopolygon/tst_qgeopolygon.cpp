@@ -51,6 +51,8 @@ private slots:
     void boundingGeoRectangle_data();
     void boundingGeoRectangle();
 
+    void boundingGeoRectangleWithCopy();
+
     void hashing();
 
     void toString();
@@ -406,6 +408,26 @@ void tst_QGeoPolygon::boundingGeoRectangle()
 
     QGeoRectangle box = p.boundingGeoRectangle();
     QCOMPARE(box.contains(probe), result);
+}
+
+void tst_QGeoPolygon::boundingGeoRectangleWithCopy()
+{
+    const auto coordinates = QList{ QGeoCoordinate(1, 1),
+                                    QGeoCoordinate(1, 2),
+                                    QGeoCoordinate(2, 3) };
+    QGeoPolygon p = constructPolygon(coordinates);
+
+    QGeoRectangle box = p.boundingGeoRectangle();
+
+    QGeoPolygon copy = p;
+    QGeoRectangle copyBox = copy.boundingGeoRectangle();
+    // matches the original
+    QCOMPARE_EQ(copyBox, box);
+
+    copy.addCoordinate(QGeoCoordinate(3, 5));
+    copyBox = copy.boundingGeoRectangle();
+    // does not match the original anymore
+    QCOMPARE_NE(copyBox, box);
 }
 
 void tst_QGeoPolygon::hashing()
