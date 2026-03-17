@@ -6,6 +6,8 @@
 #include <QtPositioning/qgeopolygon.h>
 #include <QtPositioning/qgeorectangle.h>
 
+#include <QtPositioning/private/qgeopolygon_p.h>
+
 #include <QtTest/qtest.h>
 
 QT_USE_NAMESPACE
@@ -14,7 +16,17 @@ class tst_QGeoPolygon : public QObject
 {
     Q_OBJECT
 
+private:
+    enum class Type : quint8 {
+        Lazy,
+        Eager,
+    };
+
+    QGeoPolygon constructPolygon(const QList<QGeoCoordinate> &coords);
+
 private slots:
+    void initTestCase_data();
+
     void defaultConstructor();
     void listConstructor();
     void assignment();
@@ -44,6 +56,25 @@ private slots:
     void toString();
 };
 
+QGeoPolygon tst_QGeoPolygon::constructPolygon(const QList<QGeoCoordinate> &coords)
+{
+    QFETCH_GLOBAL(const Type, type);
+
+    switch (type) {
+    case Type::Lazy:
+        return QGeoPolygon(coords);
+    case Type::Eager:
+        return QGeoPolygonEager(coords);
+    }
+}
+
+void tst_QGeoPolygon::initTestCase_data()
+{
+    QTest::addColumn<Type>("type");
+    QTest::newRow("Lazy") << Type::Lazy;
+    QTest::newRow("Eager") << Type::Eager;
+}
+
 void tst_QGeoPolygon::defaultConstructor()
 {
     QGeoPolygon p;
@@ -58,7 +89,7 @@ void tst_QGeoPolygon::listConstructor()
     QList<QGeoCoordinate> coords;
     coords.append(QGeoCoordinate(1,1));
     coords.append(QGeoCoordinate(2,2));
-    QGeoPolygon p2(coords);
+    QGeoPolygon p2 = constructPolygon(coords);
     QCOMPARE(p2.perimeter().size(), 2);
     QCOMPARE(p2.size(), 2);
     QVERIFY(!p2.isValid()); // a polygon can't have only 2 coords
@@ -66,7 +97,7 @@ void tst_QGeoPolygon::listConstructor()
 
     coords.append(QGeoCoordinate(3,0));
 
-    QGeoPolygon p(coords);
+    QGeoPolygon p = constructPolygon(coords);
     QCOMPARE(p.perimeter().size(), 3);
     QCOMPARE(p.size(), 3);
     QVERIFY(p.isValid());
@@ -86,7 +117,7 @@ void tst_QGeoPolygon::assignment()
     coords.append(QGeoCoordinate(1,1));
     coords.append(QGeoCoordinate(2,2));
     coords.append(QGeoCoordinate(3,0));
-    QGeoPolygon p2(coords);
+    QGeoPolygon p2 = constructPolygon(coords);
 
     QVERIFY(p1 != p2);
 
@@ -119,9 +150,9 @@ void tst_QGeoPolygon::comparison()
     coords2.append(QGeoCoordinate(3,1));
     coords2.append(QGeoCoordinate(4,2));
     coords2.append(QGeoCoordinate(3,0));
-    QGeoPolygon c1(coords);
-    QGeoPolygon c2(coords);
-    QGeoPolygon c3(coords2);
+    QGeoPolygon c1 = constructPolygon(coords);
+    QGeoPolygon c2 = constructPolygon(coords);
+    QGeoPolygon c3 = constructPolygon(coords2);
 
     QVERIFY(c1 == c2);
     QVERIFY(!(c1 != c2));
@@ -137,8 +168,8 @@ void tst_QGeoPolygon::comparison()
     QVERIFY(c1 != b1);
 
     // Create a QGeoPolygon with the same vertices as the rectangle
-    QGeoPolygon sameAsB1({ b1.topLeft(), b1.topRight(),
-                           b1.bottomRight(), b1.bottomLeft() });
+    QGeoPolygon sameAsB1 = constructPolygon({ b1.topLeft(), b1.topRight(),
+                                              b1.bottomRight(), b1.bottomLeft() });
     // It still should not be equal to b1, because the types are different
     QCOMPARE_NE(sameAsB1, b1);
 
@@ -188,19 +219,19 @@ void tst_QGeoPolygon::size()
 {
     QList<QGeoCoordinate> coords;
 
-    QGeoPolygon p1(coords);
+    QGeoPolygon p1 = constructPolygon(coords);
     QCOMPARE(p1.size(), coords.size());
 
     coords.append(QGeoCoordinate(1,1));
-    QGeoPolygon p2(coords);
+    QGeoPolygon p2 = constructPolygon(coords);
     QCOMPARE(p2.size(), coords.size());
 
     coords.append(QGeoCoordinate(2,2));
-    QGeoPolygon p3(coords);
+    QGeoPolygon p3 = constructPolygon(coords);
     QCOMPARE(p3.size(), coords.size());
 
     coords.append(QGeoCoordinate(3,0));
-    QGeoPolygon p4(coords);
+    QGeoPolygon p4 = constructPolygon(coords);
     QCOMPARE(p4.size(), coords.size());
 
     p4.removeCoordinate(2);
@@ -236,7 +267,7 @@ void tst_QGeoPolygon::translate()
     coords.append(c1);
     coords.append(c2);
     coords.append(c3);
-    QGeoPolygon p(coords);
+    QGeoPolygon p = constructPolygon(coords);
 
     p.translate(lat, lon);
 
@@ -269,7 +300,7 @@ void tst_QGeoPolygon::valid()
     coords.append(c1);
     coords.append(c2);
     coords.append(c3);
-    QGeoPolygon p(coords);
+    QGeoPolygon p = constructPolygon(coords);
 
     QCOMPARE(p.isValid(), valid);
 
@@ -307,7 +338,7 @@ void tst_QGeoPolygon::contains()
     coords.append(c1);
     coords.append(c2);
     coords.append(c3);
-    QGeoPolygon p(coords);
+    QGeoPolygon p = constructPolygon(coords);
 
     QCOMPARE(p.contains(probe), result);
 
@@ -326,7 +357,7 @@ void tst_QGeoPolygon::containsAfterCopy()
 
     const QGeoCoordinate testPoint(2.0, 1.0);
 
-    QGeoPolygon p1(coords);
+    QGeoPolygon p1 = constructPolygon(coords);
     QVERIFY(p1.contains(testPoint));
 
     QGeoPolygon p2 = p1;
@@ -371,7 +402,7 @@ void tst_QGeoPolygon::boundingGeoRectangle()
     coords.append(c1);
     coords.append(c2);
     coords.append(c3);
-    QGeoPolygon p(coords);
+    QGeoPolygon p = constructPolygon(coords);
 
     QGeoRectangle box = p.boundingGeoRectangle();
     QCOMPARE(box.contains(probe), result);
@@ -379,8 +410,8 @@ void tst_QGeoPolygon::boundingGeoRectangle()
 
 void tst_QGeoPolygon::hashing()
 {
-    const QGeoPolygon polygon({ QGeoCoordinate(1, 1), QGeoCoordinate(2, 2),
-                                QGeoCoordinate(3, 0) });
+    const QGeoPolygon polygon = constructPolygon({ QGeoCoordinate(1, 1), QGeoCoordinate(2, 2),
+                                                   QGeoCoordinate(3, 0) });
     const size_t polygonHash = qHash(polygon);
 
     QGeoPolygon otherCoordsPolygon = polygon;
@@ -393,14 +424,15 @@ void tst_QGeoPolygon::hashing()
     QVERIFY(qHash(otherHolesPolygon) != polygonHash);
 
     // Do not assign, so that they do not share same d_ptr
-    QGeoPolygon similarPolygon({ QGeoCoordinate(1, 1), QGeoCoordinate(2, 2),
-                                 QGeoCoordinate(3, 0) });
+    QGeoPolygon similarPolygon = constructPolygon({ QGeoCoordinate(1, 1), QGeoCoordinate(2, 2),
+                                                    QGeoCoordinate(3, 0) });
     QCOMPARE(qHash(similarPolygon), polygonHash);
 }
 
 void tst_QGeoPolygon::toString()
 {
-    const QGeoPolygon p({QGeoCoordinate(1, 1), QGeoCoordinate(2, 2), QGeoCoordinate(3, 0)});
+    const QGeoPolygon p = constructPolygon({ QGeoCoordinate(1, 1), QGeoCoordinate(2, 2),
+                                             QGeoCoordinate(3, 0) });
 
     const QString str = p.toString();
     QCOMPARE(str, QStringLiteral("QGeoPolygon([ 1° 0' 0.0\" N, 1° 0' 0.0\" E; "
