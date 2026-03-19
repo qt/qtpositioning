@@ -323,6 +323,15 @@ void tst_QGeoPolygon::contains_data()
     QTest::newRow("One of the points") << c <<  QGeoCoordinate(2, 2) << true;
     QTest::newRow("Not so far away") << c << QGeoCoordinate(0.8, 0.8) << false;
     QTest::newRow("Inside") << c << QGeoCoordinate(2.0, 1.0) << true;
+
+    const QList<QGeoCoordinate> wrapOver180 = { QGeoCoordinate(20, 175),
+                                                QGeoCoordinate(20, -175),
+                                                QGeoCoordinate(10, -175),
+                                                QGeoCoordinate(10, 175) };
+    QTest::newRow("Inside neg. long. with wrap") << wrapOver180 << QGeoCoordinate(15, -179) << true;
+    QTest::newRow("Outside neg. long. with wrap") << wrapOver180 << QGeoCoordinate(15, -170) << false;
+    QTest::newRow("Inside pos. long. with wrap") << wrapOver180 << QGeoCoordinate(15, 179) << true;
+    QTest::newRow("Outside pos. long. with wrap") << wrapOver180 << QGeoCoordinate(15, 170) << false;
 }
 
 void tst_QGeoPolygon::contains()
