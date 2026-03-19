@@ -312,34 +312,25 @@ void tst_QGeoPolygon::valid()
 
 void tst_QGeoPolygon::contains_data()
 {
-    QTest::addColumn<QGeoCoordinate>("c1");
-    QTest::addColumn<QGeoCoordinate>("c2");
-    QTest::addColumn<QGeoCoordinate>("c3");
+    QTest::addColumn<QList<QGeoCoordinate>>("coords");
     QTest::addColumn<QGeoCoordinate>("probe");
     QTest::addColumn<bool>("result");
 
-    QList<QGeoCoordinate> c;
-    c.append(QGeoCoordinate(1,1));
-    c.append(QGeoCoordinate(2,2));
-    c.append(QGeoCoordinate(3,0));
+    const QList<QGeoCoordinate> c = { QGeoCoordinate(1, 1),
+                                      QGeoCoordinate(2, 2),
+                                      QGeoCoordinate(3, 0) };
 
-    QTest::newRow("One of the points") << c[0] << c[1] << c[2] <<  QGeoCoordinate(2, 2) << true;
-    QTest::newRow("Not so far away") << c[0] << c[1] << c[2] << QGeoCoordinate(0.8, 0.8) << false;
-    QTest::newRow("Inside") << c[0] << c[1] << c[2] << QGeoCoordinate(2.0, 1.0) << true;
+    QTest::newRow("One of the points") << c <<  QGeoCoordinate(2, 2) << true;
+    QTest::newRow("Not so far away") << c << QGeoCoordinate(0.8, 0.8) << false;
+    QTest::newRow("Inside") << c << QGeoCoordinate(2.0, 1.0) << true;
 }
 
 void tst_QGeoPolygon::contains()
 {
-    QFETCH(QGeoCoordinate, c1);
-    QFETCH(QGeoCoordinate, c2);
-    QFETCH(QGeoCoordinate, c3);
-    QFETCH(QGeoCoordinate, probe);
-    QFETCH(bool, result);
+    QFETCH(const QList<QGeoCoordinate>, coords);
+    QFETCH(const QGeoCoordinate, probe);
+    QFETCH(const bool, result);
 
-    QList<QGeoCoordinate> coords;
-    coords.append(c1);
-    coords.append(c2);
-    coords.append(c3);
     QGeoPolygon p = constructPolygon(coords);
 
     QCOMPARE(p.contains(probe), result);
