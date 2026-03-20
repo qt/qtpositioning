@@ -29,8 +29,8 @@ class Q_POSITIONINGQUICK_EXPORT QQuickGeoCoordinateAnimation : public QQuickProp
     QML_NAMED_ELEMENT(CoordinateAnimation)
     QML_ADDED_IN_VERSION(5, 3)
     Q_DECLARE_PRIVATE(QQuickGeoCoordinateAnimation)
-    Q_PROPERTY(QGeoCoordinate from READ from WRITE setFrom)
-    Q_PROPERTY(QGeoCoordinate to READ to WRITE setTo)
+    Q_PROPERTY(QGeoCoordinate from READ from WRITE setFrom OVERRIDE)
+    Q_PROPERTY(QGeoCoordinate to READ to WRITE setTo OVERRIDE)
     Q_PROPERTY(Direction direction READ direction WRITE setDirection NOTIFY directionChanged
                        BINDABLE bindableDirection)
 
