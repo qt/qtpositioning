@@ -55,7 +55,7 @@ public:
     QClipperUtils m_clipperWrapper;
 };
 
-class Q_POSITIONING_EXPORT QGeoPolygonPrivateEager : public QGeoPolygonPrivate
+class Q_POSITIONING_EXPORT QGeoPolygonPrivateEager final : public QGeoPolygonPrivate
 {
 public:
     QGeoPolygonPrivateEager();

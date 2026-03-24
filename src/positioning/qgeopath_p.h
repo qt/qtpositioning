@@ -202,7 +202,7 @@ public:
     qreal m_width = 0;
 };
 
-class Q_POSITIONING_EXPORT QGeoPathPrivateEager : public QGeoPathPrivate
+class Q_POSITIONING_EXPORT QGeoPathPrivateEager final : public QGeoPathPrivate
 {
 public:
     QGeoPathPrivateEager();
