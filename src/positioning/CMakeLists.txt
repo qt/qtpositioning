@@ -51,7 +51,7 @@ qt_internal_add_module(Positioning
 
 if(ANDROID)
     set_property(TARGET Positioning APPEND PROPERTY QT_ANDROID_BUNDLED_JAR_DEPENDENCIES
-        jar/Qt${QtLocation_VERSION_MAJOR}AndroidPositioning.jar
+        jar/Qt${QtPositioning_VERSION_MAJOR}AndroidPositioning.jar
     )
     set_property(TARGET Positioning APPEND PROPERTY QT_ANDROID_LIB_DEPENDENCIES
         ${INSTALL_PLUGINSDIR}/position/libplugins_position_qtposition_android.so
@@ -73,4 +73,3 @@ qt_internal_extend_target(Positioning CONDITION WIN32
 qt_internal_add_docs(Positioning
     doc/qtpositioning.qdocconf
 )
-
