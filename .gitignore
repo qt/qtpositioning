@@ -34,7 +34,6 @@ Makefile*
 *.prl
 *.app
 *.pro.user
-CMakeLists.txt.user*
 *.qmlproject.user
 *.gcov
 config.log
@@ -139,3 +138,15 @@ tst_*~
 *.dep
 *.map
 work
+
+# cmake related artifacts
+/build*
+build/
+CMakeFiles
+CTestTestfile.cmake
+CMakeUserPresets.json
+cmake_install.cmake
+*_autogen
+tst_*.xml
+CMakeLists.txt.user*
+.xdp_CMakeLists.txt.*
