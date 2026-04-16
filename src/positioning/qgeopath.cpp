@@ -12,7 +12,6 @@
 #include "qwebmercator_p.h"
 
 #include "qdoublevector2d_p.h"
-#include "qdoublevector3d_p.h"
 
 #include <QtCore/qmutex.h>
 
