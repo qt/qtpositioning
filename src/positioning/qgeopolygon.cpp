@@ -650,11 +650,6 @@ void QGeoPolygonPrivateEager::addCoordinate(const QGeoCoordinate &coordinate)
     updateBoundingBox(); // do not markDirty as it uses computeBoundingBox instead
 }
 
-void QGeoPolygonPrivateEager::computeBoundingBox() const
-{
-    Q_UNREACHABLE();
-}
-
 void QGeoPolygonPrivateEager::updateBoundingBox()
 {
     updateBBox(m_path, m_deltaXs, m_minX, m_maxX, m_minLati, m_maxLati, m_bbox);

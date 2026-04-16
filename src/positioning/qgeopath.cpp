@@ -522,13 +522,6 @@ void QGeoPathPrivateBase::removeCoordinate(qsizetype index)
     markDirty();
 }
 
-void QGeoPathPrivateBase::computeBoundingBox() const
-{
-    QList<double> deltaXs;
-    double minX, maxX, minLati, maxLati;
-    computeBBox(m_path, deltaXs, minX, maxX, minLati, maxLati, m_bbox);
-}
-
 void QGeoPathPrivateBase::markDirty()
 {
     m_bboxDirty.store(true, std::memory_order_release);
@@ -539,7 +532,9 @@ void QGeoPathPrivateBase::ensureBoundingBoxUpdated() const
     if (m_bboxDirty.load(std::memory_order_acquire)) {
         const std::scoped_lock lock(globalPathMutex);
         if (m_bboxDirty.load(std::memory_order_acquire)) {
-            computeBoundingBox();
+            QList<double> deltaXs;
+            double minX, maxX, minLati, maxLati;
+            computeBBox(m_path, deltaXs, minX, maxX, minLati, maxLati, m_bbox);
             m_bboxDirty.store(false, std::memory_order_release);
         }
     }
@@ -745,11 +740,6 @@ void QGeoPathPrivateEager::addCoordinate(const QGeoCoordinate &coordinate)
     m_path.append(coordinate);
     //m_clipperDirty = true; // clipper not used in polylines
     updateBoundingBox();
-}
-
-void QGeoPathPrivateEager::QGeoPathPrivateEager::computeBoundingBox() const
-{
-    Q_UNREACHABLE();
 }
 
 void QGeoPathPrivateEager::QGeoPathPrivateEager::updateBoundingBox()

@@ -168,7 +168,6 @@ public:
     virtual void replaceCoordinate(qsizetype index, const QGeoCoordinate &coordinate);
     virtual void removeCoordinate(const QGeoCoordinate &coordinate);
     virtual void removeCoordinate(qsizetype index);
-    virtual void computeBoundingBox() const;
     virtual void markDirty();
 
     void ensureBoundingBoxUpdated() const;
@@ -219,7 +218,6 @@ public:
     void translate(double degreesLatitude, double degreesLongitude) override;
     void markDirty() override;
     void addCoordinate(const QGeoCoordinate &coordinate) override;
-    void computeBoundingBox() const override;
 
 // *Eager API
     void updateBoundingBox();
