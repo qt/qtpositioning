@@ -71,7 +71,6 @@ public:
 // QGeoPath API
     void markDirty() override;
     void addCoordinate(const QGeoCoordinate &coordinate) override;
-    void computeBoundingBox() const override;
 
 // QGeoPolygonPrivate API
 
