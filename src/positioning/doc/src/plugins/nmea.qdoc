@@ -93,6 +93,9 @@ serial port and file inputs.
 locate one of the well-known serial devices (as if \c {nmea.source = serial:}
 was specified).
 
+\warning The \c {socket://} scheme supports only unencrypted connection.
+Therefore it is only suitable for use within a host or over a trusted network.
+
 \section1 Position source usage example
 
 The following examples show how to create a \b nmea PositionSource
