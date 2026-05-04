@@ -89,6 +89,9 @@ private slots:
     void testWithBadNmea();
     void testWithBadNmea_data();
 
+    void getPositionInfoFromNmea_data();
+    void getPositionInfoFromNmea();
+
 private:
     QNmeaPositionInfoSource::UpdateMode m_mode;
 };
@@ -153,5 +156,25 @@ protected:
     qint64 bytesAvailable() const override
     {
         return 1024 + QIODevice::bytesAvailable();
+    }
+};
+
+//---------------------------------------------------
+
+class TestNmeaPosInfoSource : public QNmeaPositionInfoSource
+{
+    Q_OBJECT
+
+public:
+    TestNmeaPosInfoSource(UpdateMode mode) : QNmeaPositionInfoSource(mode)
+    {
+        setUserEquivalentRangeError(1.0);
+    }
+    ~TestNmeaPosInfoSource() override = default;
+
+    bool getPosInfoFromNmea(QByteArrayView bytes, QGeoPositionInfo &info)
+    {
+        bool hasFix = false;
+        return parsePosInfoFromNmeaData(bytes, &info, &hasFix);
     }
 };

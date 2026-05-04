@@ -10,6 +10,8 @@
 #include <QtCore/QElapsedTimer>
 #include <QtCore/QtNumeric>
 
+using namespace Qt::StringLiterals;
+
 #ifdef Q_OS_WIN
 
 // Windows seems to require longer timeouts and step length
@@ -587,4 +589,296 @@ void tst_QNmeaPositionInfoSource::testWithBadNmea_data()
             << (QList<QDateTime>() << firstDateTime) << RequestUpdatesMethod;
     QTest::newRow("startUpdates(), bad second sentence") << bytes
             << (QList<QDateTime>() << firstDateTime << lastDateTime) << StartUpdatesMethod;
+}
+
+void tst_QNmeaPositionInfoSource::getPositionInfoFromNmea_data()
+{
+    QTest::addColumn<QByteArray>("bytes");
+    QTest::addColumn<bool>("expectedResult");
+    QTest::addColumn<QGeoPositionInfo>("expectedPosInfo");
+
+    // Invalid common cases
+
+    const QTime tm(9, 9, 24);
+
+    QByteArray msg = QLocationTestUtils::createGgaSentence(tm).toLatin1();
+    msg.replace("$GPGGA", "$GPGXX");
+    QTest::addRow("unknown_type") << msg << false << QGeoPositionInfo();
+
+    msg = QLocationTestUtils::createGgaSentence(tm).toLatin1();
+    char &crc = msg[msg.size() - 3];
+    crc ^= 0xFF; // XOR the CRC byte
+    QTest::addRow("wrong_CRC") << msg << false << QGeoPositionInfo();
+
+    msg = QLocationTestUtils::createGgaSentence(tm).toLatin1();
+    msg.replace("$GPGGA", "$GGA");
+    QTest::addRow("missing_talker_id") << msg << false << QGeoPositionInfo();
+
+    msg = QLocationTestUtils::createGgaSentence(tm).toLatin1();
+    msg.removeFirst();
+    QTest::addRow("invalid_start") << msg << false << QGeoPositionInfo();
+
+    msg = QLocationTestUtils::createGgaSentence(tm).toLatin1().chopped(4);
+    QTest::addRow("no_checksum") << msg << false << QGeoPositionInfo();
+
+    // Malformed data in GGA
+
+    QGeoPositionInfo info;
+    info.setTimestamp(QDateTime(QDate(), tm, QTimeZone::UTC));
+    QTest::addRow("GGA_wrong_lat_dir")
+            << QLocationTestUtils::addNmeaChecksumAndBreaks(
+                       "$GPGGA,090924.000,2734.76859,X,15305.99361,E,1,04,,49.4,M,,,,*"_L1)
+                       .toLatin1()
+            << true
+            << info;
+    QTest::addRow("GGA_wrong_lon_dir")
+            << QLocationTestUtils::addNmeaChecksumAndBreaks(
+                       "$GPGGA,090924.000,2734.76859,S,15305.99361,X,1,04,,49.4,M,,,,*"_L1)
+                       .toLatin1()
+            << true
+            << info;
+    QTest::addRow("GGA_malformed_lat")
+            << QLocationTestUtils::addNmeaChecksumAndBreaks(
+                       "$GPGGA,090924.000,abc76859,S,15305.99361,E,1,04,,49.4,M,,,,*"_L1)
+                       .toLatin1()
+            << true
+            << info;
+    QTest::addRow("GGA_malformed_lon")
+            << QLocationTestUtils::addNmeaChecksumAndBreaks(
+                       "$GPGGA,090924.000,2734.76859,S,15305.def,E,1,04,,49.4,M,,,,*"_L1)
+                       .toLatin1()
+            << true
+            << info;
+
+    info.setTimestamp(QDateTime());
+    info.setCoordinate(QGeoCoordinate(-27.5794765, 153.0998935, 49.4));
+    QTest::addRow("GGA_malformed_time")
+            << QLocationTestUtils::addNmeaChecksumAndBreaks(
+                       "$GPGGA,1234time,2734.76859,S,15305.99361,E,1,04,,49.4,M,,,,*"_L1)
+                       .toLatin1()
+            << true
+            << info;
+
+    info.setTimestamp(QDateTime(QDate(), tm, QTimeZone::UTC));
+    QTest::addRow("GGA_malformed_hdop")
+            << QLocationTestUtils::addNmeaChecksumAndBreaks(
+                       "$GPGGA,090924.000,2734.76859,S,15305.99361,E,1,04,hdop,49.4,M,,,,*"_L1)
+                       .toLatin1()
+            << true
+            << info;
+
+    info.setCoordinate(QGeoCoordinate(-27.5794765, 153.0998935)); // no alt
+    QTest::addRow("GGA_malformed_alt")
+            << QLocationTestUtils::addNmeaChecksumAndBreaks(
+                       "$GPGGA,090924.000,2734.76859,S,15305.99361,E,1,04,,4b.4,M,,,,*"_L1)
+                       .toLatin1()
+            << true
+            << info;
+
+    // Malformed data in GSA
+
+    info = QGeoPositionInfo();
+
+    QTest::addRow("GSA_malformed_hdop")
+            << QLocationTestUtils::addNmeaChecksumAndBreaks(
+                       "$GPGSA,A,3,,,,,,,,,,,,,3.0,foo,*"_L1).toLatin1()
+            << true
+            << info;
+
+    info.setAttribute(QGeoPositionInfo::HorizontalAccuracy, 2.0);
+    QTest::addRow("GSA_malformed_vdop")
+            << QLocationTestUtils::addNmeaChecksumAndBreaks(
+                       "$GPGSA,A,3,,,,,,,,,,,,,3.0,1.0,foo,*"_L1).toLatin1()
+            << true
+            << info;
+
+    // Malformed data in GLL
+
+    info = QGeoPositionInfo();
+    info.setCoordinate(QGeoCoordinate(-27.5794765, 153.0998935));
+
+    QTest::addRow("GLL_malformed_timestamp")
+            << QLocationTestUtils::addNmeaChecksumAndBreaks(
+                       "$GNGLL,2734.76859,S,15305.99361,E,09092,A,D*"_L1).toLatin1()
+            << true
+            << info;
+
+    info.setCoordinate(QGeoCoordinate());
+    info.setTimestamp(QDateTime(QDate(), tm, QTimeZone::UTC));
+
+    QTest::addRow("GLL_wrong_lat_dir")
+            << QLocationTestUtils::addNmeaChecksumAndBreaks(
+                       "$GNGLL,2734.76859,W,15305.99361,E,090924,A,D*"_L1).toLatin1()
+            << true
+            << info;
+
+    QTest::addRow("GLL_wrong_lon_dir")
+            << QLocationTestUtils::addNmeaChecksumAndBreaks(
+                       "$GNGLL,2734.76859,S,15305.99361,N,090924,A,D*"_L1).toLatin1()
+            << true
+            << info;
+
+    QTest::addRow("GLL_malformed_lat")
+            << QLocationTestUtils::addNmeaChecksumAndBreaks(
+                       "$GNGLL,27a4.7b8c9,S,15305.99361,E,090924,A,D*"_L1).toLatin1()
+            << true
+            << info;
+
+    QTest::addRow("GLL_malformed_lon")
+            << QLocationTestUtils::addNmeaChecksumAndBreaks(
+                       "$GNGLL,2734.76859,S,15d0e.f9361,E,090924,A,D*"_L1).toLatin1()
+            << true
+            << info;
+
+    // Malformed data in RMC
+
+    info = QGeoPositionInfo();
+    info.setTimestamp(QDateTime(QDate(), tm, QTimeZone::UTC));
+
+    QTest::addRow("RMC_malformed_short_date")
+            << QLocationTestUtils::addNmeaChecksumAndBreaks(
+                       "$GPRMC,090924.000,A,,,,,,,12345,,,*"_L1).toLatin1()
+            << true
+            << info;
+
+    info.setTimestamp(QDateTime(QDate(2025, 5, 4), QTime(), QTimeZone::UTC));
+
+    QTest::addRow("RMC_malformed_time")
+            << QLocationTestUtils::addNmeaChecksumAndBreaks(
+                       "$GPRMC,abcdef.xyz,A,,,,,,,040525,,,*"_L1)
+                       .toLatin1()
+            << true
+            << info;
+
+    info.setTimestamp(QDateTime(QDate(2025, 5, 4), tm, QTimeZone::UTC));
+
+    QTest::addRow("RMC_wrong_lat_dir")
+            << QLocationTestUtils::addNmeaChecksumAndBreaks(
+                       "$GPRMC,090924.000,A,2734.76859,X,15305.99361,E,,,040525,,,*"_L1)
+                       .toLatin1()
+            << true
+            << info;
+
+    QTest::addRow("RMC_wrong_lon_dir")
+            << QLocationTestUtils::addNmeaChecksumAndBreaks(
+                       "$GPRMC,090924.000,A,2734.76859,S,15305.99361,X,,,040525,,,*"_L1)
+                       .toLatin1()
+            << true
+            << info;
+
+    QTest::addRow("RMC_malformed_lat")
+            << QLocationTestUtils::addNmeaChecksumAndBreaks(
+                       "$GPRMC,090924.000,A,abcde.fghij,S,15305.99361,E,,,040525,,,*"_L1)
+                       .toLatin1()
+            << true
+            << info;
+
+    QTest::addRow("RMC_malformed_lon")
+            << QLocationTestUtils::addNmeaChecksumAndBreaks(
+                       "$GPRMC,090924.000,A,2734.76859,S,abcde.fghij,E,,,040525,,,*"_L1)
+                       .toLatin1()
+            << true
+            << info;
+
+    info.setCoordinate(QGeoCoordinate(-27.5794765, 153.0998935));
+    info.setAttribute(QGeoPositionInfo::Direction, 45.0);
+
+    QTest::addRow("RMC_malformed_speed")
+            << QLocationTestUtils::addNmeaChecksumAndBreaks(
+                       "$GPRMC,090924.000,A,2734.76859,S,15305.99361,E,abc,45.0,040525,,*"_L1)
+                       .toLatin1()
+            << true
+            << info;
+
+    info.removeAttribute(QGeoPositionInfo::Direction);
+    info.setAttribute(QGeoPositionInfo::GroundSpeed, qreal(0.7 * 1.852 / 3.6));
+
+    QTest::addRow("RMC_malformed_bearing")
+            << QLocationTestUtils::addNmeaChecksumAndBreaks(
+                       "$GPRMC,090924.000,A,2734.76859,S,15305.99361,E,0.7,abc,040525,,*"_L1)
+                       .toLatin1()
+            << true
+            << info;
+
+    info.removeAttribute(QGeoPositionInfo::GroundSpeed);
+
+    QTest::addRow("RMC_malformed_mag_var")
+            << QLocationTestUtils::addNmeaChecksumAndBreaks(
+                       "$GPRMC,090924.000,A,2734.76859,S,15305.99361,E,,,040525,abc,E*"_L1)
+                       .toLatin1()
+            << true
+            << info;
+
+    // Malformed data in VTG
+
+    info = QGeoPositionInfo();
+    info.setAttribute(QGeoPositionInfo::Direction, 8.4);
+
+    QTest::addRow("VTG_malformed_speed")
+            << QLocationTestUtils::addNmeaChecksumAndBreaks(
+                       "$GNVTG,8.4,T,,M,1.3,N,abc,K,D*"_L1)
+                       .toLatin1()
+            << true
+            << info;
+
+    info = QGeoPositionInfo();
+    info.setAttribute(QGeoPositionInfo::GroundSpeed, 5.7 / 3.6);
+
+    QTest::addRow("VTG_malformed_direction")
+            << QLocationTestUtils::addNmeaChecksumAndBreaks(
+                       "$GNVTG,abc,T,,M,1.3,N,5.7,K,D*"_L1)
+                       .toLatin1()
+            << true
+            << info;
+
+    // Malformed data in ZDA
+
+    info = QGeoPositionInfo();
+    info.setTimestamp(QDateTime(QDate(), tm, QTimeZone::UTC));
+
+    QTest::addRow("ZDA_short_year")
+            << QLocationTestUtils::addNmeaChecksumAndBreaks(
+                       "$GPZDA,090924.000,04,05,25,,*"_L1)
+                       .toLatin1()
+            << true
+            << info;
+
+    info.setTimestamp(QDateTime(QDate(2025, 5, 4), QTime(), QTimeZone::UTC));
+
+    QTest::addRow("ZDA_invalid_time")
+            << QLocationTestUtils::addNmeaChecksumAndBreaks(
+                       "$GPZDA,abc,04,05,2025,,*"_L1)
+                       .toLatin1()
+            << true
+            << info;
+
+    info.setTimestamp(QDateTime(QDate(), tm, QTimeZone::UTC));
+
+    QTest::addRow("ZDA_malformed_day")
+            << QLocationTestUtils::addNmeaChecksumAndBreaks(
+                       "$GPZDA,090924.000,abc,05,2025,,*"_L1)
+                       .toLatin1()
+            << true
+            << info;
+
+    QTest::addRow("ZDA_malformed_month")
+            << QLocationTestUtils::addNmeaChecksumAndBreaks(
+                       "$GPZDA,090924.000,04,abc,2025,,*"_L1)
+                       .toLatin1()
+            << true
+            << info;
+}
+
+void tst_QNmeaPositionInfoSource::getPositionInfoFromNmea()
+{
+    QFETCH(const QByteArray, bytes);
+    QFETCH(const bool, expectedResult);
+    QFETCH(const QGeoPositionInfo, expectedPosInfo);
+
+    QGeoPositionInfo info;
+    TestNmeaPosInfoSource source(m_mode);
+    const bool res = source.getPosInfoFromNmea(bytes, info);
+
+    QCOMPARE_EQ(res, expectedResult);
+    QCOMPARE_EQ(info, expectedPosInfo);
 }
