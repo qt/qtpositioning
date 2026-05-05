@@ -387,15 +387,21 @@ QLocationUtils::getSatInfoFromNmea(QByteArrayView bv, QList<QGeoSatelliteInfo> &
         infos.clear();
         return QNmeaSatelliteInfoSource::FullyParsed; // Malformed sentence.
     }
+
+    // The hard max limit for the number of sentences in one message is used
+    // to prevent malicious messages. The protocol does not seem to define any
+    // maximum, but this value provides an upper limit that is more than enough
+    // in practice.
+    static constexpr quint32 MaxTotalSentences = 250;
     bool ok;
     const quint32 totalSentences = parts.at(1).toUInt(&ok);
-    if (!ok) {
+    if (!ok || totalSentences > MaxTotalSentences) {
         infos.clear();
         return QNmeaSatelliteInfoSource::FullyParsed; // Malformed sentence.
     }
 
     const quint32 sentence = parts.at(2).toUInt(&ok);
-    if (!ok) {
+    if (!ok || sentence > totalSentences) {
         infos.clear();
         return QNmeaSatelliteInfoSource::FullyParsed; // Malformed sentence.
     }
