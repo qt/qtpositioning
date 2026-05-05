@@ -562,6 +562,26 @@ void tst_QNmeaSatelliteInfoSource::parseDataStream_data()
                 << QList<QByteArray>{ gpsGsvNegativeTotalSatMessage,
                                       emptyGpsGsaMessage }
                 << QList<QGeoSatelliteInfo>() << QList<QGeoSatelliteInfo>();
+
+        const auto gpsGsvSentenceGreaterThanTotalMessage =
+                QLocationTestUtils::addNmeaChecksumAndBreaks(
+                        "$GPGSV,10,11,8,05,,,25,07,,,,08,,,,13,,,36*").toLatin1();
+
+        QTest::addRow("%s GPS sentence num greater than total num", mode.name.data())
+                << mode.mode
+                << QList<QByteArray>{ gpsGsvFirstMessage,
+                                      gpsGsvSentenceGreaterThanTotalMessage,
+                                      emptyGpsGsaMessage }
+                << QList<QGeoSatelliteInfo>() << QList<QGeoSatelliteInfo>();
+
+        const auto gpsGsvTooLargeTotalNumMessage =
+                QLocationTestUtils::addNmeaChecksumAndBreaks(
+                        "$GPGSV,1001,1,4,05,,,25,07,,,,08,,,,13,,,36*").toLatin1();
+        QTest::addRow("%s GPS total messages too large", mode.name.data())
+                << mode.mode
+                << QList<QByteArray>{ gpsGsvTooLargeTotalNumMessage,
+                                      emptyGpsGsaMessage }
+                << QList<QGeoSatelliteInfo>() << QList<QGeoSatelliteInfo>();
     }
 }
 
