@@ -397,19 +397,19 @@ QLocationUtils::getSatInfoFromNmea(QByteArrayView bv, QList<QGeoSatelliteInfo> &
         return QNmeaSatelliteInfoSource::FullyParsed; // Malformed sentence.
     }
     bool ok;
-    const int totalSentences = parts.at(1).toInt(&ok);
+    const quint32 totalSentences = parts.at(1).toUInt(&ok);
     if (!ok) {
         infos.clear();
         return QNmeaSatelliteInfoSource::FullyParsed; // Malformed sentence.
     }
 
-    const int sentence = parts.at(2).toInt(&ok);
+    const quint32 sentence = parts.at(2).toUInt(&ok);
     if (!ok) {
         infos.clear();
         return QNmeaSatelliteInfoSource::FullyParsed; // Malformed sentence.
     }
 
-    const int totalSats = parts.at(3).toInt(&ok);
+    const quint32 totalSats = parts.at(3).toUInt(&ok);
     if (!ok) {
         infos.clear();
         return QNmeaSatelliteInfoSource::FullyParsed; // Malformed sentence.
@@ -418,14 +418,14 @@ QLocationUtils::getSatInfoFromNmea(QByteArrayView bv, QList<QGeoSatelliteInfo> &
     if (sentence == 1)
         infos.clear();
 
-    const int numSatInSentence = qMin(sentence * 4, totalSats) - (sentence - 1) * 4;
+    const qint64 numSatInSentence = qMin(sentence * 4, totalSats) - (sentence - 1) * 4;
     if (parts.size() < (4 + numSatInSentence * 4)) {
         infos.clear();
         return QNmeaSatelliteInfoSource::FullyParsed; // Malformed sentence.
     }
 
     int field = 4;
-    for (int i = 0; i < numSatInSentence; ++i) {
+    for (qint64 i = 0; i < numSatInSentence; ++i) {
         QGeoSatelliteInfo info;
         info.setSatelliteSystem(system);
         int prn = parts.at(field++).toInt(&ok);

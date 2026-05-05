@@ -162,14 +162,17 @@ void tst_QNmeaSatelliteInfoSource::parseDataStream()
     feeder->setMessages(messages);
 
     QTRY_VERIFY_WITH_TIMEOUT(messageSentSpy.size() == messages.size(), 2000);
-    QVERIFY(!inViewSpy.isEmpty());
-    QVERIFY(!inUseSpy.isEmpty());
 
-    const auto inView = inViewSpy.back().at(0).value<QList<QGeoSatelliteInfo>>();
-    QCOMPARE(inView, desiredInView);
-
-    const auto inUse = inUseSpy.back().at(0).value<QList<QGeoSatelliteInfo>>();
-    QCOMPARE(inUse, desiredInUse);
+    if (!desiredInView.isEmpty()) {
+        QVERIFY(!inViewSpy.isEmpty());
+        const auto inView = inViewSpy.back().at(0).value<QList<QGeoSatelliteInfo>>();
+        QCOMPARE(inView, desiredInView);
+    }
+    if (!desiredInUse.isEmpty()) {
+        QVERIFY(!inUseSpy.isEmpty());
+        const auto inUse = inUseSpy.back().at(0).value<QList<QGeoSatelliteInfo>>();
+        QCOMPARE(inUse, desiredInUse);
+    }
 }
 
 void tst_QNmeaSatelliteInfoSource::parseDataStream_data()
@@ -511,6 +514,55 @@ void tst_QNmeaSatelliteInfoSource::parseDataStream_data()
                                    gnComplexGlnsGsaMessage, gnComplexBduGsaMessage,
                                    complexGpsGsvMessage1,   complexGpsGsvMessage2 }
             << complexGpsGlnsBduInView << complexGpsGlnsBduInUse;
+
+    // Malformed input data
+
+    struct ModeInfo {
+        QNmeaSatelliteInfoSource::UpdateMode mode;
+        QByteArray name;
+    };
+
+    const std::array<ModeInfo, 2> modes = {
+        ModeInfo{ QNmeaSatelliteInfoSource::UpdateMode::RealTimeMode, "realtime" },
+        ModeInfo{ QNmeaSatelliteInfoSource::UpdateMode::SimulationMode, "simulation" },
+    };
+
+    for (const auto &mode : modes) {
+        const auto gpsGsvNegativeTotalNumMessage =
+                QLocationTestUtils::addNmeaChecksumAndBreaks(
+                        "$GPGSV,-1,1,4,05,,,25,07,,,,08,,,,13,,,36*").toLatin1();
+        const auto emptyGpsGsaMessage =
+                QLocationTestUtils::addNmeaChecksumAndBreaks(
+                        "$GPGSA,A,1,,,,,,,,,,,,,50.95,50.94,1.00*").toLatin1();
+
+        QTest::addRow("%s GPS negative total messages", mode.name.data())
+                << mode.mode
+                << QList<QByteArray>{ gpsGsvNegativeTotalNumMessage, emptyGpsGsaMessage }
+                << QList<QGeoSatelliteInfo>() << QList<QGeoSatelliteInfo>();
+
+        const auto gpsGsvFirstMessage =
+                QLocationTestUtils::addNmeaChecksumAndBreaks(
+                        "$GPGSV,10,1,8,05,,,25,07,,,,08,,,,13,,,36*").toLatin1();
+        const auto gpsGsvNegativeSentenceNumMessage =
+                QLocationTestUtils::addNmeaChecksumAndBreaks(
+                        "$GPGSV,10,-1,8,05,,,25,07,,,,08,,,,13,,,36*").toLatin1();
+
+        QTest::addRow("%s GPS negative sentence num", mode.name.data())
+                << mode.mode
+                << QList<QByteArray>{ gpsGsvFirstMessage,
+                                      gpsGsvNegativeSentenceNumMessage,
+                                      emptyGpsGsaMessage }
+                << QList<QGeoSatelliteInfo>() << QList<QGeoSatelliteInfo>();
+
+        const auto gpsGsvNegativeTotalSatMessage =
+                QLocationTestUtils::addNmeaChecksumAndBreaks(
+                        "$GPGSV,10,1,-4,05,,,25,07,,,,08,,,,13,,,36*").toLatin1();
+        QTest::addRow("%s GPS negative total satellite num", mode.name.data())
+                << mode.mode
+                << QList<QByteArray>{ gpsGsvNegativeTotalSatMessage,
+                                      emptyGpsGsaMessage }
+                << QList<QGeoSatelliteInfo>() << QList<QGeoSatelliteInfo>();
+    }
 }
 
 QGeoSatelliteInfo
