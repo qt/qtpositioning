@@ -151,6 +151,8 @@ void tst_QNmeaSatelliteInfoSource::parseDataStream()
     QFETCH(QList<QGeoSatelliteInfo>, desiredInUse);
 
     QNmeaSatelliteInfoSource source(mode);
+    if (mode == QNmeaSatelliteInfoSource::UpdateMode::SimulationMode)
+        QVERIFY(source.setBackendProperty(QNmeaSatelliteInfoSource::SimulationUpdateInterval, 10));
     auto feeder = new DataFeeder(&source);
     source.setDevice(feeder);
 
@@ -161,7 +163,7 @@ void tst_QNmeaSatelliteInfoSource::parseDataStream()
     source.startUpdates();
     feeder->setMessages(messages);
 
-    QTRY_VERIFY_WITH_TIMEOUT(messageSentSpy.size() == messages.size(), 2000);
+    QTRY_VERIFY_WITH_TIMEOUT(messageSentSpy.size() == messages.size(), 10000);
 
     if (!desiredInView.isEmpty()) {
         QVERIFY(!inViewSpy.isEmpty());
@@ -581,6 +583,25 @@ void tst_QNmeaSatelliteInfoSource::parseDataStream_data()
                 << mode.mode
                 << QList<QByteArray>{ gpsGsvTooLargeTotalNumMessage,
                                       emptyGpsGsaMessage }
+                << QList<QGeoSatelliteInfo>() << QList<QGeoSatelliteInfo>();
+
+        const auto gpsGsvSecondMessage =
+                QLocationTestUtils::addNmeaChecksumAndBreaks(
+                        "$GPGSV,10,2,2000,05,,,25,07,,,,08,,,,13,,,36*").toLatin1();
+
+        // Craft a message that repeatedly sends the second sentence, thus
+        // potentially triggering an OOM condition by endlessly accumulating
+        // the list of parsed satellites. In this test we send only 300
+        // sentences, that represents 1200 satellites.
+        // We should stop after 1000 accumulated satellites, clear the list and
+        // discard all follow-up messages.
+        QList<QByteArray> repeatedSecondMessage = { gpsGsvFirstMessage };
+        repeatedSecondMessage.append(QList<QByteArray>(300, gpsGsvSecondMessage));
+        repeatedSecondMessage.append(emptyGpsGsaMessage);
+
+        QTest::addRow("%s GPS repeated sentence DDoS", mode.name.data())
+                << mode.mode
+                << repeatedSecondMessage
                 << QList<QGeoSatelliteInfo>() << QList<QGeoSatelliteInfo>();
     }
 }

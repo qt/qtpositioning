@@ -423,6 +423,16 @@ QLocationUtils::getSatInfoFromNmea(QByteArrayView bv, QList<QGeoSatelliteInfo> &
 
     if (sentence == 1)
         infos.clear();
+    else if (infos.isEmpty()) // sentences out of order or DDoS spotted earlier
+        return QNmeaSatelliteInfoSource::FullyParsed; // Malformed sentence.
+
+    static constexpr qsizetype MaxTotalSatellites = 1000;
+    const auto currentSatsSize = infos.size();
+    if (currentSatsSize > qint64(totalSats) || currentSatsSize > MaxTotalSatellites) {
+        // Maybe DDoS: otherwise, probably something is wrong; reject, either way.
+        infos.clear();
+        return QNmeaSatelliteInfoSource::FullyParsed; // Malformed sentence.
+    }
 
     const qint64 numSatInSentence = qMin(sentence * 4, totalSats) - (sentence - 1) * 4;
     if (parts.size() < (4 + numSatInSentence * 4)) {
