@@ -9,14 +9,10 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.location.GnssStatus;
-import android.location.GnssStatus.Callback;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.Looper;
 import android.os.Build;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 
 import android.util.Log;
