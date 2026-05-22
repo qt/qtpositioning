@@ -1,0 +1,9 @@
+{
+    "Keys": ["ohos"],
+    "Provider": "ohos",
+    "Position": true,
+    "Satellite": true,
+    "Monitor": false,
+    "Priority": 1000,
+    "Testable": false
+}
