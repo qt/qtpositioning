@@ -797,7 +797,7 @@ private slots:
         info.setPersistent(true);
         info.setName("RectangleAreaMonitor");
         QTest::newRow("Rectangle Test") << info  << 45
-                << QString("QGeoAreaMonitorInfo(\"RectangleAreaMonitor\", QGeoShape(Rectangle), "
+                << QString("QGeoAreaMonitorInfo(\"RectangleAreaMonitor\", QGeoShape(Rectangle, (), ()), "
                               "persistent: true, expiry: QDateTime(Invalid)) 45");
 
         info = QGeoAreaMonitorInfo();
@@ -808,7 +808,7 @@ private slots:
         map.insert(QString("foobarKey"), QVariant(45)); //should be ignored
         info.setNotificationParameters(map);
         QTest::newRow("Circle Test") << info  << 45
-                << QString("QGeoAreaMonitorInfo(\"CircleAreaMonitor\", QGeoShape(Circle), "
+                << QString("QGeoAreaMonitorInfo(\"CircleAreaMonitor\", QGeoShape(Circle, center=(), radius=-1), "
                               "persistent: false, expiry: QDateTime(Invalid)) 45");
 
         // we ignore any further QDateTime related changes to avoid depending on QDateTime related
