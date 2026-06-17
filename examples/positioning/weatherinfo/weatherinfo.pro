@@ -48,8 +48,8 @@ qml_resources.prefix = /qt/qml/Weather
 
 RESOURCES += qml_resources
 
-ios: QMAKE_INFO_PLIST = ../shared/Info.qmake.ios.plist
-macos: QMAKE_INFO_PLIST = ../shared/Info.qmake.macos.plist
+ios: QMAKE_INFO_PLIST = Info.qmake.ios.plist
+macos: QMAKE_INFO_PLIST = Info.qmake.macos.plist
 
 target.path = $$[QT_INSTALL_EXAMPLES]/positioning/weatherinfo
 INSTALLS += target
