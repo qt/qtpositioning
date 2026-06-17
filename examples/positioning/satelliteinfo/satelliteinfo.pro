@@ -74,8 +74,8 @@ data_resources.prefix = /
 
 RESOURCES += data_resources
 
-ios: QMAKE_INFO_PLIST = ../shared/Info.qmake.ios.plist
-macos: QMAKE_INFO_PLIST = ../shared/Info.qmake.macos.plist
+ios: QMAKE_INFO_PLIST = Info.qmake.ios.plist
+macos: QMAKE_INFO_PLIST = Info.qmake.macos.plist
 
 android {
     # explicitly link with serialport in order to
