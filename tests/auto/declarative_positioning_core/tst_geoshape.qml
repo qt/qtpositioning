@@ -4,7 +4,7 @@
 import QtQuick 2.0
 import QtTest 1.0
 import QtPositioning 5.2
-import TestFactory 1.0
+import PositioningTest.Core 1.0
 
 Item {
     id: testCase
