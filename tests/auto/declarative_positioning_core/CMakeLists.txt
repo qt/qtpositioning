@@ -28,7 +28,7 @@ qt_internal_add_test(tst_declarative_positioning_core
 )
 
 qt_add_qml_module(tst_declarative_positioning_core
-    URI TestFactory
+    URI PositioningTest.Core
     VERSION 1.0
     QML_FILES
         tst_address.qml

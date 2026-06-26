@@ -19,7 +19,7 @@ qt_internal_add_test(tst_declarative_satellitesource
 )
 
 qt_add_qml_module(tst_declarative_satellitesource
-    URI TestFactory
+    URI PositioningTest.SatelliteSource
     VERSION 1.0
     QML_FILES
         tst_satellite.qml
