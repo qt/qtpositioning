@@ -453,8 +453,6 @@ void QOhosGeoPositionInfoSource::requestUpdate(int timeoutMs)
 {
     qOhosDebug(QtForOhos) << Q_FUNC_INFO << timeoutMs;
 
-    constexpr int defaultTimeoutMs = 3000;
-
     if (m_singlePositionUpdateHandle) {
         qOhosDebug(QtForOhos) << Q_FUNC_INFO << "Update already in progress. Ignoring this one";
         return;
@@ -465,7 +463,7 @@ void QOhosGeoPositionInfoSource::requestUpdate(int timeoutMs)
         return;
     }
 
-    auto timeout = timeoutMs != 0 ? timeoutMs : defaultTimeoutMs;
+    auto timeout = timeoutMs != 0 ? timeoutMs : coldStartMarginMs;
 
     m_singlePositionUpdateHandle = makeSinglePositionInfoUpdateProducer(
         this,
