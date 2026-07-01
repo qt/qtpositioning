@@ -32,18 +32,6 @@ qt_internal_add_plugin(QGeoPositionInfoSourceFactoryOhosPlugin
         hilog_ndk.z
 )
 
-qt_internal_add_harmonyos_permission(QGeoPositionInfoSourceFactoryOhosPlugin
-    NAME ohos.permission.LOCATION
-    REASON "Used to access device location for positioning."
-    USED_SCENE_WHEN inuse
-)
-
-qt_internal_add_harmonyos_permission(QGeoPositionInfoSourceFactoryOhosPlugin
-    NAME ohos.permission.APPROXIMATELY_LOCATION
-    REASON "Used to access approximate device location for positioning."
-    USED_SCENE_WHEN inuse
-)
-
 target_include_directories(QGeoPositionInfoSourceFactoryOhosPlugin PRIVATE
     ${QT_OHOS_NODE_ADDON_API_INCLUDE_DIR}
 )
