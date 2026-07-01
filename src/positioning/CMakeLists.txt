@@ -61,6 +61,24 @@ if(ANDROID)
     )
 endif()
 
+if(OHOS)
+    set_property(TARGET Positioning APPEND PROPERTY QT_HARMONYOS_EXTRA_PLUGINS
+        QGeoPositionInfoSourceFactoryOhosPlugin
+    )
+
+    qt_internal_add_harmonyos_permission(Positioning
+        NAME ohos.permission.LOCATION
+        REASON "Used to access device location for positioning."
+        USED_SCENE_WHEN inuse
+    )
+
+    qt_internal_add_harmonyos_permission(Positioning
+        NAME ohos.permission.APPROXIMATELY_LOCATION
+        REASON "Used to access approximate device location for positioning."
+        USED_SCENE_WHEN inuse
+    )
+endif()
+
 qt_internal_extend_target(Positioning CONDITION WIN32
     NO_UNITY_BUILD_SOURCES
         qclipperutils.cpp # `using namespace std` in clip2tri.h results in 'byte': ambiguous symbol
