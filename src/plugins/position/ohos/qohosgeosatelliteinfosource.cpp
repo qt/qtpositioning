@@ -350,6 +350,8 @@ void QOhosGeoSatelliteInfoSource::handleSatelliteStatusInfoUpdate(
     QList<QGeoSatelliteInfo> satellitesInView;
     QList<QGeoSatelliteInfo> satellitesInUse;
 
+    QSet<std::pair<int, int>> seenIds;
+
     for (const auto &updatedSatellite : updatedSatellites) {
         if (qFuzzyIsNull(updatedSatellite.carrierToNoiseDensity))
             continue;
@@ -363,6 +365,12 @@ void QOhosGeoSatelliteInfoSource::handleSatelliteStatusInfoUpdate(
         satelliteInfo.setSignalStrength(updatedSatellite.carrierToNoiseDensity);
         satelliteInfo.setAttribute(QGeoSatelliteInfo::Azimuth, updatedSatellite.azimuth);
         satelliteInfo.setAttribute(QGeoSatelliteInfo::Elevation, updatedSatellite.altitude);
+
+        const auto uid = std::make_pair(static_cast<int>(satelliteInfo.satelliteSystem()),
+                                   satelliteInfo.satelliteIdentifier());
+        if (seenIds.contains(uid))
+            continue;
+        seenIds.insert(uid);
 
         satellitesInView.append(satelliteInfo);
         if (updatedSatellite.usedInFix)
