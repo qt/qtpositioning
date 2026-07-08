@@ -443,7 +443,7 @@ void QOhosGeoPositionInfoSource::continuousUpdateTimeout()
         const auto now = QDateTime::currentMSecsSinceEpoch();
         if ((now - m_lastUpdateTime) > (updateInterval() + coldStartMarginMs)) {
             m_continuousUpdateTimeoutErrorRaised = true;
-            Q_EMIT errorOccurred(QGeoPositionInfoSource::UpdateTimeoutError);
+            setErrorHelper(QGeoPositionInfoSource::UpdateTimeoutError);
         }
     }
 }
@@ -466,7 +466,7 @@ void QOhosGeoPositionInfoSource::requestUpdate(int timeoutMs)
     }
 
     if (timeoutMs != 0 && timeoutMs < minimumUpdateInterval()) {
-        Q_EMIT errorOccurred(QGeoPositionInfoSource::UpdateTimeoutError);
+        setErrorHelper(QGeoPositionInfoSource::UpdateTimeoutError);
         return;
     }
 
@@ -479,12 +479,10 @@ void QOhosGeoPositionInfoSource::requestUpdate(int timeoutMs)
         [this](std::optional<QGeoPositionInfo> optPositionInfo, PositioningMethods positioningMethods) {
             m_singlePositionUpdateHandle.reset();
             m_singleUpdateTimeoutTimer.reset();
-            if (optPositionInfo.has_value()) {
+            if (optPositionInfo.has_value())
                 updatePositionInfo(optPositionInfo.value(), positioningMethods);
-            } else {
-                setErrorHelper(QGeoPositionInfoSource::UnknownSourceError);
-                Q_EMIT errorOccurred(QGeoPositionInfoSource::UpdateTimeoutError);
-            }
+            else
+                setErrorHelper(QGeoPositionInfoSource::UpdateTimeoutError);
         });
     if (!m_singlePositionUpdateHandle) {
         qOhosWarning(QtForOhos) << Q_FUNC_INFO << "Failed to make single position info update producer";
@@ -495,7 +493,7 @@ void QOhosGeoPositionInfoSource::requestUpdate(int timeoutMs)
     m_singleUpdateTimeoutTimer =
         makeSingleShotUpdateTimeoutTimer(timeout, [this]() {
             m_singlePositionUpdateHandle.reset();
-            Q_EMIT errorOccurred(QGeoPositionInfoSource::UpdateTimeoutError);
+            setErrorHelper(QGeoPositionInfoSource::UpdateTimeoutError);
         });
 
     setErrorHelper(QGeoPositionInfoSource::NoError);
@@ -521,6 +519,7 @@ void QOhosGeoPositionInfoSource::updatePositionInfo(
 
     m_lastUpdateTime = QDateTime::currentMSecsSinceEpoch();
     m_continuousUpdateTimeoutErrorRaised = false;
+    setErrorHelper(QGeoPositionInfoSource::NoError);
 
     if (positioningMethods.testFlag(PositioningMethod::SatellitePositioningMethods))
         m_lastUpdatedPositionInfoFromSatelliteSource = positionInfo;
