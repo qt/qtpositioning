@@ -367,8 +367,10 @@ void QOhosGeoPositionInfoSource::setUpdateInterval(int msec)
 
     QGeoPositionInfoSource::setUpdateInterval(msec);
 
-    if (m_continuousLocationUpdatesHandle)
+    if (m_continuousLocationUpdatesHandle) {
+        stopUpdates();
         startUpdates();
+    }
 }
 
 QGeoPositionInfo QOhosGeoPositionInfoSource::lastKnownPosition(bool fromSatellitePositioningMethodsOnly) const
@@ -411,6 +413,11 @@ QGeoPositionInfoSource::Error QOhosGeoPositionInfoSource::error() const
 void QOhosGeoPositionInfoSource::startUpdates()
 {
     qOhosDebug(QtForOhos) << Q_FUNC_INFO;
+
+    if (m_continuousLocationUpdatesHandle) {
+        qOhosDebug(QtForOhos) << Q_FUNC_INFO << "Continuous updates already running. Ignoring";
+        return;
+    }
 
     auto intervalMs = std::max(updateInterval(), minimumUpdateInterval());
 
