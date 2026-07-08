@@ -37,6 +37,9 @@ enum class LocationError
     LOCATING_FAILED_INTERNET_ACCESS_FAILURE,
 };
 
+constexpr int coldStartMarginMs = 2 * 60 * 1000;
+constexpr int continuousUpdateTimerIntervalMs = 30 * 1000;
+
 const char *toStaticString(UserActivityScenario scenario)
 {
     switch (scenario) {
@@ -306,6 +309,7 @@ protected:
 
 private:
     void setErrorHelper(QGeoPositionInfoSource::Error error);
+    void continuousUpdateTimeout();
 
     void updatePositionInfo(const QGeoPositionInfo &positionInfo, PositioningMethods positioningMethods);
 
@@ -316,7 +320,9 @@ private:
     std::shared_ptr<void> m_locationErrorHandle;
 
     std::shared_ptr<void> m_continuousLocationUpdatesHandle;
-    std::unique_ptr<QTimer> m_continuousUpdateTimeoutTimer;
+    QTimer m_continuousUpdateTimeoutTimer;
+    qint64 m_lastUpdateTime = 0;
+    bool m_continuousUpdateTimeoutErrorRaised = false;
 
     std::shared_ptr<void> m_singlePositionUpdateHandle;
     std::unique_ptr<QTimer> m_singleUpdateTimeoutTimer;
@@ -346,6 +352,11 @@ QOhosGeoPositionInfoSource::QOhosGeoPositionInfoSource(QObject *parent)
                 << Q_FUNC_INFO << "Received error from callback:" << toStaticString(error);
             setErrorHelper(convertLocationErrorToQtError(error));
         });
+
+    m_continuousUpdateTimeoutTimer.setSingleShot(false);
+    m_continuousUpdateTimeoutTimer.setInterval(continuousUpdateTimerIntervalMs);
+    QObject::connect(&m_continuousUpdateTimeoutTimer, &QTimer::timeout,
+            this, [this]() { continuousUpdateTimeout(); });
 }
 
 QOhosGeoPositionInfoSource::~QOhosGeoPositionInfoSource() = default;
@@ -401,31 +412,33 @@ void QOhosGeoPositionInfoSource::startUpdates()
 {
     qOhosDebug(QtForOhos) << Q_FUNC_INFO;
 
-    constexpr int allowedTimeoutDelayMs = 1000;
-
     auto intervalMs = std::max(updateInterval(), minimumUpdateInterval());
+
+    m_lastUpdateTime = QDateTime::currentMSecsSinceEpoch();
+    m_continuousUpdateTimeoutErrorRaised = false;
 
     m_continuousLocationUpdatesHandle =
         makeContinuousPositionInfoUpdateProducer(
             this, intervalMs,
             preferredPositioningMethods(),
-            [this, intervalMs](const QGeoPositionInfo &positionInfo, PositioningMethods positioningMethods) {
+            [this](const QGeoPositionInfo &positionInfo, PositioningMethods positioningMethods) {
                 updatePositionInfo(positionInfo, positioningMethods);
-
-                m_continuousUpdateTimeoutTimer =
-                    makeSingleShotUpdateTimeoutTimer(
-                        intervalMs + allowedTimeoutDelayMs, [this]() {
-                            Q_EMIT errorOccurred(QGeoPositionInfoSource::UpdateTimeoutError);
-                        });
             });
 
-    m_continuousUpdateTimeoutTimer =
-        makeSingleShotUpdateTimeoutTimer(
-            intervalMs + allowedTimeoutDelayMs, [this]() {
-                Q_EMIT errorOccurred(QGeoPositionInfoSource::UpdateTimeoutError);
-            });
+    m_continuousUpdateTimeoutTimer.start();
 
     setErrorHelper(QGeoPositionInfoSource::NoError);
+}
+
+void QOhosGeoPositionInfoSource::continuousUpdateTimeout()
+{
+    if (!m_continuousUpdateTimeoutErrorRaised) {
+        const auto now = QDateTime::currentMSecsSinceEpoch();
+        if ((now - m_lastUpdateTime) > (updateInterval() + coldStartMarginMs)) {
+            m_continuousUpdateTimeoutErrorRaised = true;
+            Q_EMIT errorOccurred(QGeoPositionInfoSource::UpdateTimeoutError);
+        }
+    }
 }
 
 void QOhosGeoPositionInfoSource::stopUpdates()
@@ -433,6 +446,7 @@ void QOhosGeoPositionInfoSource::stopUpdates()
     qOhosDebug(QtForOhos) << Q_FUNC_INFO;
 
     m_continuousLocationUpdatesHandle.reset();
+    m_continuousUpdateTimeoutTimer.stop();
 }
 
 void QOhosGeoPositionInfoSource::requestUpdate(int timeoutMs)
@@ -499,6 +513,9 @@ void QOhosGeoPositionInfoSource::updatePositionInfo(
     const QGeoPositionInfo &positionInfo, PositioningMethods positioningMethods)
 {
     qOhosDebug(QtForOhos) << Q_FUNC_INFO << positionInfo;
+
+    m_lastUpdateTime = QDateTime::currentMSecsSinceEpoch();
+    m_continuousUpdateTimeoutErrorRaised = false;
 
     if (positioningMethods.testFlag(PositioningMethod::SatellitePositioningMethods))
         m_lastUpdatedPositionInfoFromSatelliteSource = positionInfo;
