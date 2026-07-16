@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only
 
 #include "qohosgeopositioninfosource.h"
+#include "qohosenums.h"
 #include "qohospositioncommon.h"
 #include <QtCore/private/qcore_ohos_p.h>
 #include <QtCore/private/qohoscommon_p.h>
@@ -20,22 +21,8 @@ QT_BEGIN_NAMESPACE
 
 namespace {
 
-enum class UserActivityScenario
-{
-    NAVIGATION,
-    SPORT,
-    TRANSPORT,
-    DAILY_LIFE_SERVICE,
-};
-
-enum class LocationError
-{
-    LOCATING_FAILED_DEFAULT,
-    LOCATING_FAILED_LOCATION_PERMISSION_DENIED,
-    LOCATING_FAILED_BACKGROUND_PERMISSION_DENIED,
-    LOCATING_FAILED_LOCATION_SWITCH_OFF,
-    LOCATING_FAILED_INTERNET_ACCESS_FAILURE,
-};
+using UserActivityScenario = QtOhos::enums::ohos::geoLocationManager::UserActivityScenario;
+using LocationError = QtOhos::enums::ohos::geoLocationManager::LocationError;
 
 constexpr int coldStartMarginMs = 2 * 60 * 1000;
 constexpr int continuousUpdateTimerIntervalMs = 30 * 1000;
@@ -534,35 +521,6 @@ void QOhosGeoPositionInfoSource::updatePositionInfo(
 QGeoPositionInfoSource *tryMakeQOhosGeoPositionInfoSource(QObject *parent)
 {
     return QOhosGeoPositionInfoSource::tryMakeInstance(parent);
-}
-
-namespace QtOhos {
-
-template<>
-struct OhosEnumMeta<UserActivityScenario>
-{
-    static constexpr const char *fullTypeName = "@ohos.geoLocationManager.UserActivityScenario";
-    static constexpr std::array<std::pair<UserActivityScenario, const char *>, 4> enumeratorsNames = {{
-        {UserActivityScenario::NAVIGATION, "NAVIGATION"},
-        {UserActivityScenario::SPORT, "SPORT"},
-        {UserActivityScenario::TRANSPORT, "TRANSPORT"},
-        {UserActivityScenario::DAILY_LIFE_SERVICE, "DAILY_LIFE_SERVICE"},
-    }};
-};
-
-template<>
-struct OhosEnumMeta<LocationError>
-{
-    static constexpr const char *fullTypeName = "@ohos.geoLocationManager.LocationError";
-    static constexpr std::array<std::pair<LocationError, const char *>, 5> enumeratorsNames = {{
-        {LocationError::LOCATING_FAILED_DEFAULT, "LOCATING_FAILED_DEFAULT"},
-        {LocationError::LOCATING_FAILED_LOCATION_PERMISSION_DENIED, "LOCATING_FAILED_LOCATION_PERMISSION_DENIED"},
-        {LocationError::LOCATING_FAILED_BACKGROUND_PERMISSION_DENIED, "LOCATING_FAILED_BACKGROUND_PERMISSION_DENIED"},
-        {LocationError::LOCATING_FAILED_LOCATION_SWITCH_OFF, "LOCATING_FAILED_LOCATION_SWITCH_OFF"},
-        {LocationError::LOCATING_FAILED_INTERNET_ACCESS_FAILURE, "LOCATING_FAILED_INTERNET_ACCESS_FAILURE"},
-    }};
-};
-
 }
 
 QT_END_NAMESPACE

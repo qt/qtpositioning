@@ -3,6 +3,7 @@
 
 #include "qohosgeopositioninfosource.h"
 #include "qohosgeosatelliteinfosource.h"
+#include "qohosenums.h"
 #include "qohospositioncommon.h"
 #include <QtCore/private/qcore_ohos_p.h>
 #include <QtCore/private/qnapi_p.h>
@@ -25,17 +26,8 @@ namespace {
 
 constexpr int updateAsOftenAsNecessaryInterval = 0;
 
-enum class SatelliteConstellationCategory
-{
-    CONSTELLATION_CATEGORY_UNKNOWN,
-    CONSTELLATION_CATEGORY_GPS,
-    CONSTELLATION_CATEGORY_SBAS,
-    CONSTELLATION_CATEGORY_GLONASS,
-    CONSTELLATION_CATEGORY_QZSS,
-    CONSTELLATION_CATEGORY_BEIDOU,
-    CONSTELLATION_CATEGORY_GALILEO,
-    CONSTELLATION_CATEGORY_IRNSS,
-};
+using SatelliteConstellationCategory =
+    QtOhos::enums::ohos::geoLocationManager::SatelliteConstellationCategory;
 
 struct SatelliteInfo
 {
@@ -412,26 +404,6 @@ void QOhosGeoSatelliteInfoSource::handleUpdateFinished()
 QGeoSatelliteInfoSource *makeQOhosGeoSatelliteInfoSource(QObject *parent)
 {
     return new QOhosGeoSatelliteInfoSource(parent);
-}
-
-namespace QtOhos {
-
-template<>
-struct OhosEnumMeta<SatelliteConstellationCategory>
-{
-    static constexpr const char *fullTypeName = "@ohos.geoLocationManager.SatelliteConstellationCategory";
-    static constexpr std::array<std::pair<SatelliteConstellationCategory, const char *>, 8> enumeratorsNames = {{
-        {SatelliteConstellationCategory::CONSTELLATION_CATEGORY_UNKNOWN, "CONSTELLATION_CATEGORY_UNKNOWN"},
-        {SatelliteConstellationCategory::CONSTELLATION_CATEGORY_GPS, "CONSTELLATION_CATEGORY_GPS"},
-        {SatelliteConstellationCategory::CONSTELLATION_CATEGORY_SBAS, "CONSTELLATION_CATEGORY_SBAS"},
-        {SatelliteConstellationCategory::CONSTELLATION_CATEGORY_GLONASS, "CONSTELLATION_CATEGORY_GLONASS"},
-        {SatelliteConstellationCategory::CONSTELLATION_CATEGORY_QZSS, "CONSTELLATION_CATEGORY_QZSS"},
-        {SatelliteConstellationCategory::CONSTELLATION_CATEGORY_BEIDOU, "CONSTELLATION_CATEGORY_BEIDOU"},
-        {SatelliteConstellationCategory::CONSTELLATION_CATEGORY_GALILEO, "CONSTELLATION_CATEGORY_GALILEO"},
-        {SatelliteConstellationCategory::CONSTELLATION_CATEGORY_IRNSS, "CONSTELLATION_CATEGORY_IRNSS"},
-    }};
-};
-
 }
 
 QT_END_NAMESPACE
