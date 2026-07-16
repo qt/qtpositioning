@@ -22,7 +22,6 @@ qt_internal_add_plugin(QGeoPositionInfoSourceFactoryOhosPlugin
         positionfactory_ohos.h positionfactory_ohos.cpp
         qohosgeopositioninfosource.h qohosgeopositioninfosource.cpp
         qohosgeosatelliteinfosource.h qohosgeosatelliteinfosource.cpp
-        qohosjsutils.h qohosjsutils.cpp
         qohospositioncommon.h qohospositioncommon.cpp
     LIBRARIES
         Qt::Core
