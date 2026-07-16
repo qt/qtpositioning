@@ -20,6 +20,7 @@ qt_internal_add_plugin(QGeoPositionInfoSourceFactoryOhosPlugin
     EXCEPTIONS
     SOURCES
         positionfactory_ohos.h positionfactory_ohos.cpp
+        qohosenums.h
         qohosgeopositioninfosource.h qohosgeopositioninfosource.cpp
         qohosgeosatelliteinfosource.h qohosgeosatelliteinfosource.cpp
         qohospositioncommon.h qohospositioncommon.cpp
