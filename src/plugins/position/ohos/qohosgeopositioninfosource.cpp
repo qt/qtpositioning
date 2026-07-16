@@ -2,10 +2,10 @@
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only
 
 #include "qohosgeopositioninfosource.h"
-#include "qohosjsutils.h"
 #include "qohospositioncommon.h"
 #include <QtCore/private/qcore_ohos_p.h>
 #include <QtCore/private/qohoscommon_p.h>
+#include <QtCore/private/qohosjstools_p.h>
 #include <QtCore/private/qohoslogger_p.h>
 #include <QtCore/qtimer.h>
 #include <algorithm>
@@ -141,22 +141,23 @@ std::shared_ptr<void> registerLocationChangeUpdateHandler(
                 "%s registering callback with scenario: %s",
                 Q_FUNC_INFO, toStaticString(userActivityScenario));
 
-            return QtOhos::registerOnOffMethodsBasedEventHandler(
-                getGeoLocationManagerObject(jsState), "locationChange",
-                [contextObjectRef, weakPositionInfoUpdateConsumer](const QOhosCallbackInfo &cbInfo) {
-                    auto location = cbInfo.getFirstArg<QNapi::Object>(Q_FUNC_INFO);
-                    auto positionInfo = convertLocationObjectToPositionInfo(location);
+            return QtOhos::makeProxyWithJsThreadDeleter(
+                registerQOhosOnOffMethodsBasedEventHandler(
+                    getGeoLocationManagerObject(jsState), "locationChange",
+                    [contextObjectRef, weakPositionInfoUpdateConsumer](const QOhosCallbackInfo &cbInfo) {
+                        auto location = cbInfo.getFirstArg<QNapi::Object>(Q_FUNC_INFO);
+                        auto positionInfo = convertLocationObjectToPositionInfo(location);
 
-                    contextObjectRef.visitInQtThreadIfAlive(
-                        [weakPositionInfoUpdateConsumer, positionInfo](auto &) {
-                            auto sharedPositionInfoUpdateConsumer = weakPositionInfoUpdateConsumer.lock();
-                            if (sharedPositionInfoUpdateConsumer)
-                                (*sharedPositionInfoUpdateConsumer)(positionInfo);
-                        });
-                },
-                {
-                    .extraOnArg = std::make_optional<QNapi::ValueWrapper>(continuousLocationRequest),
-                });
+                        contextObjectRef.visitInQtThreadIfAlive(
+                            [weakPositionInfoUpdateConsumer, positionInfo](auto &) {
+                                auto sharedPositionInfoUpdateConsumer = weakPositionInfoUpdateConsumer.lock();
+                                if (sharedPositionInfoUpdateConsumer)
+                                    (*sharedPositionInfoUpdateConsumer)(positionInfo);
+                            });
+                    },
+                    {
+                        .extraOnArg = std::make_optional<QNapi::ValueWrapper>(continuousLocationRequest),
+                    }));
         });
 
     return QtOhos::moveToSharedPtr(
@@ -250,18 +251,19 @@ std::shared_ptr<void> registerLocationErrorHandler(
 
     auto registrationHandle = QOhosJsThreadGateway::eval(
         [&](QOhosJsState &jsState) {
-            return QtOhos::registerOnOffMethodsBasedEventHandler(
-                getGeoLocationManagerObject(jsState), "locationError",
-                [contextObjectRef, weakErrorConsumer](const QOhosCallbackInfo &cbInfo) {
-                    auto jsLocationError = cbInfo.getFirstArg<QNapi::Number>(Q_FUNC_INFO);
-                    auto locationError = cbInfo.jsState().mapOhosEnumFromJs<LocationError>(jsLocationError);
-                    contextObjectRef.visitInQtThreadIfAlive(
-                        [weakErrorConsumer, locationError](auto &) {
-                            auto sharedErrorConsumer = weakErrorConsumer.lock();
-                            if (sharedErrorConsumer)
-                                (*sharedErrorConsumer)(locationError);
-                        });
-                });
+            return QtOhos::makeProxyWithJsThreadDeleter(
+                registerQOhosOnOffMethodsBasedEventHandler(
+                    getGeoLocationManagerObject(jsState), "locationError",
+                    [contextObjectRef, weakErrorConsumer](const QOhosCallbackInfo &cbInfo) {
+                        auto jsLocationError = cbInfo.getFirstArg<QNapi::Number>(Q_FUNC_INFO);
+                        auto locationError = cbInfo.jsState().mapOhosEnumFromJs<LocationError>(jsLocationError);
+                        contextObjectRef.visitInQtThreadIfAlive(
+                            [weakErrorConsumer, locationError](auto &) {
+                                auto sharedErrorConsumer = weakErrorConsumer.lock();
+                                if (sharedErrorConsumer)
+                                    (*sharedErrorConsumer)(locationError);
+                            });
+                    }));
             });
 
     return QtOhos::makeSharedPtrWithAttachedExtraData(registrationHandle, sharedErrorConsumer);

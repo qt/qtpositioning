@@ -4,10 +4,10 @@
 #include "qohosgeopositioninfosource.h"
 #include "qohosgeosatelliteinfosource.h"
 #include "qohospositioncommon.h"
-#include "qohosjsutils.h"
 #include <QtCore/private/qcore_ohos_p.h>
 #include <QtCore/private/qnapi_p.h>
 #include <QtCore/private/qohoscommon_p.h>
+#include <QtCore/private/qohosjstools_p.h>
 #include <QtCore/private/qohoslogger_p.h>
 #include <QtCore/qset.h>
 #include <QtCore/qmath.h>
@@ -161,19 +161,20 @@ std::shared_ptr<void> registerSatelliteStatusInfoProducerConsumer(
 
     auto registrationHandle = QOhosJsThreadGateway::eval(
         [&](QOhosJsState &jsState) {
-            return QtOhos::registerOnOffMethodsBasedEventHandler(
-                getGeoLocationManagerObject(jsState), "satelliteStatusChange",
-                [contextObjectRef, weakSatelliteStatusInfoConsumer](const QOhosCallbackInfo &cbInfo) {
-                    auto satelliteStatusInfo = cbInfo.getFirstArg<QNapi::Object>(Q_FUNC_INFO);
-                    auto satelliteInfos = convertJsSatelliteStatusInfoObjectToQGeoSatelliteInfos(
-                        cbInfo.jsState(), satelliteStatusInfo);
-                    contextObjectRef.visitInQtThreadIfAlive(
-                        [weakSatelliteStatusInfoConsumer, satelliteInfos](auto &) {
-                            auto sharedSatelliteStatusInfoConsumer = weakSatelliteStatusInfoConsumer.lock();
-                            if (sharedSatelliteStatusInfoConsumer)
-                                (*sharedSatelliteStatusInfoConsumer)(satelliteInfos);
-                        });
-                });
+            return QtOhos::makeProxyWithJsThreadDeleter(
+                registerQOhosOnOffMethodsBasedEventHandler(
+                    getGeoLocationManagerObject(jsState), "satelliteStatusChange",
+                    [contextObjectRef, weakSatelliteStatusInfoConsumer](const QOhosCallbackInfo &cbInfo) {
+                        auto satelliteStatusInfo = cbInfo.getFirstArg<QNapi::Object>(Q_FUNC_INFO);
+                        auto satelliteInfos = convertJsSatelliteStatusInfoObjectToQGeoSatelliteInfos(
+                            cbInfo.jsState(), satelliteStatusInfo);
+                        contextObjectRef.visitInQtThreadIfAlive(
+                            [weakSatelliteStatusInfoConsumer, satelliteInfos](auto &) {
+                                auto sharedSatelliteStatusInfoConsumer = weakSatelliteStatusInfoConsumer.lock();
+                                if (sharedSatelliteStatusInfoConsumer)
+                                    (*sharedSatelliteStatusInfoConsumer)(satelliteInfos);
+                            });
+                    }));
         });
 
     return QtOhos::moveToSharedPtr(
