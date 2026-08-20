@@ -63,6 +63,8 @@ QGeoPath tst_QGeoPath::constructPath(const QList<QGeoCoordinate> &coords, qreal 
     case Type::Eager:
         return QGeoPathEager(coords, width);
     }
+
+    Q_UNREACHABLE_RETURN({});
 }
 
 void tst_QGeoPath::initTestCase_data()

@@ -68,6 +68,8 @@ QGeoPolygon tst_QGeoPolygon::constructPolygon(const QList<QGeoCoordinate> &coord
     case Type::Eager:
         return QGeoPolygonEager(coords);
     }
+
+    Q_UNREACHABLE_RETURN({});
 }
 
 void tst_QGeoPolygon::initTestCase_data()
