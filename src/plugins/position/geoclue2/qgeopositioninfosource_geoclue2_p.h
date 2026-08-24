@@ -7,7 +7,7 @@
 
 #include <QtPositioning/QGeoPositionInfoSource>
 #include <QtCore/QPointer>
-#include <manager_interface.h>
+#include <manager_interface_p.h>
 
 namespace QtPositioningPrivate {
 
