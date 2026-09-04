@@ -143,7 +143,10 @@ std::shared_ptr<void> registerLocationChangeUpdateHandler(
                             });
                     },
                     {
+                        .optEventSourceAliveCheckFunc = {},
                         .extraOnArg = std::make_optional<QNapi::ValueWrapper>(continuousLocationRequest),
+                        .extraOffArg = {},
+                        .optOnCallExceptionHandler = {},
                     }));
         });
 
