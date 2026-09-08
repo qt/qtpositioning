@@ -188,7 +188,7 @@ std::shared_ptr<void> makeSinglePositionInfoUpdateProducer(
     });
 
     auto weakContext = QtOhos::makeWeakPtr(sharedContext);
-    auto positionInfoUpdateConsumerJsProxy =
+    auto sharedPositionInfoUpdateProxy = QtOhos::moveToSharedPtr(
         [weakContext, positioningMethods](std::optional<QGeoPositionInfo> optPositionInfo) {
             auto sharedContext = weakContext.lock();
             if (sharedContext) {
@@ -199,7 +199,7 @@ std::shared_ptr<void> makeSinglePositionInfoUpdateProducer(
                             sharedContext->positionInfoUpdateConsumer(optPositionInfo, positioningMethods);
                     });
             }
-        };
+        });
 
     QOhosJsThreadGateway::runAndWait(
         [&](QOhosJsState &jsState) {
@@ -215,14 +215,13 @@ std::shared_ptr<void> makeSinglePositionInfoUpdateProducer(
 
             getGeoLocationManagerObject(jsState)
             .evalToPromiseOrRejectOnThrow("getCurrentLocation(*)", {currentLocationRequest})
-            .withContext(std::move(positionInfoUpdateConsumerJsProxy))
-            .onThenWithContext([](const QOhosCallbackInfo &cbInfo, auto &positionInfoUpdateConsumerJsProxy) {
+            .onThen([sharedPositionInfoUpdateProxy](const QOhosCallbackInfo &cbInfo) {
                 auto location = cbInfo.getFirstArg<QNapi::Object>("getCurrentLocation");
-                positionInfoUpdateConsumerJsProxy(convertLocationObjectToPositionInfo(location));
+                (*sharedPositionInfoUpdateProxy)(convertLocationObjectToPositionInfo(location));
             })
-            .onCatchWithContext([](const QOhosCallbackInfo &cbInfo, auto &positionInfoUpdateConsumerJsProxy) {
+            .onCatch([sharedPositionInfoUpdateProxy](const QOhosCallbackInfo &cbInfo) {
                 QtOhos::logJsCallbackError(cbInfo, "getCurrentLocation() failed");
-                positionInfoUpdateConsumerJsProxy(std::nullopt);
+                (*sharedPositionInfoUpdateProxy)(std::nullopt);
             });
         });
 
