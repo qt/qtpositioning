@@ -98,6 +98,7 @@ to integrate the new \l QPermission API into the application.
     \li \l {Interfaces between C++ and QML Code in Qt Positioning}
     \li \l {Qt Positioning on Android}
     \li \l {Qt Positioning on iOS}
+    \li \l {Qt Positioning Security Considerations}
 \endlist
 
 \section1 Examples

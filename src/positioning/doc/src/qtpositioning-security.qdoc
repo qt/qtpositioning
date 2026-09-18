@@ -1,0 +1,52 @@
+// Copyright (C) 2026 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GFDL-1.3-no-invariants-only
+
+/*!
+    \page qtpositioning-security.html
+    \title Qt Positioning Security Considerations
+    \ingroup security-considerations
+    \brief How to prevent security problems when using Qt Positioning.
+
+    This page highlights potential security issues that can arise when using
+    the module and suggests how to avoid them.
+
+    \section1 Plugins
+
+    The module uses a \l {Qt Positioning Plugins}{plugin system} to select a
+    backend at runtime. This selection can be based either on the platform or on
+    an explicit request from the application.
+
+    \section2 Prevent loading malicious plugins
+
+    The plugin system gives an attacker an opportunity to get a malicious plugin
+    loaded into the application. Because a plugin is a shared library running in
+    the application's process, it can execute arbitrary code with the
+    application's privileges.
+
+    The \l {Deploying Plugins#The Plugin Directory}{Qt plugins documentation}
+    gives an overview of how plugins are located and loaded, and of what
+    affects the lookup paths. Making sure that no untrusted plugin is
+    reachable through those paths is the responsibility of the application
+    developer. When deploying an application, verify that:
+
+    \list
+      \li The Qt installation and application directories cannot be modified
+          by untrusted users.
+      \li If the application uses a \c {qt.conf} file, its contents are
+          correct, and untrusted users cannot modify the file.
+      \li Untrusted parties cannot control the process environment, because
+          variables such as \c {QT_PLUGIN_PATH} extend the plugin lookup
+          paths.
+    \endlist
+
+    An application can also call \l {QCoreApplication::setLibraryPaths()} at
+    startup to set the lookup paths explicitly. The paths set this way still
+    need to be protected from modification by untrusted users.
+
+    \section2 Avoid test mode in production
+
+    To keep automated tests deterministic, the module ignores all production
+    plugins when the \c {QT_QTESTLIB_RUNNING} environment variable is set. As a
+    result, no position or satellite source is available to the application.
+    Make sure that this variable is not set in a production environment.
+*/
