@@ -27,7 +27,7 @@ class QGeoPositionInfoSourceCL : public QGeoPositionInfoSource
 {
     Q_OBJECT
 public:
-    QGeoPositionInfoSourceCL(QObject *parent = 0);
+    QGeoPositionInfoSourceCL(const QVariantMap &parameters, QObject *parent = nullptr);
     ~QGeoPositionInfoSourceCL();
 
     QGeoPositionInfo lastKnownPosition(bool fromSatellitePositioningMethodsOnly = false) const override;
@@ -44,6 +44,7 @@ public:
 private:
     bool enableLocationManager();
     void setTimeoutInterval(int msec);
+    void parseParameters(const QVariantMap &parameters);
 
 public Q_SLOTS:
     void startUpdates() override;
@@ -56,6 +57,8 @@ protected:
 
 private:
     Q_DISABLE_COPY(QGeoPositionInfoSourceCL);
+    bool m_allowAutoPause = true;
+
     CLLocationManager *m_locationManager;
     bool m_updatesWanted;
 

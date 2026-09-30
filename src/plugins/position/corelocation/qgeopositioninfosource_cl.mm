@@ -11,7 +11,11 @@
 #include <QtCore/qtimezone.h>
 #include <QtCore/QPermission>
 #include <QtCore/QCoreApplication>
+#include <QtCore/QVariantMap>
 
+using namespace Qt::Literals::StringLiterals;
+
+static constexpr auto kAllowAutoPause = "allowAutoPause"_L1;
 
 #define MINIMUM_UPDATE_INTERVAL 1000
 
@@ -88,7 +92,7 @@
 
 QT_BEGIN_NAMESPACE
 
-QGeoPositionInfoSourceCL::QGeoPositionInfoSourceCL(QObject *parent)
+QGeoPositionInfoSourceCL::QGeoPositionInfoSourceCL(const QVariantMap &parameters, QObject *parent)
     : QGeoPositionInfoSource(parent),
       m_locationManager(0),
       m_updatesWanted(false),
@@ -96,6 +100,7 @@ QGeoPositionInfoSourceCL::QGeoPositionInfoSourceCL(QObject *parent)
       m_updateTimeout(0),
       m_positionError(QGeoPositionInfoSource::NoError)
 {
+      parseParameters(parameters);
 }
 
 QGeoPositionInfoSourceCL::~QGeoPositionInfoSourceCL()
@@ -132,6 +137,8 @@ bool QGeoPositionInfoSourceCL::enableLocationManager()
                 for (id mode in modes) {
                     if ([@"location" isEqualToString:mode]) {
                         m_locationManager.allowsBackgroundLocationUpdates = YES;
+                        m_locationManager.pausesLocationUpdatesAutomatically =
+                                m_allowAutoPause ? YES : NO;
                         break;
                     }
                 }
@@ -152,6 +159,11 @@ void QGeoPositionInfoSourceCL::setTimeoutInterval(int msec)
     if (m_updateTimer) killTimer(m_updateTimer);
     if (msec > 0) m_updateTimer = startTimer(msec);
     else m_updateTimer = 0;
+}
+
+void QGeoPositionInfoSourceCL::parseParameters(const QVariantMap &parameters)
+{
+    m_allowAutoPause = parameters.value(kAllowAutoPause, true).toBool();
 }
 
 void QGeoPositionInfoSourceCL::startUpdates()

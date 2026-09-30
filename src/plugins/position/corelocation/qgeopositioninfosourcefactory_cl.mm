@@ -9,8 +9,7 @@ QT_BEGIN_NAMESPACE
 
 QGeoPositionInfoSource *QGeoPositionInfoSourceFactoryCL::positionInfoSource(QObject *parent, const QVariantMap &parameters)
 {
-    Q_UNUSED(parameters)
-    return new QGeoPositionInfoSourceCL(parent);
+    return new QGeoPositionInfoSourceCL(parameters, parent);
 }
 
 QGeoSatelliteInfoSource *QGeoPositionInfoSourceFactoryCL::satelliteInfoSource(QObject *parent, const QVariantMap &parameters)

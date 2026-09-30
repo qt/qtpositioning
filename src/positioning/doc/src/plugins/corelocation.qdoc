@@ -1,0 +1,92 @@
+// Copyright (C) 2026 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GFDL-1.3-no-invariants-only
+
+/*!
+
+\page position-plugin-corelocation.html
+\title Qt Positioning Core Location plugin
+\ingroup QtPositioning-plugins
+
+\brief Wraps iOS and macOS positioning subsystems.
+
+\section1 Overview
+
+The Qt Positioning Core Location plugin wraps native Apple Core Location APIs
+and provides access to positioning information.
+
+The plugin can be loaded by using the provider name \b corelocation.
+
+\section1 Parameters
+
+The following table lists parameters that \e can be passed to the Core Location
+plugin.
+
+\table
+\header
+    \li Parameter
+    \li Description
+\row
+    \li allowAutoPause
+    \li It determines if the plugin allows the system to pause location updates
+        automatically to save power when the app is in the background. The default
+        value is \c true.
+        This parameter is only relevant for iOS when background location updates
+        are enabled. See \l {Automatic pausing of location updates} section for
+        more details.
+\endtable
+
+\section2 Automatic pausing of location updates
+
+In iOS, the underlying \c CLLocationManager can pause location updates
+automatically to save battery power when location data is unlikely to change.
+
+If the \c {allowAutoPause} plugin parameter is set to \c {false}, the plugin
+sets the \c pausesLocationUpdatesAutomatically property to \c NO on the
+\c CLLocationManager instance. This prevents the operating system from pausing
+location updates while the application runs in the background.
+
+\note This parameter only affects iOS applications when background location
+updates are enabled (by including the \c {location} value in \c UIBackgroundModes
+in the \c Info.plist file).
+
+\section1 Examples
+
+The following examples show how to create a \b corelocation \l PositionSource from
+C++ and QML.
+
+\section2 QML
+
+The following snippet creates a \l PositionSource with no parameters. The default
+value for \c {allowAutoPause} is used (\c true).
+
+\qml
+PositionSource {
+    name: "corelocation"
+}
+\endqml
+
+The next snippet explicitly adds the \c {allowAutoPause} \l PluginParameter
+and sets its value to \c false.
+
+\qml
+PositionSource {
+    name: "corelocation"
+    PluginParameter {
+        name: "allowAutoPause"
+        value: false
+    }
+}
+\endqml
+
+\section2 C++
+
+The following snippet shows how to use C++ to create a
+\l {QGeoPositionInfoSource}{position source} with \c {allowAutoPause} disabled.
+
+\code
+QVariantMap params;
+params["allowAutoPause"] = false;
+QGeoPositionInfoSource *positionSource = QGeoPositionInfoSource::createSource("corelocation", params, this);
+\endcode
+
+*/
