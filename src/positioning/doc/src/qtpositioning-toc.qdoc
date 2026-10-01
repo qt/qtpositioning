@@ -15,12 +15,7 @@
     \li \l {Qt Positioning on Android}{Android support}
     \li \l {Qt Positioning on iOS}{iOS support}
     \li \l {Qt Positioning Plugins}{Plugins}
-        \list
-            \li \l{Qt Positioning Android plugin}{Android plugin}
-            \li \l{Qt Positioning GeoClue v2 plugin}{GeoClue v2 plugin}
-            \li \l{Qt Positioning Gypsy plugin}{Gypsy plugin}
-            \li \l{Qt Positioning NMEA plugin}{NMEA plugin}
-        \endlist
+        \generatelist {QtPositioning-plugins}
     \li \l {Qt Positioning Security Considerations}
     \li \l {Changes to Qt Positioning}{Upgrading from Qt 5}
     \endlist

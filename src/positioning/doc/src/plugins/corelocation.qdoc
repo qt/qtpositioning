@@ -7,7 +7,7 @@
 \title Qt Positioning Core Location plugin
 \ingroup QtPositioning-plugins
 
-\brief Wraps iOS and macOS positioning subsystems.
+\brief Wraps iOS and \macos positioning subsystems.
 
 \section1 Overview
 
@@ -27,37 +27,36 @@ plugin.
     \li Description
 \row
     \li allowAutoPause
-    \li It determines if the plugin allows the system to pause location updates
-        automatically to save power when the app is in the background. The default
-        value is \c true.
-        This parameter is only relevant for iOS when background location updates
-        are enabled. See \l {Automatic pausing of location updates} section for
-        more details.
+    \li Controls whether the plugin allows the system to pause location updates
+        automatically to save power. The default value is \c true. This
+        parameter is only relevant on iOS when you enable background location
+        updates. For more details, see
+        \l {Automatic pausing of location updates}.
 \endtable
 
 \section2 Automatic pausing of location updates
 
-In iOS, the underlying \c CLLocationManager can pause location updates
+On iOS, the underlying \c CLLocationManager can pause location updates
 automatically to save battery power when location data is unlikely to change.
 
-If the \c {allowAutoPause} plugin parameter is set to \c {false}, the plugin
-sets the \c pausesLocationUpdatesAutomatically property to \c NO on the
-\c CLLocationManager instance. This prevents the operating system from pausing
-location updates while the application runs in the background.
+To prevent the operating system from pausing location updates while the
+application runs in the background, set the \c allowAutoPause plugin parameter
+to \c false. The plugin then sets the \c pausesLocationUpdatesAutomatically
+property of the \c CLLocationManager instance to \c NO.
 
-\note This parameter only affects iOS applications when background location
-updates are enabled (by including the \c {location} value in \c UIBackgroundModes
-in the \c Info.plist file).
+This parameter has an effect only if you enable background location updates. To
+enable them, add the \c location value to \c UIBackgroundModes in the
+\c Info.plist file. See \l {Qt Positioning on iOS} for details.
 
 \section1 Examples
 
-The following examples show how to create a \b corelocation \l PositionSource from
-C++ and QML.
+The following examples show how to create a \b corelocation \l PositionSource
+from C++ and QML.
 
 \section2 QML
 
-The following snippet creates a \l PositionSource with no parameters. The default
-value for \c {allowAutoPause} is used (\c true).
+The following snippet creates a \l PositionSource with no parameters. The plugin
+uses the default value for \c {allowAutoPause}, which is \c true.
 
 \qml
 PositionSource {
