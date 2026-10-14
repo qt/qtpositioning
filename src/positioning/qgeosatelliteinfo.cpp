@@ -149,6 +149,11 @@ void QGeoSatelliteInfo::setSatelliteSystem(SatelliteSystem system)
 }
 
 /*!
+    \property QGeoSatelliteInfo::satelliteSystem
+    \brief the satellite system in use, such as GPS or GLONASS.
+*/
+
+/*!
     Returns the Satellite System (GPS, GLONASS, ...)
 
     \note This value can be used together with \l satelliteIdentifier()
@@ -182,7 +187,8 @@ void QGeoSatelliteInfo::setSatelliteIdentifier(int satId)
 }
 
 /*!
-    Returns the satellite identifier number.
+    \property QGeoSatelliteInfo::satelliteIdentifier
+    \brief the satellite identifier number.
 
     The satellite identifier number can be used to identify a satellite within
     the satellite system.
@@ -204,6 +210,10 @@ void QGeoSatelliteInfo::setSatelliteIdentifier(int satId)
     identifier ranges for different satellite systems may intersect. To uniquely
     identify a satellite, a combination of satelliteIndetifier() and
     \l satelliteSystem() must be used.
+*/
+
+/*!
+    Returns the satellite identifier number.
 
     \sa satelliteSystem()
 */
@@ -220,6 +230,11 @@ void QGeoSatelliteInfo::setSignalStrength(int signalStrength)
     d.detach();
     d->signal = signalStrength;
 }
+
+/*!
+    \property QGeoSatelliteInfo::signalStrength
+    \brief the signal strength.
+*/
 
 /*!
     Returns the signal strength, or -1 if the value has not been set.
