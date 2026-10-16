@@ -105,14 +105,12 @@ QMultiHash<QString, QCborMap> QGeoPositionInfoSourcePrivate::plugins(bool reload
 static bool pluginComparator(const QCborMap &p1, const QCborMap &p2)
 {
     const QString prio = QStringLiteral("Priority");
-    if (p1.contains(prio) && !p2.contains(prio))
-        return true;
-    if (!p1.contains(prio) && p2.contains(prio))
-        return false;
-    if (p1.value(prio).isDouble() && !p2.value(prio).isDouble())
-        return true;
-    if (!p1.value(prio).isDouble() && p2.value(prio).isDouble())
-        return false;
+    QCborValue v1 = p1.value(prio);
+    QCborValue v2 = p2.value(prio);
+    bool p1IsNumeric = v1.isInteger() || v1.isDouble();
+    bool p2IsNumeric = v2.isInteger() || v2.isDouble();
+    if (p1IsNumeric != p2IsNumeric)
+        return p1IsNumeric;     // the one that has a numeric priority sorts first
     return (p1.value(prio).toDouble() > p2.value(prio).toDouble());
 }
 
