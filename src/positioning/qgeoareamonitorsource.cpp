@@ -118,13 +118,13 @@ QGeoAreaMonitorSource *QGeoAreaMonitorSource::createDefaultSource(QObject *paren
         if (obj.value(QStringLiteral("Monitor")).isBool()
                 && obj.value(QStringLiteral("Monitor")).toBool())
         {
-            QGeoAreaMonitorSource *s = nullptr;
             auto factory = QGeoPositionInfoSourcePrivate::loadFactory(obj);
-            if (factory)
-                s = factory->areaMonitor(parent, QVariantMap());
-            if (s)
+            if (!factory)
+                continue;
+            if (QGeoAreaMonitorSource *s = factory->areaMonitor(parent, QVariantMap())) {
                 s->d_func()->providerName = obj.value(QStringLiteral("Provider")).toString();
-            return s;
+                return s;
+            }
         }
     }
     return nullptr;
@@ -138,16 +138,15 @@ QGeoAreaMonitorSource *QGeoAreaMonitorSource::createDefaultSource(QObject *paren
 */
 QGeoAreaMonitorSource *QGeoAreaMonitorSource::createSource(const QString &sourceName, QObject *parent)
 {
-    auto plugins = QGeoPositionInfoSourcePrivate::plugins();
-    if (plugins.contains(sourceName)) {
-        const auto metaData = plugins.value(sourceName);
-        QGeoAreaMonitorSource *s = nullptr;
+    const QList<QCborMap> candidates = QGeoPositionInfoSourcePrivate::plugins().values(sourceName);
+    for (const QCborMap &metaData : candidates) {
         auto factory = QGeoPositionInfoSourcePrivate::loadFactory(metaData);
-        if (factory)
-            s = factory->areaMonitor(parent, QVariantMap());
-        if (s)
+        if (!factory)
+            continue;
+        if (QGeoAreaMonitorSource *s = factory->areaMonitor(parent, QVariantMap())) {
             s->d_func()->providerName = metaData.value(QStringLiteral("Provider")).toString();
-        return s;
+            return s;
+        }
     }
 
     return nullptr;

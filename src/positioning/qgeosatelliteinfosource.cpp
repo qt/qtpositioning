@@ -224,7 +224,10 @@ QGeoSatelliteInfoSource *QGeoSatelliteInfoSource::createDefaultSource(const QVar
                 if (inTest)
                     continue;
             }
-            return QGeoSatelliteInfoSourcePrivate::createSourceReal(obj, parameters, parent);
+            if (QGeoSatelliteInfoSource *source =
+                    QGeoSatelliteInfoSourcePrivate::createSourceReal(obj, parameters, parent)) {
+                return source;
+            }
         }
     }
 
@@ -243,9 +246,13 @@ QGeoSatelliteInfoSource *QGeoSatelliteInfoSource::createDefaultSource(const QVar
 */
 QGeoSatelliteInfoSource *QGeoSatelliteInfoSource::createSource(const QString &sourceName, const QVariantMap &parameters, QObject *parent)
 {
-    auto plugins = QGeoPositionInfoSourcePrivate::plugins();
-    if (plugins.contains(sourceName))
-        return QGeoSatelliteInfoSourcePrivate::createSourceReal(plugins.value(sourceName), parameters, parent);
+    const QList<QCborMap> candidates = QGeoPositionInfoSourcePrivate::plugins().values(sourceName);
+    for (const QCborMap &obj : candidates) {
+        if (QGeoSatelliteInfoSource *source =
+                QGeoSatelliteInfoSourcePrivate::createSourceReal(obj, parameters, parent)) {
+            return source;
+        }
+    }
     return nullptr;
 }
 
