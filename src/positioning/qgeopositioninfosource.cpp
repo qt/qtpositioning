@@ -387,9 +387,13 @@ QGeoPositionInfoSource *QGeoPositionInfoSource::createSource(const QString &sour
 */
 QGeoPositionInfoSource *QGeoPositionInfoSource::createSource(const QString &sourceName, const QVariantMap &parameters, QObject *parent)
 {
-    auto plugins = QGeoPositionInfoSourcePrivate::plugins();
-    if (plugins.contains(sourceName))
-        return QGeoPositionInfoSourcePrivate::createSourceReal(plugins.value(sourceName), parameters, parent);
+    const QList<QCborMap> candidates = QGeoPositionInfoSourcePrivate::plugins().values(sourceName);
+    for (const QCborMap &obj : candidates) {
+        if (QGeoPositionInfoSource *source =
+                QGeoPositionInfoSourcePrivate::createSourceReal(obj, parameters, parent)) {
+            return source;
+        }
+    }
     return nullptr;
 }
 
