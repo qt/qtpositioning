@@ -17,17 +17,17 @@ qhp.QtPositioning.subprojects = manual examples classes qml
 
 qhp.QtPositioning.subprojects.classes.title = C++ Classes
 qhp.QtPositioning.subprojects.classes.indexTitle = Qt Positioning C++ Classes
-qhp.QtPositioning.subprojects.classes.selectors = class fake:headerfile
+qhp.QtPositioning.subprojects.classes.selectors = class headerfile
 qhp.QtPositioning.subprojects.classes.sortPages = true
 
 qhp.QtPositioning.subprojects.qml.title = QML Types
 qhp.QtPositioning.subprojects.qml.indexTitle = Qt Positioning QML Types
-qhp.QtPositioning.subprojects.qml.selectors = qmlclass
+qhp.QtPositioning.subprojects.qml.selectors = qmltype qmlvaluetype
 qhp.QtPositioning.subprojects.qml.sortPages = true
 
 qhp.QtPositioning.subprojects.examples.title = Qt Positioning Examples
 qhp.QtPositioning.subprojects.examples.indexTitle = Qt Positioning Examples
-qhp.QtPositioning.subprojects.examples.selectors = fake:example
+qhp.QtPositioning.subprojects.examples.selectors = example
 
 qhp.QtPositioning.subprojects.manual.title = Qt Positioning
 qhp.QtPositioning.subprojects.manual.indexTitle = Qt Positioning module topics
