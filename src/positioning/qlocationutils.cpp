@@ -73,8 +73,12 @@ static void qlocationutils_readGsa(QByteArrayView bv, QGeoPositionInfo *info, do
 {
     const QList<QByteArray> parts = QByteArray::fromRawData(bv.data(), bv.size()).split(',');
 
+    // The GSA sentence is different from GGA:
+    // 1 - no fix;
+    // 2 - 2D fix;
+    // 3 - 3D fix.
     if (hasFix && parts.size() > 2 && !parts[2].isEmpty())
-        *hasFix = parts[2].toInt() > 0;
+        *hasFix = parts[2].toInt() > 1;
 
     if (parts.size() > 16 && !parts[16].isEmpty()) {
         bool hasHdop = false;
