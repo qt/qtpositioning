@@ -29,7 +29,7 @@ QT_BEGIN_NAMESPACE
     Hemisphere and a negative latitude indicates the Southern Hemisphere.  The \l longitude
     attribute specifies the number of decimal degrees east and west.  A positive longitude
     indicates the Eastern Hemisphere and a negative longitude indicates the Western Hemisphere.
-    The \l altitude attribute specifies the number of meters above sea level.  Together, these
+    The \l altitude attribute specifies the altitude in meters.  Together, these
     attributes specify a 3-dimensional position anywhere on or near the Earth's surface.
 
     The \l isValid attribute can be used to test if a coordinate is valid.  A coordinate is
@@ -104,10 +104,11 @@ QT_BEGIN_NAMESPACE
 /*!
     \qmlproperty real geoCoordinate::altitude
 
-    This property holds the altitude value (meters above sea level).
+    This property holds the altitude value (in meters).
     If the property has not been set, its default value is NaN.
 
-    For more details see the \l {QGeoCoordinate::altitude} property
+    For more details, including the reference surface of the altitude, see
+    \l {QGeoCoordinate::altitude()}.
 */
 
 /*!

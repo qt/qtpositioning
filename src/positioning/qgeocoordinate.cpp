@@ -138,9 +138,11 @@ QGeoMercatorCoordinatePrivate::~QGeoMercatorCoordinatePrivate()
 
 /*!
     \property QGeoCoordinate::altitude
-    \brief This property holds the altitude in meters above sea level.
+    \brief This property holds the altitude in meters.
 
     The property is undefined (\l {qQNaN()}) if the altitude has not been set.
+
+    See altitude() for more details on the altitude reference.
 
     While this property is introduced in Qt 5.5, the related accessor functions
     exist since the first version of this class.
@@ -196,7 +198,8 @@ QGeoCoordinate::QGeoCoordinate(double latitude, double longitude)
     is not between -180 to 180 inclusive, none of the values are set and
     the type() will be QGeoCoordinate::InvalidCoordinate.
 
-    Note that \a altitude specifies the meters above sea level.
+    Note that \a altitude is specified in meters. See altitude() for more
+    details on the altitude reference.
 
     \sa isValid()
 */
@@ -364,11 +367,63 @@ void QGeoCoordinate::setLongitude(double longitude)
 }
 
 /*!
-    Returns the altitude (meters above sea level).
+    Returns the altitude in meters.
 
     The return value is undefined if the altitude has not been set.
 
-    \sa setAltitude(), type()
+    The altitude is always given in meters, but it can be measured from
+    different reference surfaces:
+
+    \list
+        \li \e {Mean Sea Level (MSL)}. The altitude is the height above the
+            mean sea level of the Earth, which is usually approximated by a
+            geoid model, such as EGM96 or EGM2008. This altitude is also known
+            as orthometric height.
+        \li \e {WGS84 ellipsoid}. The altitude is the height above the
+            \l {http://en.wikipedia.org/wiki/World_Geodetic_System}{WGS84}
+            reference ellipsoid. This is also known as ellipsoidal height.
+    \endlist
+
+    QGeoCoordinate does not store which reference surface the altitude is
+    measured from. If the application creates the coordinate, the application
+    defines the meaning of the altitude. If the coordinate comes from a
+    \l QGeoPositionInfoSource, the reference surface depends on the backend
+    that provides the position updates, as shown in the following table.
+
+    \table
+    \header
+        \li Backend
+        \li Altitude type
+        \li Comment
+    \row
+        \li \l {Qt Positioning Android plugin}{android}
+        \li WGS84 (default) or MSL
+        \li The altitude is WGS84 by default. Starting from Android 14, the
+            backend can provide the MSL altitude instead if the
+            \c useMslAltitude plugin parameter is set to \c true. See
+            \l {Qt Positioning Android plugin} for more details.
+    \row
+        \li \l {Qt Positioning Core Location plugin}{corelocation}
+        \li MSL
+        \li
+    \row
+        \li \l {Qt Positioning NMEA plugin}{nmea}
+        \li MSL
+        \li The altitude is read from the GGA sentence. This also applies
+            to \l QNmeaPositionInfoSource.
+    \row
+        \li winrt (Windows)
+        \li MSL
+        \li The altitude is reported only if the platform states that it
+            is measured from the geoid. Otherwise, the altitude is not set.
+    \endtable
+
+    The other backends, such as \l {Qt Positioning GeoClue v2 plugin}{geoclue2}
+    or wasm, have no reliable way to determine the type of the returned
+    altitude. The underlying platform APIs do not specify it, and it can
+    depend on the actual source of the position data.
+
+    \sa setAltitude(), type(), {Qt Positioning Plugins}
 */
 double QGeoCoordinate::altitude() const
 {
@@ -376,7 +431,9 @@ double QGeoCoordinate::altitude() const
 }
 
 /*!
-    Sets the altitude (meters above sea level) to \a altitude.
+    Sets the altitude to \a altitude, in meters.
+
+    See altitude() for more details on the altitude reference.
 
     \sa altitude()
 */

@@ -27,7 +27,7 @@ surface \unicode {0x2014} as provided by a latitude-longitude coordinate
     \list
     \li The date and time at which the position was reported
     \li The velocity of the device that reported the position
-    \li The altitude of the reported position (height above sea level)
+    \li The altitude of the reported position (in meters)
     \li The bearing of the device in degrees, relative to true north
     \endlist
 
