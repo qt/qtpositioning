@@ -32,7 +32,7 @@ Some plugins already ship with Qt. These are:
         an interface to the Gypsy daemon.
     \row
         \li \b winrt
-        \li Wraps WinRT positioning subsystem. Available only on WinRT and Windows10.
+        \li Wraps \c {Windows.Devices.Geolocation} APIs. Available on Windows.
     \row
         \li \b nmea
         \li An \l {Qt Positioning NMEA plugin}{NMEA} backend that parses NMEA
